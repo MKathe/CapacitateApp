@@ -16,6 +16,7 @@ public class UserEntity implements Serializable {
     private boolean checker;
     private CompanyEntity company;
 
+
     public boolean isChecker() {
         return checker;
     }

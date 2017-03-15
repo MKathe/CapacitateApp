@@ -3,6 +3,7 @@ package com.cerezaconsulting.coreproject.presentation.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -26,6 +27,7 @@ import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
 import com.cerezaconsulting.coreproject.data.local.SessionManager;
 import com.cerezaconsulting.coreproject.data.model.UserEntity;
+import com.cerezaconsulting.coreproject.utils.MaterialColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +53,13 @@ public class PanelActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTheme(R.style.indigoTheme);
+
         setContentView(R.layout.activity_main);
         mSessionManager = new SessionManager(this);
+
+
         /**
          *Setup the DrawerLayout and NavigationView
          */
@@ -75,7 +82,7 @@ public class PanelActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setTitle("Mis Citas");
+        toolbar.setTitle("Cursos");
 
         setupDrawerContent(navigationView);
 
@@ -98,6 +105,7 @@ public class PanelActivity extends BaseActivity {
         profile_image = (ImageView) header.findViewById(R.id.imageView);
         //  startService(new Intent(this, GeolocationService.class));
         initHeader();
+
 
     }
 
@@ -169,7 +177,7 @@ public class PanelActivity extends BaseActivity {
                                 break;
                         }
                         menuItem.setChecked(false);
-                      //  mDrawer.closeDrawers();
+                        //  mDrawer.closeDrawers();
                         return true;
                     }
 
@@ -177,9 +185,11 @@ public class PanelActivity extends BaseActivity {
     }
 
 
-    private void CloseSession(){
+    private void CloseSession() {
         mSessionManager.closeSession();
-        newActivityClearPreview(this,null,LoginActivity.class);
+        newActivityClearPreview(this, null, LoginActivity.class);
+
+
     }
 
     @Override
@@ -200,6 +210,7 @@ public class PanelActivity extends BaseActivity {
         if (mUser != null) {
 
             tv_username.setText(mUser.getFullName());
+
             /*if (mUser.getPhoto() != null) {
                 GlideUtils.loadImageCircleTransform(profile_image, mUser.getPhoto(), this);
 
@@ -208,7 +219,6 @@ public class PanelActivity extends BaseActivity {
 
 
     }
-
 
 
     @Override
@@ -222,6 +232,7 @@ public class PanelActivity extends BaseActivity {
 
 
     }
+
     @Override
     public void onBackPressed() {
         if (this.mDrawer.isDrawerOpen(GravityCompat.START)) {
