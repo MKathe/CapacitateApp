@@ -19,6 +19,7 @@ import com.cerezaconsulting.coreproject.core.BaseFragment;
 import com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout;
 import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.presentation.activities.QuestionActivity;
 import com.cerezaconsulting.coreproject.presentation.adapters.ChapterAdapter;
 import com.cerezaconsulting.coreproject.presentation.contracts.ChapterContract;
 import com.cerezaconsulting.coreproject.presentation.presenters.communicator.CommunicatorChapterItem;
@@ -103,6 +104,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     public void detailChapter(ChapterEntity chapterEntity) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("chapter",chapterEntity);
+        nextActivity(getActivity(),bundle, QuestionActivity.class,false);
     }
 
     @Override
