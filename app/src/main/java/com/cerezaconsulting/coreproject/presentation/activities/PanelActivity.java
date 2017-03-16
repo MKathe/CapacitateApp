@@ -54,7 +54,7 @@ public class PanelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.indigoTheme);
+        setTheme(R.style.AppTheme);
 
         setContentView(R.layout.activity_main);
         mSessionManager = new SessionManager(this);

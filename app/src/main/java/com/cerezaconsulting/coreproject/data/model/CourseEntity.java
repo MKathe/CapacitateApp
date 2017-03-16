@@ -20,7 +20,12 @@ public class CourseEntity implements Serializable {
     }
 
     public String getName() {
-        return name;
+        if(name!=null) {
+            return name;
+        }
+        else{
+            return "";
+        }
     }
 
     public void setName(String name) {

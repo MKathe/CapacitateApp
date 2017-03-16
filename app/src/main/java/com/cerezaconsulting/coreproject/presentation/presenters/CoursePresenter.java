@@ -70,6 +70,6 @@ public class CoursePresenter implements CourseContract.Presenter,CommunicatorCou
 
     @Override
     public void onClick(CourseEntity courseEntity) {
-
+        mView.detailCourse(courseEntity);
     }
 }

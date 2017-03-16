@@ -38,4 +38,6 @@
     <color name="cream">#ececec</color>
     <color name="transparent">#00ececec</color>
     <color name="error_red">#E0293F</color>
+
+    <color name="light_red">#e14e3e</color>
 </resources>

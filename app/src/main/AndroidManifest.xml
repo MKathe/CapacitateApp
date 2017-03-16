@@ -31,6 +31,9 @@
         <activity
             android:screenOrientation="portrait"
             android:name="com.cerezaconsulting.coreproject.presentation.activities.PanelActivity"></activity>
+        <activity android:name=".presentation.activities.ChapterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

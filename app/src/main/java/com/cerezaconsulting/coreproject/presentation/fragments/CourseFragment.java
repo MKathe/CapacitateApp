@@ -20,6 +20,7 @@ import com.cerezaconsulting.coreproject.core.BaseActivity;
 import com.cerezaconsulting.coreproject.core.BaseFragment;
 import com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.presentation.activities.ChapterActivity;
 import com.cerezaconsulting.coreproject.presentation.adapters.CourseAdapter;
 import com.cerezaconsulting.coreproject.presentation.contracts.CourseContract;
 import com.cerezaconsulting.coreproject.presentation.presenters.communicator.CommunicatorCourseItem;
@@ -52,7 +53,6 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
     FloatingActionButton fabAddTask;
     @BindView(R.id.refresh_layout)
     ScrollChildSwipeRefreshLayout refreshLayout;
-    private ProgressDialogCustom mProgressDialogCustom;
     private CourseAdapter courseAdapter;
     private LinearLayoutManager layoutManager;
     private CourseContract.Presenter presenter;
@@ -91,7 +91,6 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
 
         courseAdapter = new CourseAdapter(new ArrayList<CourseEntity>(),(CommunicatorCourseItem) presenter);
         complatinsList.setAdapter(courseAdapter);
-        mProgressDialogCustom = new ProgressDialogCustom(getContext(), "Cargando...");
         presenter.start();
     }
 
@@ -110,7 +109,9 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
 
     @Override
     public void detailCourse(CourseEntity courseEntity) {
-
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("course",courseEntity);
+        nextActivity(getActivity(),bundle, ChapterActivity.class,false);
     }
 
     @Override
