@@ -1,4 +1,4 @@
-package com.cerezaconsulting.coreproject.data;
+package com.cerezaconsulting.coreproject.data.remote;
 
 
 import com.cerezaconsulting.coreproject.BuildConfig;

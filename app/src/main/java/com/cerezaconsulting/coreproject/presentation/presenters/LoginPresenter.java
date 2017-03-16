@@ -3,7 +3,7 @@ package com.cerezaconsulting.coreproject.presentation.presenters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.cerezaconsulting.coreproject.data.ServiceFactory;
+import com.cerezaconsulting.coreproject.data.remote.ServiceFactory;
 import com.cerezaconsulting.coreproject.data.local.SessionManager;
 import com.cerezaconsulting.coreproject.data.model.AccessTokenEntity;
 import com.cerezaconsulting.coreproject.data.model.UserEntity;
@@ -11,7 +11,6 @@ import com.cerezaconsulting.coreproject.data.remote.request.LoginRequest;
 import com.cerezaconsulting.coreproject.data.remote.request.PerfilRequest;
 import com.cerezaconsulting.coreproject.data.response.LoginResponse;
 import com.cerezaconsulting.coreproject.presentation.contracts.LoginContract;
-import com.cerezaconsulting.coreproject.presentation.contracts.MainContract;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -8,20 +8,14 @@
         <item
             android:id="@+id/nav_connect"
             android:visible="true"
-            android:title="Perfil" />
+            android:title="Mis Reportes" />
         <item
             android:id="@+id/nav_profile"
-            android:title="Administrar" />
+            android:title="Perfil" />
+        <item
+            android:id="@+id/nav_help"
+            android:title="Ayuda"/>
 
-        <item
-            android:id="@+id/nav_contact"
-            android:title="Programar Horarios" />
-        <item
-            android:id="@+id/nav_schedules_special"
-            android:title="Horarios Especiales" />
-        <item
-            android:id="@+id/places"
-            android:title="Sobre Symbiosis" />
     </group>
 
     <group

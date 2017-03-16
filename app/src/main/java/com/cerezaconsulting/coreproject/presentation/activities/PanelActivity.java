@@ -27,6 +27,9 @@ import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
 import com.cerezaconsulting.coreproject.data.local.SessionManager;
 import com.cerezaconsulting.coreproject.data.model.UserEntity;
+import com.cerezaconsulting.coreproject.presentation.fragments.CourseFragment;
+import com.cerezaconsulting.coreproject.presentation.presenters.CoursePresenter;
+import com.cerezaconsulting.coreproject.utils.ActivityUtils;
 import com.cerezaconsulting.coreproject.utils.MaterialColor;
 
 import java.util.ArrayList;
@@ -40,13 +43,10 @@ public class PanelActivity extends BaseActivity {
     SessionManager mSessionManager;
     private Toolbar toolbar;
     private ActionBarDrawerToggle mDrawerToggle;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     public TextView tv_username;
     public ImageView profile_image;
     public TextView tv_state_gender;
-    public Intent intent;
     public UserEntity mUser;
 
 
@@ -63,22 +63,14 @@ public class PanelActivity extends BaseActivity {
         /**
          *Setup the DrawerLayout and NavigationView
          */
-        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.layout_content_frame);
         mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View activityView = layoutInflater.inflate(R.layout.layout_tab, null, false);
 
 
         /**
          * Setup click events on the Navigation View Items.
          */
-        frameLayout.addView(activityView);
-        viewPager = (ViewPager) activityView.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) activityView.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -107,15 +99,23 @@ public class PanelActivity extends BaseActivity {
         initHeader();
 
 
+        CourseFragment fragment = (CourseFragment) getSupportFragmentManager().findFragmentById(R.id.body);
+        if(fragment==null){
+            fragment = CourseFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.body);
+        }
+
+        new CoursePresenter(fragment,getApplicationContext());
+
     }
 
 
-    private void setupViewPager(ViewPager viewPager) {
+    /*private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-     /*   adapter.addFragment(new DatePendingProfileFragment(), "Pendientes");
+        adapter.addFragment(new DatePendingProfileFragment(), "Pendientes");
         adapter.addFragment(new DateRealizeProfileFragment(), "Realizadas");
         adapter.addFragment(new DateExpiredProfileFragment(), "Canceladas");
-*/
+
         viewPager.setAdapter(adapter);
     }
 
@@ -146,7 +146,7 @@ public class PanelActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
+    }*/
 
 
     private void setupDrawerContent(NavigationView navigationView) {
