@@ -9,6 +9,7 @@ import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
 import com.cerezaconsulting.coreproject.presentation.fragments.ChapterFragment;
+import com.cerezaconsulting.coreproject.presentation.presenters.ChapterPresenter;
 import com.cerezaconsulting.coreproject.utils.ActivityUtils;
 
 import butterknife.BindView;
@@ -48,6 +49,7 @@ public class ChapterActivity extends BaseActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.body);
         }
 
+        new ChapterPresenter(fragment,getApplicationContext());
     }
 
     @Override

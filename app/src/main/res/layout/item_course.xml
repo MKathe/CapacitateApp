@@ -44,8 +44,8 @@
             android:tint="@color/black_select"
             android:layout_gravity="center"/>
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
             android:tint="@color/black_select"
             android:id="@+id/iv_options"
             android:src="@drawable/ic_action_overflow"
