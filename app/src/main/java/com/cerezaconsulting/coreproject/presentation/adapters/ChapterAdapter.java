@@ -33,16 +33,16 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course, parent, false);
+        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chapter, parent, false);
         return new ViewHolder(root, this);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ChapterEntity chapterEntity = list.get(position);
-        holder.ivOptions.setVisibility(View.GONE);
+
         holder.tvTitle.setText(chapterEntity.getName());
-        holder.tvSubtitle.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -65,12 +65,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
 
         @BindView(R.id.tv_title)
         TextView tvTitle;
-        @BindView(R.id.tv_subtitle)
-        TextView tvSubtitle;
         @BindView(R.id.iv_check)
         ImageView ivCheck;
-        @BindView(R.id.iv_options)
-        ImageView ivOptions;
         private OnClickListListener onClickListListener;
 
         ViewHolder(View itemView, OnClickListListener onClickListListener) {

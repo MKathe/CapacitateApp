@@ -26,14 +26,6 @@ import butterknife.OnClick;
 public class ExampleFragment extends BaseFragment implements MainContract.View {
 
     private static final String TAG = ExampleActivity.class.getSimpleName();
-    @BindView(R.id.etEmail)
-    EditText etEmail;
-    @BindView(R.id.etpassword)
-    EditText etpassword;
-    @BindView(R.id.btn_login)
-    Button btnLogin;
-    @BindView(R.id.et_forget_password)
-    TextView etForgetPassword;
 
 
     private MainContract.Presenter mPresenter;
@@ -67,7 +59,7 @@ public class ExampleFragment extends BaseFragment implements MainContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_login_two, container, false);
+        View root = inflater.inflate(R.layout.dialog_question_rebase, container, false);
         ButterKnife.bind(this, root);
         return root;
     }
@@ -107,13 +99,5 @@ public class ExampleFragment extends BaseFragment implements MainContract.View {
         return isAdded();
     }
 
-    @OnClick({R.id.btn_login, R.id.et_forget_password})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_login:
-                break;
-            case R.id.et_forget_password:
-                break;
-        }
-    }
+
 }

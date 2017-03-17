@@ -69,7 +69,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_login_two, container, false);
+        View root = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, root);
         return root;
     }
