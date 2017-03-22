@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             app:itemTextColor="@color/black"
-            app:itemIconTint="@color/black"
+            app:itemIconTint="@color/dark_gray"
             android:background="@color/white"
             app:headerLayout="@layout/header_drawer"
 

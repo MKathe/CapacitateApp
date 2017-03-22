@@ -30,6 +30,7 @@ import com.cerezaconsulting.coreproject.data.model.UserEntity;
 import com.cerezaconsulting.coreproject.presentation.fragments.CourseFragment;
 import com.cerezaconsulting.coreproject.presentation.presenters.CoursePresenter;
 import com.cerezaconsulting.coreproject.utils.ActivityUtils;
+import com.cerezaconsulting.coreproject.utils.GlideUtils;
 import com.cerezaconsulting.coreproject.utils.MaterialColor;
 
 import java.util.ArrayList;
@@ -100,12 +101,12 @@ public class PanelActivity extends BaseActivity {
 
 
         CourseFragment fragment = (CourseFragment) getSupportFragmentManager().findFragmentById(R.id.body);
-        if(fragment==null){
+        if (fragment == null) {
             fragment = CourseFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.body);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.body);
         }
 
-        new CoursePresenter(fragment,getApplicationContext());
+        new CoursePresenter(fragment, getApplicationContext());
 
     }
 
@@ -210,11 +211,11 @@ public class PanelActivity extends BaseActivity {
         if (mUser != null) {
 
             tv_username.setText(mUser.getFullName());
+            tv_state_gender.setText(mUser.getEmail());
+            if (mUser.getCompany() != null) {
+                GlideUtils.loadImage(profile_image, mUser.getCompany().getLogo(), this);
 
-            /*if (mUser.getPhoto() != null) {
-                GlideUtils.loadImageCircleTransform(profile_image, mUser.getPhoto(), this);
-
-            }*/
+            }
         }
 
 

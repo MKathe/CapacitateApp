@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <group
+        android:visible="false"
         android:id="@+id/group1"
         android:checkableBehavior="single">
         <item
+
             android:id="@+id/nav_connect"
-            android:visible="true"
             android:title="Mis Reportes" />
         <item
             android:id="@+id/nav_profile"
@@ -21,6 +22,7 @@
     <group
         android:id="@+id/group2">
         <item
+            android:icon="@drawable/ic_arrow_back"
             android:id="@+id/nav_signout"
             android:title="Cerrar Sesión" />
     </group>
