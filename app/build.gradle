@@ -69,6 +69,7 @@ dependencies {
 
     compile helpLibraries.guava
     compile helpLibraries.calligraphy
+    compile helpLibraries.saaripar
 
     compile imagesLoader.glide
 

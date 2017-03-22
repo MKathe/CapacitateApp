@@ -72,7 +72,7 @@ public abstract  class BaseActivity extends AppCompatActivity {
 
     public void showMessage(String message) {
         CoordinatorLayout container = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        this.showMessageSnack(container, message, R.color.colorPrimaryDark);
+        this.showMessageSnack(container, message, R.color.black);
     }
 
     public void showMessageError(String message) {

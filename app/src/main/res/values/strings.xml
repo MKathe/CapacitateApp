@@ -5,5 +5,11 @@
     <string name="demo_max_label">max</string>
 
 
+    <string name="not_user">User not found</string>
+    <string name="invalid_password">Incorrect Password</string>
+    <string name="no_connect">Unable to connect to server</string>
+    <string name="password_long">Password is too long</string>
+
+
 
 </resources>

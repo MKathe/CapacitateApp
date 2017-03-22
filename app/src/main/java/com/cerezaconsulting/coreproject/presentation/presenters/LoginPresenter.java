@@ -3,6 +3,7 @@ package com.cerezaconsulting.coreproject.presentation.presenters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.data.remote.ServiceFactory;
 import com.cerezaconsulting.coreproject.data.local.SessionManager;
 import com.cerezaconsulting.coreproject.data.model.AccessTokenEntity;
@@ -19,11 +20,11 @@ import retrofit2.Response;
 /**
  * Created by manu on 08/08/16.
  */
-public class LoginPresenter implements LoginContract.Presenter{
+public class LoginPresenter implements LoginContract.Presenter {
 
     private final LoginContract.View mView;
+    private Context context;
     private final SessionManager mSessionManager;
-
 
 
     public LoginPresenter(@NonNull LoginContract.View view,
@@ -31,6 +32,7 @@ public class LoginPresenter implements LoginContract.Presenter{
         this.mView = view;
         this.mSessionManager = new SessionManager(context);
         this.mView.setPresenter(this);
+        this.context = context;
     }
 
 
@@ -45,7 +47,7 @@ public class LoginPresenter implements LoginContract.Presenter{
         LoginRequest loginService =
                 ServiceFactory.createService(LoginRequest.class);
 
-        LoginResponse loginResponse = new LoginResponse(username,password);
+        LoginResponse loginResponse = new LoginResponse(username, password);
 
         Call<AccessTokenEntity> call = loginService.basicLogin(loginResponse);
         mView.setLoadingIndicator(true);
@@ -58,14 +60,30 @@ public class LoginPresenter implements LoginContract.Presenter{
 
                 } else {
                     mView.setLoadingIndicator(false);
-                    mView.showMessage("");
+
+                    switch (response.code()) {
+
+                        case 404:
+                            mView.showErrorMessage(context.getResources().getString(R.string.not_user));
+                            break;
+                        case 401:
+                            mView.showErrorMessage(context.getResources().getString(R.string.invalid_password));
+                            break;
+                        case 400:
+                            mView.showErrorMessage(context.getResources().getString(R.string.password_long));
+                            break;
+                        default:
+                            mView.showErrorMessage("Error desconocido");
+                            break;
+                    }
+
                 }
             }
 
             @Override
             public void onFailure(Call<AccessTokenEntity> call, Throwable t) {
                 mView.setLoadingIndicator(false);
-                mView.showErrorMessage("");
+                mView.showErrorMessage(context.getResources().getString(R.string.no_connect));
             }
         });
     }

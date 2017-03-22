@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
@@ -17,6 +18,12 @@ import com.cerezaconsulting.coreproject.presentation.activities.PanelActivity;
 import com.cerezaconsulting.coreproject.presentation.contracts.LoginContract;
 import com.cerezaconsulting.coreproject.presentation.contracts.MainContract;
 import com.cerezaconsulting.coreproject.utils.ProgressDialogCustom;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,18 +32,26 @@ import butterknife.OnClick;
 /**
  * Created by junior on 27/08/16.
  */
-public class LoginFragment extends BaseFragment implements LoginContract.View {
+public class LoginFragment extends BaseFragment implements LoginContract.View, Validator.ValidationListener {
 
     private static final String TAG = ExampleActivity.class.getSimpleName();
+
+    @NotEmpty(message = "Este campo no puede ser vacio")
     @BindView(R.id.etEmail)
     EditText etEmail;
+
+    @NotEmpty(message = "Este campo no puede ser vacio")
     @BindView(R.id.etpassword)
     EditText etpassword;
+
+
     @BindView(R.id.btn_login)
     Button btnLogin;
     @BindView(R.id.et_forget_password)
     TextView etForgetPassword;
 
+
+    private Validator mValidator;
 
     private LoginContract.Presenter mPresenter;
 
@@ -78,6 +93,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProgressDialogCustom = new ProgressDialogCustom(getContext(), "Ingresando...");
+        mValidator =  new Validator(this);
+        mValidator.setValidationListener(this);
 
 
     }
@@ -123,14 +140,14 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
 
     @Override
     public void loginSuccess() {
-        newActivityClearPreview(getActivity(),null, PanelActivity.class);
+        newActivityClearPreview(getActivity(), null, PanelActivity.class);
     }
 
     @OnClick({R.id.btn_login, R.id.et_forget_password})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                mPresenter.loginNormal(etEmail.getText().toString(),etpassword.getText().toString());
+                    mValidator.validate();
                 break;
             case R.id.et_forget_password:
                 break;
@@ -140,5 +157,25 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        mPresenter.loginNormal(etEmail.getText().toString(), etpassword.getText().toString());
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(getContext());
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

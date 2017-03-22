@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Core Project</string>
+    <string name="pick_image_intent_text">Elegir imagen</string>
+    <string name="demo_min_label">min</string>
+    <string name="demo_max_label">max</string>
+
+
+
+    <string name="not_user">Usuario no encontrado</string>
+    <string name="invalid_password">Contraseña incorrecta</string>
+    <string name="no_connect">No se puede conectar al servidor</string>
+    <string name="password_long">Contraseña es demasiado grande</string>
+</resources>
