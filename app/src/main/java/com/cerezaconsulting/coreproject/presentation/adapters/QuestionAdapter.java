@@ -36,6 +36,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+
+
+
     }
 
     @Override

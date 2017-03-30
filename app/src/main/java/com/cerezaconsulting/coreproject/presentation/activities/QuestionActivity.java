@@ -7,8 +7,13 @@ import android.support.v7.widget.Toolbar;
 
 import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
+import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
+import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.data.model.QuestionEntity;
 import com.cerezaconsulting.coreproject.presentation.fragments.QuestionFragment;
 import com.cerezaconsulting.coreproject.utils.ActivityUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,12 +38,17 @@ public class QuestionActivity extends BaseActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDefaultDisplayHomeAsUpEnabled(true);
-        ab.setTitle("");
 
+        ChapterEntity chapterEntity = new ChapterEntity();
+        if (getIntent().hasExtra("chapter")) {
+            chapterEntity = (ChapterEntity) getIntent().getSerializableExtra("chapter");
+        }
+
+        ab.setTitle(chapterEntity.getName());
         QuestionFragment fragment = (QuestionFragment) getSupportFragmentManager().findFragmentById(R.id.body);
-        if(fragment==null){
-            fragment = QuestionFragment.newInstance(new Bundle());
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.body);
+        if (fragment == null) {
+            fragment = QuestionFragment.newInstance(getIntent().getExtras());
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.body);
         }
 
     }

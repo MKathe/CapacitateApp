@@ -1,6 +1,7 @@
 package com.cerezaconsulting.coreproject.data.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by miguel on 16/03/17.
@@ -9,7 +10,35 @@ import java.io.Serializable;
 public class ChapterEntity implements Serializable {
     private String id;
     private String name;
-    private String order;
+    private boolean finished = false;
+    private ArrayList<QuestionEntity> questionEntities;
+
+
+    public ArrayList<QuestionEntity> getQuestionEntities() {
+        return questionEntities;
+    }
+
+    public void setQuestionEntities(ArrayList<QuestionEntity> questionEntities) {
+        this.questionEntities = questionEntities;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public ArrayList<FragmentEntity> getFragments() {
+        return fragments;
+    }
+
+    public void setFragments(ArrayList<FragmentEntity> fragments) {
+        this.fragments = fragments;
+    }
+
+    private ArrayList<FragmentEntity> fragments;
 
     public String getId() {
         return id;
@@ -20,10 +49,9 @@ public class ChapterEntity implements Serializable {
     }
 
     public String getName() {
-        if(name!=null) {
+        if (name != null) {
             return name;
-        }
-        else{
+        } else {
             return "";
         }
     }
@@ -32,11 +60,5 @@ public class ChapterEntity implements Serializable {
         this.name = name;
     }
 
-    public String getOrder() {
-        return order;
-    }
 
-    public void setOrder(String order) {
-        this.order = order;
-    }
 }

@@ -1,137 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="430dp"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_margin="5dp">
+        android:background="@color/white"
+        android:orientation="vertical">
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:text="Pregunta"
             android:id="@+id/tv_question"
-            android:textSize="@dimen/large_text"
-            android:background="@color/blue_facebook"/>
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_height="80dp"
+            android:layout_margin="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="3"
+            android:text="Pregunta"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x_large_text" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
             android:id="@+id/ll_answer_1"
-            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@color/white">
+            android:padding="10dp">
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
                 android:id="@+id/tv_answer_1"
-                android:paddingRight="5dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/small_text"
-                android:textColor="@color/black_select"
-                android:text="Respuesta"/>
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingRight="5dp"
+                android:text="Respuesta"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/normal_text" />
+
             <ImageView
+                android:id="@+id/iv_answer_1"
                 android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/iv_answer_1"/>
+                android:layout_height="20dp" />
         </LinearLayout>
-        <LinearLayout
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
             android:id="@+id/ll_answer_2"
-            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@color/white">
+            android:padding="10dp">
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
                 android:id="@+id/tv_answer_2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/small_text"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingRight="5dp"
-                android:textColor="@color/black_select"
-                android:text="Respuesta"/>
+                android:text="Respuesta"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/normal_text" />
+
             <ImageView
+                android:id="@+id/iv_answer_2"
                 android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/iv_answer_2"/>
+                android:layout_height="20dp" />
         </LinearLayout>
-        <LinearLayout
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
             android:id="@+id/ll_answer_3"
-            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@color/white">
+            android:padding="10dp">
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
                 android:id="@+id/tv_answer_3"
-                android:paddingRight="5dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/small_text"
-                android:textColor="@color/black_select"
-                android:text="Respuesta"/>
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingRight="5dp"
+                android:text="Respuesta"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/normal_text" />
+
             <ImageView
+                android:id="@+id/iv_answer_3"
                 android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/iv_answer_3"/>
+                android:layout_height="20dp" />
         </LinearLayout>
-        <LinearLayout
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
             android:id="@+id/ll_answer_4"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="2dp"
-            android:orientation="horizontal"
-            android:background="@color/white">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:id="@+id/tv_answer_4"
-                android:paddingRight="5dp"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/small_text"
-                android:textColor="@color/black_select"
-                android:text="Respuesta"/>
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/iv_answer_4"/>
-        </LinearLayout>
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:id="@+id/ll_answer_5"
-            android:gravity="center_vertical"
             android:layout_marginBottom="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@color/white">
+            android:padding="10dp">
+
             <TextView
+                android:id="@+id/tv_answer_4"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:id="@+id/tv_answer_5"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingRight="5dp"
-                android:textSize="@dimen/small_text"
-                android:textColor="@color/black_select"
-                android:text="Respuesta"/>
+                android:text="Respuesta"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/normal_text" />
+
             <ImageView
+                android:id="@+id/iv_answer_4"
                 android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/iv_answer_5"/>
+                android:layout_height="20dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
+            android:id="@+id/ll_answer_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_answer_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingRight="5dp"
+                android:text="Respuesta"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/normal_text" />
+
+            <ImageView
+                android:id="@+id/iv_answer_5"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -61,6 +61,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
         communicatorChapterItem.onClick(chapterEntity);
     }
 
+
+
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_title)

@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/cream"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
+    <include
+        layout="@layout/fragment_chapter_complete"/>
+    <include
+
+        layout="@layout/fragment_course_complete"/>
+    <include
+
+        layout="@layout/fragment_review_complete"/>
+
+
+    <RelativeLayout
+        android:id="@+id/frame_principal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/rv_questions"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:id="@+id/btn_back"
-            android:background="@color/gray"
-            android:text="Volver" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:background="@color/blue_facebook"
-            android:id="@+id/btn_next"
-            android:textColor="@color/white"
-            android:text="Continuar"/>
-    </LinearLayout>
-</LinearLayout>
+        android:layout_height="match_parent">
+        <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
+            android:id="@+id/aut_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="430dp" />
+
+        <LinearLayout
+            android:layout_below="@id/aut_scroll"
+            android:id="@+id/layoutDots"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:background="@color/cream"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/indicator"
+                android:padding="10dip"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/transparent"
+                app:radius="8dp"
+                app:pageColor="@color/gray"
+                app:fillColor="@color/dark_gray"
+                app:strokeColor="#FF000000"
+                app:strokeWidth="0dp"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

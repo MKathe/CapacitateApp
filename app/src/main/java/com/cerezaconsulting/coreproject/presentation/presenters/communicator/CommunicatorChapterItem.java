@@ -7,5 +7,7 @@ import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
  */
 
 public interface CommunicatorChapterItem {
+
     void onClick(ChapterEntity chapterEntity);
+    void openQuestions();
 }

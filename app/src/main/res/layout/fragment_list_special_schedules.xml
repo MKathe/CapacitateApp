@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/refresh_layout"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -12,7 +13,7 @@
         android:layout_height="match_parent">
         <FrameLayout
             android:layout_width="match_parent"
-            android:background="@color/cream"
+            android:background="@color/white"
             android:layout_height="match_parent">
             <RelativeLayout
                 android:id="@+id/clinic_container"
@@ -25,9 +26,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
-
-
                     <android.support.v7.widget.RecyclerView
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"

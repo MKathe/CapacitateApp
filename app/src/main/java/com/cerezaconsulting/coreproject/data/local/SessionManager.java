@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.cerezaconsulting.coreproject.data.model.AccessTokenEntity;
+import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.data.model.CoursesEntity;
 import com.cerezaconsulting.coreproject.data.model.UserEntity;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 /**
  * Created by junior on 13/10/16.
@@ -17,13 +21,13 @@ public class SessionManager {
     public static int PRIVATE_MODE = 0;
 
     /**
-     USUARIO DATA SESSION - JSON
+     * USUARIO DATA SESSION - JSON
      */
     public static final String USER_TOKEN = "user_code";
     public static final String USER_JSON = "user_json";
     public static final String IS_LOGIN = "user_login";
     public static final String EXPLANATION_SCHEDULE = "schedule_explanation";
-
+    public static final String COURSES_WORKING = "courses";
 
 
     private SharedPreferences preferences;
@@ -36,7 +40,7 @@ public class SessionManager {
         editor = preferences.edit();
     }
 
-    public boolean isLogin()  {
+    public boolean isLogin() {
         return preferences.getBoolean(IS_LOGIN, false);
     }
 
@@ -48,11 +52,11 @@ public class SessionManager {
     }
 
 
-    public boolean isExplanationSchedule()  {
+    public boolean isExplanationSchedule() {
         return preferences.getBoolean(EXPLANATION_SCHEDULE, false);
     }
 
-    public void setExplanationSchedle(boolean active){
+    public void setExplanationSchedle(boolean active) {
         editor.putBoolean(EXPLANATION_SCHEDULE, active);
         editor.commit();
     }
@@ -87,5 +91,22 @@ public class SessionManager {
         String userData = preferences.getString(USER_JSON, null);
         return new Gson().fromJson(userData, UserEntity.class);
     }
+
+
+    public void setCourses(CoursesEntity courseEntities) {
+        if (courseEntities != null) {
+            Gson gson = new Gson();
+            String user = gson.toJson(courseEntities);
+            editor.putString(COURSES_WORKING, user);
+        }
+        editor.commit();
+    }
+
+    public CoursesEntity getCoures() {
+        String userData = preferences.getString(COURSES_WORKING, null);
+        return new Gson().fromJson(userData, CoursesEntity.class);
+    }
+
+
 
 }

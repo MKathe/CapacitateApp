@@ -5,9 +5,16 @@
     <string name="demo_max_label">max</string>
 
 
-
     <string name="not_user">Usuario no encontrado</string>
     <string name="invalid_password">Contraseña incorrecta</string>
     <string name="no_connect">No se puede conectar al servidor</string>
     <string name="password_long">Contraseña es demasiado grande</string>
+    <string name="chapter_complete">Has concluido el capítulo</string>
+    <string name="chapter_course">Has Concluido el curso</string>
+    <string name="chapter_review">Has Concluido el Repaso</string>
+    <string name="good">¡Bien Hecho!</string>
+    <string name="good_great">¡Felicitaciones!</string>
+    <string name="acepted">Aceptar</string>
+    <string name="next_chapter">Siguiente Capítulo</string>
+    <string name="review_commend">Mejora tu ranking y fortalece tu aprendizaje/n hasta el próximo repaso</string>
 </resources>

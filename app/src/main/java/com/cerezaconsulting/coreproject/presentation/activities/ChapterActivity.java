@@ -4,13 +4,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
+import com.cerezaconsulting.coreproject.data.events.MessageChapterCompleteEvent;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.presentation.adapters.CardFragmentPagerAdapter;
 import com.cerezaconsulting.coreproject.presentation.fragments.ChapterFragment;
 import com.cerezaconsulting.coreproject.presentation.presenters.ChapterPresenter;
 import com.cerezaconsulting.coreproject.utils.ActivityUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +32,23 @@ public class ChapterActivity extends BaseActivity {
     Toolbar toolbar;
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCompletedChapterEvent(MessageChapterCompleteEvent event) {
+        Log.e("EVENT", "------");
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back);
@@ -33,7 +57,7 @@ public class ChapterActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         CourseEntity courseEntity = new CourseEntity();
-        if(getIntent().hasExtra("course")){
+        if (getIntent().hasExtra("course")) {
             courseEntity = (CourseEntity) getIntent().getSerializableExtra("course");
         }
 
@@ -44,12 +68,12 @@ public class ChapterActivity extends BaseActivity {
         ab.setTitle(courseEntity.getName());
 
         ChapterFragment fragment = (ChapterFragment) getSupportFragmentManager().findFragmentById(R.id.body);
-        if(fragment==null){
+        if (fragment == null) {
             fragment = ChapterFragment.newInstance(getIntent().getExtras());
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.body);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.body);
         }
 
-        new ChapterPresenter(fragment,getApplicationContext());
+        new ChapterPresenter(fragment, getApplicationContext());
     }
 
     @Override

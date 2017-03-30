@@ -1,41 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="5dp"
-    card_view:contentPadding="10dp"
-    android:layout_height="50dp">
-    <LinearLayout
+    android:orientation="vertical"
+    app:cardUseCompatPadding="true">
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="5dp"
+            android:layout_margin="20dp"
+            android:gravity="center"
             android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/tv_status_chapter"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/doble_check"
+                android:visibility="visible" />
+
             <TextView
+
+                android:id="@+id/tv_title"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Titulo del primer capitulo"
                 android:textColor="@color/black"
-                android:id="@+id/tv_title"
-                android:text="Title"
-                android:textSize="@dimen/large_text"/>
+                android:textSize="25dp" />
 
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:maxLines="3"
+
+                android:id="@+id/tv_detail"
+                android:text="Title kakajknsnkdasda sdasdasd asdasdasda dsadsad asdasda asdadsasdasdasdasd asdadasd asdasdasd asdasd asdasdasdasd as asdasdasa"
+                android:textAlignment="gravity"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/button_square_border"
+                android:text="INGRESAR" />
         </LinearLayout>
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_check"
-            android:visibility="invisible"
-            android:id="@+id/iv_check"
-            android:tint="@color/black_select"
-            android:layout_gravity="center"/>
 
-    </LinearLayout>
+
+    </FrameLayout>
+
 </android.support.v7.widget.CardView>

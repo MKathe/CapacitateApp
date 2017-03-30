@@ -24,13 +24,13 @@ import butterknife.ButterKnife;
  * Created by miguel on 15/03/17.
  */
 
-public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> implements OnClickListListener{
+public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> implements OnClickListListener {
 
 
     private ArrayList<CourseEntity> list;
     private CommunicatorCourseItem communicatorCourseItem;
 
-    public CourseAdapter(ArrayList<CourseEntity> list,CommunicatorCourseItem communicatorCourseItem) {
+    public CourseAdapter(ArrayList<CourseEntity> list, CommunicatorCourseItem communicatorCourseItem) {
         this.list = list;
         this.communicatorCourseItem = communicatorCourseItem;
     }
@@ -38,7 +38,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course, parent, false);
-        return new ViewHolder(root,this);
+        return new ViewHolder(root, this);
     }
 
     @Override
@@ -46,6 +46,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         CourseEntity courseEntity = list.get(position);
         holder.tvTitle.setText(courseEntity.getName());
         holder.tvSubtitle.setText(courseEntity.getDescription());
+
+        if (courseEntity.isOffLineDisposed()) {
+            holder.onlineDisposed.setBackgroundResource(R.drawable.offline_verde);
+        } else {
+            holder.onlineDisposed.setBackgroundResource(R.drawable.offline_gris);
+        }
+
         holder.ivOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,13 +63,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
     private void showPopupMenu(View view) {
         // inflate menu
-        PopupMenu popup = new PopupMenu(view.getContext(),view );
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_course, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.action_send_question:
                         return true;
                     case R.id.action_download:
@@ -75,8 +82,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         popup.show();
     }
 
-    public void setItems(ArrayList<CourseEntity> list){
+    public void setItems(ArrayList<CourseEntity> list) {
         this.list = list;
+
         notifyDataSetChanged();
     }
 
@@ -91,7 +99,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         communicatorCourseItem.onClick(courseEntity);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tv_title)
         TextView tvTitle;
         @BindView(R.id.tv_subtitle)
@@ -100,11 +108,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         ImageView ivCheck;
         @BindView(R.id.iv_options)
         ImageView ivOptions;
+        @BindView(R.id.online_disposed)
+        ImageView onlineDisposed;
+
         private OnClickListListener onClickListListener;
 
-        ViewHolder(View itemView,OnClickListListener onClickListListener) {
+        ViewHolder(View itemView, OnClickListListener onClickListListener) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             this.onClickListListener = onClickListListener;
             this.itemView.setOnClickListener(this);
         }

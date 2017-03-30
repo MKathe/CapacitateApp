@@ -15,8 +15,15 @@ public interface CourseContract {
         boolean isActive();
         void getCourses(ArrayList<CourseEntity> list);
         void detailCourse(CourseEntity courseEntity);
+
+        void openCourse(CourseEntity courseEntity);
     }
     interface Presenter extends BasePresenter{
 
+        void downloadCourseById(String idTraining);
+
+        void loadCourses();
+
+        void loadCoursesFromLocalRepository();
     }
 }

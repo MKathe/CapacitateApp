@@ -9,6 +9,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:3.0.0'
+        classpath "io.realm:realm-gradle-plugin:2.3.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -17,7 +18,6 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         jcenter()
         maven { url "https://jitpack.io" }
     }
@@ -119,6 +119,7 @@ ext {
             permissions :  "pub.devrel:easypermissions:${permissonVersion}",
             saaripar :  "com.mobsandgeeks:android-saripaar:${saripaarVersion}",
             multidex : "com.android.support:multidex:${multidexVersion}",
-            guava : "com.google.guava:guava:${guavaVersion}"
+            guava : "com.google.guava:guava:${guavaVersion}",
+            jsoap : "org.jsoup:jsoup:1.10.2"
     ]
 }

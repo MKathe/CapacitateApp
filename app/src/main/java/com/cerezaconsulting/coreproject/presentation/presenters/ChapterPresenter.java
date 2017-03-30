@@ -71,4 +71,9 @@ public class ChapterPresenter implements ChapterContract.Presenter,CommunicatorC
     public void onClick(ChapterEntity chapterEntity) {
         mView.detailChapter(chapterEntity);
     }
+
+    @Override
+    public void openQuestions() {
+
+    }
 }

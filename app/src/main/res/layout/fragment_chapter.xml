@@ -1,127 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/cream"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
     <LinearLayout
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
-        <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            app:cardCornerRadius="5dp"
-            android:elevation="5dp"
-            android:layout_marginRight="5dp"
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/amber"
-            android:layout_weight="1">
-            <LinearLayout
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_margin="3dp"
-                android:padding="5dp"
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/item_1" />
 
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_lightbulb_outline"
-                    android:tint="@color/white"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:id="@+id/tv_light_bulb"
-                    android:textSize="@dimen/normal_text"
-                    android:text="33.5%"/>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_light_bulb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="33.5%"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+        </LinearLayout>
 
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            app:cardCornerRadius="5dp"
-            android:elevation="5dp"
-            android:layout_marginRight="5dp"
+        <View
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/blue_facebook_select"
-            android:layout_weight="1">
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray"></View>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_margin="3dp"
-                android:padding="5dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_directions_run"
-                    android:tint="@color/white"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/normal_text"
-                    android:id="@+id/tv_advance"
-                    android:text="34.5%"/>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            app:cardCornerRadius="5dp"
-            android:elevation="5dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/light_red"
-            android:layout_weight="1">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_margin="3dp"
-                android:padding="5dp">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_action_bargraph"
-                    android:tint="@color/white"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:id="@+id/tv_number_advance"
-                    android:textSize="@dimen/normal_text"
-                    android:text="12.5%"/>
-            </LinearLayout>
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-        </android.support.v7.widget.CardView>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/item_2" />
+
+            <TextView
+                android:id="@+id/tv_advance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="34.5%"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/item_3" />
+
+            <TextView
+                android:id="@+id/tv_number_advance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12.5%"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+        </LinearLayout>
 
 
     </LinearLayout>
-    <com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:layout_marginBottom="20dp"
+        android:maxLines="3"
+        android:text="lorem"
+        android:textColor="@color/black" />
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/cream">
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="bottom"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="25dp"
+            android:paddingEnd="35dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingStart="35dp" />
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+    <com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/refresh_layout"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cream"
+        android:orientation="vertical"
+        android:visibility="gone">
 
 
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <RelativeLayout
                     android:id="@+id/rl_container"
                     android:layout_width="match_parent"
@@ -135,11 +172,10 @@
                         android:orientation="vertical">
 
 
-
                         <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_items"
                             android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:id="@+id/rv_items"/>
+                            android:layout_height="fill_parent" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -153,16 +189,16 @@
                             android:id="@+id/iv_no_items"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
-                            android:layout_gravity="center"/>
+                            android:layout_gravity="center" />
 
                         <TextView
-                            android:layout_marginTop="10dp"
                             android:id="@+id/tv_no_items"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:textColor="@color/black"
-                            android:text="NO ITEMS" />
+                            android:layout_marginTop="10dp"
+                            android:text="NO ITEMS"
+                            android:textColor="@color/black" />
 
 
                     </LinearLayout>
@@ -173,5 +209,5 @@
             </FrameLayout>
         </android.support.design.widget.CoordinatorLayout>
 
-    </com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout >
+    </com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout>
 </LinearLayout>

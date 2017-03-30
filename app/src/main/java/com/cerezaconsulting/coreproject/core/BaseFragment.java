@@ -3,6 +3,7 @@ package com.cerezaconsulting.coreproject.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,21 @@ public abstract class BaseFragment extends Fragment {
 
     private boolean loading = false;
 
+    public boolean isInternetConnection(Context context) {
+        try {
+            ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if (conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected())
+                return true;
+            else
+                return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 
     protected void nextActivity(Activity context, Bundle bundle, Class<?> activity, boolean destroy) {
         Intent intent = new Intent(context, activity);
@@ -24,6 +40,15 @@ public abstract class BaseFragment extends Fragment {
             intent.putExtras(bundle);
         }
         startActivity(intent);
+        if (destroy) context.finish();
+    }
+
+    protected void nextActivity(Activity context, Bundle bundle, Class<?> activity, boolean destroy, int response) {
+        Intent intent = new Intent(context, activity);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivityForResult(intent, response);
         if (destroy) context.finish();
     }
 
@@ -57,7 +82,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-
     public void openWebPage(String url) {
         Uri webpage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
@@ -82,7 +106,6 @@ public abstract class BaseFragment extends Fragment {
             return false;
         }
     }
-
 
 
     public void visibleLayoutToogle(boolean active, View view) {

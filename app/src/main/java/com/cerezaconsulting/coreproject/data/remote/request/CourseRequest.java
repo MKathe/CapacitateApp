@@ -1,6 +1,7 @@
 package com.cerezaconsulting.coreproject.data.remote.request;
 
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.data.model.TrainingEntity;
 
 import java.util.ArrayList;
 
@@ -18,4 +19,9 @@ public interface CourseRequest {
     Call<ArrayList<CourseEntity>> getCourses(@Header("Authorization") String token,
                                              @Path("idCompany") String idCompany);
 
+
+    @GET("training/employee/{idUser}/training/{idTraining}")
+    Call<TrainingEntity> downloadCourses(@Header("Authorization") String token,
+                                         @Path("idUser") String idUser,
+                                         @Path("idTraining") String idTraining);
 }

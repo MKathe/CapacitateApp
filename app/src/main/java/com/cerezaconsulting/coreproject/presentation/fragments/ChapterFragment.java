@@ -1,11 +1,19 @@
 package com.cerezaconsulting.coreproject.presentation.fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,12 +25,23 @@ import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
 import com.cerezaconsulting.coreproject.core.BaseFragment;
 import com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout;
+import com.cerezaconsulting.coreproject.data.events.MessageActivityEvent;
+import com.cerezaconsulting.coreproject.data.events.MessageChapterCompleteEvent;
+import com.cerezaconsulting.coreproject.data.local.SessionManager;
 import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
+import com.cerezaconsulting.coreproject.data.model.CoursesEntity;
+import com.cerezaconsulting.coreproject.presentation.activities.FragmentsActivity;
 import com.cerezaconsulting.coreproject.presentation.activities.QuestionActivity;
+import com.cerezaconsulting.coreproject.presentation.adapters.CardFragmentPagerAdapter;
 import com.cerezaconsulting.coreproject.presentation.adapters.ChapterAdapter;
+import com.cerezaconsulting.coreproject.presentation.adapters.ShadowTransformer;
 import com.cerezaconsulting.coreproject.presentation.contracts.ChapterContract;
 import com.cerezaconsulting.coreproject.presentation.presenters.communicator.CommunicatorChapterItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -33,7 +52,9 @@ import butterknife.ButterKnife;
  * Created by miguel on 16/03/17.
  */
 
-public class ChapterFragment extends BaseFragment implements ChapterContract.View{
+public class ChapterFragment extends BaseFragment implements ChapterContract.View {
+
+    private static final int REQUEST_FRAGMENT = 200;
 
     @BindView(R.id.tv_light_bulb)
     TextView tvLightBulb;
@@ -55,10 +76,17 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     RelativeLayout rlContainer;
     @BindView(R.id.refresh_layout)
     ScrollChildSwipeRefreshLayout refreshLayout;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
+
     private CourseEntity courseEntity;
     private ChapterContract.Presenter presenter;
     private LinearLayoutManager layoutManager;
     private ChapterAdapter adapter;
+    private SessionManager sessionManager;
+    private CardFragmentPagerAdapter pagerAdapter;
 
     public static ChapterFragment newInstance(Bundle bundle) {
         ChapterFragment fragment = new ChapterFragment();
@@ -66,10 +94,64 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         return fragment;
     }
 
+   /* @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void onMessageEvent(MessageChapterCompleteEvent event) {
+        Log.e("EVENT", "----");
+        if (event != null) {
+            pagerAdapter = new CardFragmentPagerAdapter(courseEntity, getActivity().getSupportFragmentManager(), dpToPixels(2, getContext()),
+                    event.getCourseEntity().getTrainingEntity().getRelease().getCourse().getChapters());
+
+            openNextChapter(event.getCourseEntity(), event.getChapterEntity());
+
+        }
+
+    }*/
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         courseEntity = (CourseEntity) getArguments().getSerializable("course");
+        sessionManager = new SessionManager(getContext());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_chapter, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        pagerAdapter = new CardFragmentPagerAdapter(courseEntity, getActivity().getSupportFragmentManager(), dpToPixels(2, getContext()),
+                courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.btn_save:
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Nullable
@@ -77,7 +159,20 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_chapter, container, false);
         ButterKnife.bind(this, root);
+        setHasOptionsMenu(true);
+
         return root;
+    }
+
+    /**
+     * Change value in dp to pixels
+     *
+     * @param dp
+     * @param context
+     * @return
+     */
+    public static float dpToPixels(int dp, Context context) {
+        return dp * (context.getResources().getDisplayMetrics().density);
     }
 
     @Override
@@ -87,15 +182,33 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvItems.setLayoutManager(layoutManager);
 
-        adapter = new ChapterAdapter(new ArrayList<ChapterEntity>(),(CommunicatorChapterItem) presenter);
+        adapter = new ChapterAdapter(new ArrayList<ChapterEntity>(), (CommunicatorChapterItem) presenter);
         rvItems.setAdapter(adapter);
-        presenter.getChapter(courseEntity.getId());
+        getChapter(courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+        tvDescription.setText(courseEntity.getDescription());
+
+        pagerAdapter =
+                new CardFragmentPagerAdapter(courseEntity, getActivity().getSupportFragmentManager(), dpToPixels(2, getContext()),
+                        courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+
+        ShadowTransformer fragmentCardShadowTransformer = new ShadowTransformer(viewPager, pagerAdapter);
+        fragmentCardShadowTransformer.enableScaling(true);
+
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setPageTransformer(false, fragmentCardShadowTransformer);
+        viewPager.setOffscreenPageLimit(3);
+
+
+        tvLightBulb.setText(courseEntity.getTrainingEntity().getIntellect() + "%");
+        tvAdvance.setText(courseEntity.getTrainingEntity().getProgress() + "%");
+        tvNumberAdvance.setText(courseEntity.getTrainingEntity().getPosition() + "%");
     }
+
 
     @Override
     public void getChapter(ArrayList<ChapterEntity> list) {
         adapter.setItems(list);
-        if(list.size()!=0){
+        if (list.size() != 0) {
             llNoItems.setVisibility(View.GONE);
         }
     }
@@ -103,8 +216,9 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Override
     public void detailChapter(ChapterEntity chapterEntity) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("chapter",chapterEntity);
-        nextActivity(getActivity(),bundle, QuestionActivity.class,false);
+        bundle.putSerializable("course", courseEntity);
+        bundle.putSerializable("chapter", chapterEntity);
+        nextActivity(getActivity(), bundle, QuestionActivity.class, false, REQUEST_FRAGMENT);
     }
 
     @Override
@@ -143,5 +257,61 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Override
     public void showErrorMessage(String message) {
         ((BaseActivity) getActivity()).showMessageError(message);
+    }
+
+    /*public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == REQUEST_FRAGMENT) {
+
+                getActivity().setResult(Activity.RESULT_OK, data);
+
+                CourseEntity courseEntity = (CourseEntity) data.getSerializableExtra("course");
+                ChapterEntity chapterEntity = (ChapterEntity) data.getSerializableExtra("chapter");
+
+
+                pagerAdapter =
+                        new CardFragmentPagerAdapter(courseEntity, getActivity().getSupportFragmentManager(), dpToPixels(2, getContext()),
+                                courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+                openNextChapter(courseEntity, chapterEntity);
+            }
+
+        }
+    }*/
+
+    private void openNextChapter(CourseEntity courseEntity, ChapterEntity chapterEntity) {
+
+        for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
+
+            if (courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).getId().
+                    equals(chapterEntity.getId())) {
+
+                if (i == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size() - 1) {
+                    for (int j = 0; j < i; j++) {
+                        openFragmentActivity(courseEntity, chapterEntity);
+                    }
+                } else {
+                    for (int j = i + 1; j < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); j++) {
+                        openFragmentActivity(courseEntity, chapterEntity);
+                    }
+                }
+
+
+            }
+
+        }
+    }
+
+    private void openFragmentActivity(CourseEntity courseEntity, ChapterEntity chapterEntity) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("chapter", chapterEntity);
+        bundle.putSerializable("chapters", courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+        bundle.putSerializable("course", courseEntity);
+        Intent intent = new Intent(getActivity(), FragmentsActivity.class);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivityForResult(intent, REQUEST_FRAGMENT);
     }
 }

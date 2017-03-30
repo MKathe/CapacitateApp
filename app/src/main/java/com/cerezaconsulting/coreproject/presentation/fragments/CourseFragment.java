@@ -1,12 +1,16 @@
 package com.cerezaconsulting.coreproject.presentation.fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +23,19 @@ import com.cerezaconsulting.coreproject.R;
 import com.cerezaconsulting.coreproject.core.BaseActivity;
 import com.cerezaconsulting.coreproject.core.BaseFragment;
 import com.cerezaconsulting.coreproject.core.ScrollChildSwipeRefreshLayout;
+import com.cerezaconsulting.coreproject.data.events.MessageChapterCompleteEvent;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
 import com.cerezaconsulting.coreproject.presentation.activities.ChapterActivity;
+import com.cerezaconsulting.coreproject.presentation.adapters.CardFragmentPagerAdapter;
 import com.cerezaconsulting.coreproject.presentation.adapters.CourseAdapter;
 import com.cerezaconsulting.coreproject.presentation.contracts.CourseContract;
 import com.cerezaconsulting.coreproject.presentation.presenters.communicator.CommunicatorCourseItem;
+import com.cerezaconsulting.coreproject.utils.AlertUtils;
 import com.cerezaconsulting.coreproject.utils.ProgressDialogCustom;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -35,7 +46,9 @@ import butterknife.ButterKnife;
  * Created by miguel on 15/03/17.
  */
 
-public class CourseFragment extends BaseFragment implements CourseContract.View{
+public class CourseFragment extends BaseFragment implements CourseContract.View {
+
+    public static final int REQUEST_CHAPTER = 100;
 
     @BindView(R.id.complatins_list)
     RecyclerView complatinsList;
@@ -52,6 +65,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
     @BindView(R.id.fab_add_task)
     FloatingActionButton fabAddTask;
     @BindView(R.id.refresh_layout)
+
     ScrollChildSwipeRefreshLayout refreshLayout;
     private CourseAdapter courseAdapter;
     private LinearLayoutManager layoutManager;
@@ -59,6 +73,33 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
 
     public static CourseFragment newInstance() {
         return new CourseFragment();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCompletedChapterEvent(MessageChapterCompleteEvent event) {
+        if (event != null) {
+            // presenter.loadCoursesFromLocalRepository();
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.loadCoursesFromLocalRepository();
     }
 
     @Nullable
@@ -81,7 +122,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            presenter.start();
+                presenter.start();
             }
         });
 
@@ -89,7 +130,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
         layoutManager = new LinearLayoutManager(getContext());
         complatinsList.setLayoutManager(layoutManager);
 
-        courseAdapter = new CourseAdapter(new ArrayList<CourseEntity>(),(CommunicatorCourseItem) presenter);
+        courseAdapter = new CourseAdapter(new ArrayList<CourseEntity>(), (CommunicatorCourseItem) presenter);
         complatinsList.setAdapter(courseAdapter);
         presenter.start();
     }
@@ -102,16 +143,65 @@ public class CourseFragment extends BaseFragment implements CourseContract.View{
     @Override
     public void getCourses(ArrayList<CourseEntity> list) {
         courseAdapter.setItems(list);
-        if(list.size()!=0){
+        if (list.size() != 0) {
             noComplatins.setVisibility(View.GONE);
         }
     }
 
+
+    public void showDialogForDownloadCourse(Context context, String title, CharSequence message, final String idTraining) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        if (title != null) builder.setTitle(title);
+
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                dialogInterface.cancel();
+                if (isInternetConnection(getContext())) {
+                    presenter.downloadCourseById(idTraining);
+                } else {
+                    showErrorMessage("No está conectado a internet");
+                }
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+
+            }
+        });
+        builder.show();
+    }
+
     @Override
     public void detailCourse(CourseEntity courseEntity) {
+
+
+        if (courseEntity.isOffLineDisposed()) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("course", courseEntity);
+            nextActivity(getActivity(), bundle, ChapterActivity.class, false);
+        } else {
+            showDialogForDownloadCourse(getContext(), "Descargar Curso",
+                    "Debes primero descargar el contenido del curso, recuerda que esto debes estar conenctado a una red inalámbrica",
+                    courseEntity.getId());
+        }
+
+
+    }
+
+    @Override
+    public void openCourse(CourseEntity courseEntity) {
+
+
         Bundle bundle = new Bundle();
-        bundle.putSerializable("course",courseEntity);
-        nextActivity(getActivity(),bundle, ChapterActivity.class,false);
+        bundle.putSerializable("course", courseEntity);
+        nextActivity(getActivity(), bundle, ChapterActivity.class, false, REQUEST_CHAPTER);
     }
 
     @Override
