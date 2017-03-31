@@ -1,6 +1,7 @@
 package com.cerezaconsulting.coreproject.data.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by junior on 24/03/17.
@@ -9,13 +10,21 @@ import java.io.Serializable;
 public class TrainingEntity implements Serializable {
 
     private int id;
-    private int position;
-    private int progress;
-    private int intellect;
+    private double position;
+    private double progress;
+    private double intellect;
     private String certificate;
     private boolean finished = false;
     private RealeseEntity release;
+    private ArrayList<ActivityEntity> activityEntities;
 
+    public ArrayList<ActivityEntity> getActivityEntities() {
+        return activityEntities;
+    }
+
+    public void setActivityEntities(ArrayList<ActivityEntity> activityEntities) {
+        this.activityEntities = activityEntities;
+    }
 
     public int getId() {
         return id;
@@ -25,7 +34,7 @@ public class TrainingEntity implements Serializable {
         this.id = id;
     }
 
-    public int getPosition() {
+    public double getPosition() {
         return position;
     }
 
@@ -33,19 +42,19 @@ public class TrainingEntity implements Serializable {
         this.position = position;
     }
 
-    public int getProgress() {
+    public double getProgress() {
         return progress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 
-    public int getIntellect() {
+    public double getIntellect() {
         return intellect;
     }
 
-    public void setIntellect(int intellect) {
+    public void setIntellect(double intellect) {
         this.intellect = intellect;
     }
 

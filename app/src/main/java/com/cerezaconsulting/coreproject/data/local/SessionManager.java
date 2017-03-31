@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.cerezaconsulting.coreproject.data.model.AccessTokenEntity;
+import com.cerezaconsulting.coreproject.data.model.ActivitiesGroupEntity;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
 import com.cerezaconsulting.coreproject.data.model.CoursesEntity;
 import com.cerezaconsulting.coreproject.data.model.UserEntity;
@@ -28,7 +29,8 @@ public class SessionManager {
     public static final String IS_LOGIN = "user_login";
     public static final String EXPLANATION_SCHEDULE = "schedule_explanation";
     public static final String COURSES_WORKING = "courses";
-
+    public static final String ACTIVTIES_CHALLENGE = "activities_challengue";
+    public static final String ACTIVITIES_REVIEW = "activities_review";
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -105,8 +107,34 @@ public class SessionManager {
     public CoursesEntity getCoures() {
         String userData = preferences.getString(COURSES_WORKING, null);
         return new Gson().fromJson(userData, CoursesEntity.class);
+
+    }
+    public void setChallengueActivities(ActivitiesGroupEntity challengueActivities ) {
+        if (challengueActivities != null) {
+            Gson gson = new Gson();
+            String user = gson.toJson(challengueActivities);
+            editor.putString(ACTIVTIES_CHALLENGE, user);
+        }
+        editor.commit();
     }
 
+    public ActivitiesGroupEntity getChallengueActivities() {
+        String userData = preferences.getString(ACTIVTIES_CHALLENGE, null);
+        return new Gson().fromJson(userData, ActivitiesGroupEntity.class);
+    }
 
+    public void setReviewActivities(ActivitiesGroupEntity challengueActivities ) {
+        if (challengueActivities != null) {
+            Gson gson = new Gson();
+            String user = gson.toJson(challengueActivities);
+            editor.putString(ACTIVITIES_REVIEW, user);
+        }
+        editor.commit();
+    }
+
+    public ActivitiesGroupEntity getReviewActivities() {
+        String userData = preferences.getString(ACTIVITIES_REVIEW, null);
+        return new Gson().fromJson(userData, ActivitiesGroupEntity.class);
+    }
 
 }

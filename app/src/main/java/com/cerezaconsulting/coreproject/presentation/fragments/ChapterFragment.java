@@ -155,6 +155,11 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
                     viewPager.setAdapter(pagerAdapter);
                     viewPager.setPageTransformer(false, fragmentCardShadowTransformer);
                     viewPager.setOffscreenPageLimit(3);
+
+                    tvLightBulb.setText(event.getCourseEntity().getTrainingEntity().getIntellect() + "%");
+                    tvAdvance.setText(event.getCourseEntity().getTrainingEntity().getProgress() + "%");
+                    tvNumberAdvance.setText(event.getCourseEntity().getTrainingEntity().getPosition() + "%");
+
                     openNextChapter(event.getCourseEntity(), event.getChapterEntity());
                     // openNextChapter(event.getCourseEntity(), event.getChapterEntity());
                     /*
@@ -409,7 +414,21 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
                             openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j));
                             viewPager.setCurrentItem(j);
                             return;
+                        } else {
+                            if (j == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size() - 1) {
+
+                                for (int k = 0; k <=i; k++) {
+                                    if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(k).isFinished()) {
+                                        openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(k));
+                                        viewPager.setCurrentItem(k);
+                                        return;
+                                    }
+                                }
+
+                            }
                         }
+
+
                     }
                 }
 

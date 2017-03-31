@@ -27,8 +27,8 @@
             android:padding="5dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_margin="5dp"
                 android:src="@drawable/item_1" />
 
@@ -36,9 +36,10 @@
                 android:id="@+id/tv_light_bulb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="33.5%"
+                android:text="133.5 %"
+                android:maxLines="1"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="17dp" />
         </LinearLayout>
 
         <View
@@ -59,8 +60,8 @@
             android:padding="5dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_margin="5dp"
                 android:src="@drawable/item_2" />
 
@@ -90,8 +91,8 @@
             android:padding="5dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_margin="5dp"
                 android:src="@drawable/item_3" />
 

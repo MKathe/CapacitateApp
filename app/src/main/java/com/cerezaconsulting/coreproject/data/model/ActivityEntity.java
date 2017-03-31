@@ -27,7 +27,7 @@ public class ActivityEntity implements Serializable {
     public void addIdFragmentToPoorly(String idFragment) {
 
 
-        if (poorly != null)
+        if (poorly.equals(""))
             poorly = idFragment;
         else
             poorly = poorly + "," + idFragment;
@@ -38,7 +38,7 @@ public class ActivityEntity implements Serializable {
     }
 
     public void calculateIntellect(int totalQuestion) {
-        intellect = correct / totalQuestion;
+        intellect = (correct) / totalQuestion * 100.0;
 
     }
 

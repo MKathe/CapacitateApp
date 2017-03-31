@@ -6,6 +6,7 @@ import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
 import com.cerezaconsulting.coreproject.data.model.FragmentEntity;
 import com.cerezaconsulting.coreproject.data.model.OptionEntity;
 import com.cerezaconsulting.coreproject.data.model.QuestionEntity;
+import com.cerezaconsulting.coreproject.data.model.TrainingEntity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -181,7 +182,7 @@ public class CompendioUtils {
         return fragmentEntitiesTemp;
     }
 
-    public static Double calculate(ArrayList<ActivityEntity> activities) {
+    public static Double calculateIntellect(ArrayList<ActivityEntity> activities) {
         double result = 0;
         double total_intellect = 0;
         double total_question = 0;
@@ -196,5 +197,32 @@ public class CompendioUtils {
         }
 
         return result;
+    }
+
+    public static Double calculateProgress(TrainingEntity training) {
+        Double progress;
+
+        Double total_activities = (double) training.getActivityEntities().size();
+        Double total_chapter = (double) training.getRelease().getCourse().getChapters().size();
+
+        if (total_activities == 0) {
+            progress = 0.0;
+        } else if (total_activities >= total_chapter) {
+            progress = 100.0;
+        } else {
+            progress = (total_activities / total_chapter) * 100.0;
+        }
+
+        return progress;
+    }
+
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

@@ -26,6 +26,7 @@ import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
 import com.cerezaconsulting.coreproject.data.model.CoursesEntity;
 import com.cerezaconsulting.coreproject.data.model.QuestionEntity;
+import com.cerezaconsulting.coreproject.utils.CompendioUtils;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
@@ -86,6 +87,8 @@ public class QuestionFragment extends BaseFragment {
     private int currentItem = 0;
     private ChapterEntity mChapterEntity;
     private CourseEntity mCourseEntity;
+    private SessionManager mSessionManager;
+
 
     private CoursesEntity coursesEntity;
 
@@ -122,15 +125,18 @@ public class QuestionFragment extends BaseFragment {
                 }
             }
             if (isEndToQuestionary()) {
-                saveProgressCourse();
                 framePrincipal.setVisibility(View.GONE);
                 mActivityEntity.calculateIntellect(questionEntities.size());
+                saveProgressCourse();
+
                 if (isToEndCourse()) {
                     lyCourseComplete.setVisibility(View.VISIBLE);
                     titleCourse.setText(mCourseEntity.getName());
                 } else {
                     lyChapterComplete.setVisibility(View.VISIBLE);
                     titleChapter.setText(mChapterEntity.getName());
+                    tvIntellect.setText(mCourseEntity.getTrainingEntity().getIntellect() + " %");
+
                 }
 
 
@@ -158,6 +164,7 @@ public class QuestionFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSessionManager = new SessionManager(getContext());
         questionEntities = (ArrayList<QuestionEntity>) getArguments().getSerializable("question");
         mChapterEntity = (ChapterEntity) getArguments().getSerializable("chapter");
         mCourseEntity = (CourseEntity) getArguments().getSerializable("course");
@@ -208,18 +215,27 @@ public class QuestionFragment extends BaseFragment {
 
         SessionManager sessionManager = new SessionManager(getContext());
         coursesEntity = sessionManager.getCoures();
-        // mCourseEntity.getTrainingEntity().setIntellect();
-        // mCourseEntity.getTrainingEntity().setProgress();
+
+        if (mCourseEntity.getTrainingEntity().getActivityEntities() == null) {
+            mCourseEntity.getTrainingEntity().setActivityEntities(new ArrayList<ActivityEntity>());
+        }
+        mCourseEntity.getTrainingEntity().getActivityEntities().add(mActivityEntity);
+        mCourseEntity.getTrainingEntity().
+                setIntellect(CompendioUtils.round(CompendioUtils.calculateIntellect(mCourseEntity.getTrainingEntity().getActivityEntities()), 2));
+        mCourseEntity.getTrainingEntity().
+                setProgress(CompendioUtils.round(CompendioUtils.calculateProgress(mCourseEntity.getTrainingEntity()), 2));
         mChapterEntity.setFinished(true);
 
         for (int i = 0; i < mCourseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
             if (mChapterEntity.getId().equals(mCourseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).getId())) {
                 mCourseEntity.getTrainingEntity().getRelease().getCourse().getChapters().set(i, mChapterEntity);
+                break;
             }
         }
         for (int i = 0; i < coursesEntity.getCourseEntities().size(); i++) {
             if (coursesEntity.getCourseEntities().get(i).getId().equals(mCourseEntity.getId())) {
                 coursesEntity.getCourseEntities().set(i, mCourseEntity);
+                break;
             }
         }
         sessionManager.setCourses(coursesEntity);
@@ -229,7 +245,7 @@ public class QuestionFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_button_chapter:
-                EventBus.getDefault().postSticky(mChapterEntity);
+                //EventBus.getDefault().postSticky(mChapterEntity);
                 EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
                         coursesEntity, mCourseEntity));
                 Intent intent = new Intent();
@@ -238,6 +254,7 @@ public class QuestionFragment extends BaseFragment {
                 intent.putExtra("course", mCourseEntity);
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
+
                 break;
             case R.id.next_course_complete:
                 break;
