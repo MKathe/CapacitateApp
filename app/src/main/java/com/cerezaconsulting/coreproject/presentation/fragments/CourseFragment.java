@@ -122,7 +122,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.start();
+              presenter.loadCourses();
             }
         });
 

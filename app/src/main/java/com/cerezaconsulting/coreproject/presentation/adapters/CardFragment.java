@@ -25,7 +25,12 @@ import com.cerezaconsulting.coreproject.data.model.ChapterEntity;
 import com.cerezaconsulting.coreproject.data.model.CourseEntity;
 import com.cerezaconsulting.coreproject.presentation.activities.ChapterActivity;
 import com.cerezaconsulting.coreproject.presentation.activities.FragmentsActivity;
+import com.cerezaconsulting.coreproject.presentation.adapters.listener.OnClickChapterListener;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -33,8 +38,10 @@ import java.util.ArrayList;
 public class CardFragment extends Fragment {
 
     private CardView cardView;
-
-
+    private ImageView imageView;
+    private ChapterEntity chapterEntity;
+    private ArrayList<ChapterEntity> chapterEntities;
+    private CourseEntity courseEntity;
 
     public static Fragment getInstance(CourseEntity courseEntity, ChapterEntity chapterEntity, ArrayList<ChapterEntity> chapterEntities) {
 
@@ -43,10 +50,50 @@ public class CardFragment extends Fragment {
         args.putSerializable("position", chapterEntity);
         args.putSerializable("chapters", chapterEntities);
         args.putSerializable("course", courseEntity);
-
         f.setArguments(args);
 
         return f;
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        chapterEntity = (ChapterEntity) getArguments().getSerializable("position");
+        chapterEntities = (ArrayList<ChapterEntity>) getArguments().getSerializable("chapters");
+        courseEntity = (CourseEntity) getArguments().getSerializable("course");
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(boolean event) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("FRAGMENT", "resumed");
+        imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
+
+    }
+
+    public void refreshChapter(ChapterEntity chapterEntity) {
+
+        this.chapterEntity = chapterEntity;
+        chapterEntity.setFinished(true);
+//        imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @SuppressLint("DefaultLocale")
@@ -61,14 +108,8 @@ public class CardFragment extends Fragment {
 
         TextView title = (TextView) view.findViewById(R.id.tv_title);
         TextView description = (TextView) view.findViewById(R.id.tv_detail);
-        ImageView imageView = (ImageView) view.findViewById(R.id.tv_status_chapter);
-
-
+        imageView = (ImageView) view.findViewById(R.id.tv_status_chapter);
         Button button = (Button) view.findViewById(R.id.button);
-
-        final ChapterEntity chapterEntity = (ChapterEntity) getArguments().getSerializable("position");
-        final ArrayList<ChapterEntity> chapterEntities = (ArrayList<ChapterEntity>) getArguments().getSerializable("chapters");
-        final CourseEntity courseEntity = (CourseEntity) getArguments().getSerializable("course");
 
         imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
 
@@ -107,7 +148,7 @@ public class CardFragment extends Fragment {
                 ChapterEntity chapterEntity = (ChapterEntity) data.getSerializableExtra("chapter");
 
                 openNextChapter(courseEntity, chapterEntity);
-             }
+            }
 
         }
     }
@@ -122,14 +163,16 @@ public class CardFragment extends Fragment {
                 if (i == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size() - 1) {
                     for (int j = 0; j < i; j++) {
                         if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j).isFinished()) {
+                            imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
                             openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j));
                             return;
                         }
                     }
                 } else {
-                    for (int j = i + 1; j < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); j++) {
-                        if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j).isFinished()) {
-                            openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j));
+                    for (int h = i + 1; h < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); h++) {
+                        if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(h).isFinished()) {
+                            imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
+                            openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(h));
                             return;
                         }
                     }
@@ -142,6 +185,7 @@ public class CardFragment extends Fragment {
     }
 
     private void openFragmentActivity(CourseEntity courseEntity, ChapterEntity chapterEntity) {
+        this.chapterEntity.setFinished(true);
         Bundle bundle = new Bundle();
         bundle.putSerializable("chapter", chapterEntity);
         bundle.putSerializable("chapters", courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());

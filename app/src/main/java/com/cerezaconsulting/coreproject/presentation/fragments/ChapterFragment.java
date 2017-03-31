@@ -33,6 +33,7 @@ import com.cerezaconsulting.coreproject.data.model.CourseEntity;
 import com.cerezaconsulting.coreproject.data.model.CoursesEntity;
 import com.cerezaconsulting.coreproject.presentation.activities.FragmentsActivity;
 import com.cerezaconsulting.coreproject.presentation.activities.QuestionActivity;
+import com.cerezaconsulting.coreproject.presentation.adapters.CardFragment;
 import com.cerezaconsulting.coreproject.presentation.adapters.CardFragmentPagerAdapter;
 import com.cerezaconsulting.coreproject.presentation.adapters.ChapterAdapter;
 import com.cerezaconsulting.coreproject.presentation.adapters.ShadowTransformer;
@@ -94,6 +95,82 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         return fragment;
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(boolean event) {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ChapterEntity event) {
+/*
+        if (event != null) {
+
+            for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
+                if (event.getId().equals(courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).getId())) {
+
+                    CoursesEntity courseEntity = sessionManager.getCoures();
+
+                    viewPager.setCurrentItem(i);
+
+                    *//*
+                    Log.e("EVENT", "---" + i + "--");
+                    viewPager.setCurrentItem(i);
+                    pagerAdapter.getItem(i).onResume();*//*
+
+                    //EventBus.getDefault().postSticky(true);
+                    *//*viewPager.setCurrentItem(i);
+                    ((CardFragment) pagerAdapter.getItem(i)).refreshChapter(event);
+                    EventBus.getDefault().postSticky(true);*//*
+                    return;
+                }
+            }
+        }*/
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageChapterCompleteEvent event) {
+        if (event != null) {
+
+            for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
+                if (event.getChapterEntity().getId().equals(courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).getId())) {
+
+
+                    event.getCourseEntity().getTrainingEntity().getRelease().getCourse().getChapters().set(i, event.getChapterEntity());
+                    viewPager.setCurrentItem(i);
+                    pagerAdapter = new CardFragmentPagerAdapter(event.getCourseEntity(), getActivity().getSupportFragmentManager(), dpToPixels(2, getContext()),
+                            event.getCourseEntity().getTrainingEntity().getRelease().getCourse().getChapters());
+
+                    viewPager.setAdapter(null);
+                    viewPager.setAdapter(pagerAdapter);
+                    ShadowTransformer fragmentCardShadowTransformer = new ShadowTransformer(viewPager, pagerAdapter);
+                    fragmentCardShadowTransformer.enableScaling(true);
+
+                    viewPager.setAdapter(pagerAdapter);
+                    viewPager.setPageTransformer(false, fragmentCardShadowTransformer);
+                    viewPager.setOffscreenPageLimit(3);
+                    openNextChapter(event.getCourseEntity(), event.getChapterEntity());
+                    // openNextChapter(event.getCourseEntity(), event.getChapterEntity());
+                    /*
+                    Log.e("EVENT", "---" + i + "--");
+                    viewPager.setCurrentItem(i);
+                    pagerAdapter.getItem(i).onResume();*/
+
+                    //EventBus.getDefault().postSticky(true);
+                    /*viewPager.setCurrentItem(i);
+                    ((CardFragment) pagerAdapter.getItem(i)).refreshChapter(event);
+                    EventBus.getDefault().postSticky(true);*/
+                    return;
+                }
+            }
+        }
+    }
    /* @Override
     public void onStart() {
         super.onStart();
@@ -122,6 +199,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         courseEntity = (CourseEntity) getArguments().getSerializable("course");
         sessionManager = new SessionManager(getContext());
     }
@@ -136,12 +214,22 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        pagerAdapter = new CardFragmentPagerAdapter(courseEntity, getActivity().getSupportFragmentManager(), dpToPixels(2, getContext()),
-                courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
-
+        updatePager();
     }
 
 
+    private void updatePager() {
+        ArrayList<CourseEntity> courseEntities = sessionManager.getCoures().getCourseEntities();
+
+        for (int i = 0; i < courseEntities.size(); i++) {
+
+            if (courseEntities.get(i).getId().equals(courseEntity.getId())) {
+                this.courseEntity = courseEntities.get(i);
+                return;
+            }
+        }
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -202,6 +290,25 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         tvLightBulb.setText(courseEntity.getTrainingEntity().getIntellect() + "%");
         tvAdvance.setText(courseEntity.getTrainingEntity().getProgress() + "%");
         tvNumberAdvance.setText(courseEntity.getTrainingEntity().getPosition() + "%");
+
+       /* viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+                //Not used
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //Force the fragment to reload its data
+                Fragment f = mAdapter.getItem(position);
+                f.onResume();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                //Not used
+            }
+        });*/
     }
 
 
@@ -289,11 +396,20 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
 
                 if (i == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size() - 1) {
                     for (int j = 0; j < i; j++) {
-                        openFragmentActivity(courseEntity, chapterEntity);
+                        if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j).isFinished()) {
+                            openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j));
+                            viewPager.setCurrentItem(j);
+                            return;
+                        }
                     }
                 } else {
                     for (int j = i + 1; j < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); j++) {
-                        openFragmentActivity(courseEntity, chapterEntity);
+
+                        if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j).isFinished()) {
+                            openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(j));
+                            viewPager.setCurrentItem(j);
+                            return;
+                        }
                     }
                 }
 

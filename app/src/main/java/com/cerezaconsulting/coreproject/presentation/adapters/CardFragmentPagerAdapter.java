@@ -16,7 +16,7 @@ import java.util.List;
 public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implements CardAdapter {
 
     private List<CardFragment> fragments;
-    private ArrayList<ChapterEntity> chapterEntities;
+    private ArrayList<ChapterEntity> chapterEntities = null;
     private float baseElevation;
     private CourseEntity courseEntity;
 
@@ -27,7 +27,7 @@ public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implemen
         this.baseElevation = v;
         this.chapterEntities = chapters;
 
-        for (int i = 0; i < chapters.size(); i++) {
+        for (int i = 0; i < chapterEntities.size(); i++) {
 
             addCardFragment(new CardFragment());
         }

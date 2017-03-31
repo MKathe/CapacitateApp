@@ -59,8 +59,6 @@ public class QuestionFragment extends BaseFragment {
     TextView tvIntellect;
     @BindView(R.id.next_button_chapter)
     Button nextButtonChapter;
-    @BindView(R.id.title_course_complete)
-    TextView titleCourseComplete;
     @BindView(R.id.title_course)
     TextView titleCourse;
     @BindView(R.id.tv_review)
@@ -103,6 +101,11 @@ public class QuestionFragment extends BaseFragment {
 
     }
 
+    @Subscribe
+    public void onEvent(ChapterEntity chapterEntity) {
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageActivityEvent event) {
 
@@ -111,7 +114,6 @@ public class QuestionFragment extends BaseFragment {
             currentItem++;
             autScroll.setCurrentItem(currentItem);
             if (mActivityEntity != null) {
-
                 if (event.isCorret()) {
                     mActivityEntity.incrementCorrect();
                 } else {
@@ -119,18 +121,16 @@ public class QuestionFragment extends BaseFragment {
                     mActivityEntity.addIdFragmentToPoorly(event.getIdFragment());
                 }
             }
-
-
             if (isEndToQuestionary()) {
                 saveProgressCourse();
                 framePrincipal.setVisibility(View.GONE);
                 mActivityEntity.calculateIntellect(questionEntities.size());
-
-
                 if (isToEndCourse()) {
                     lyCourseComplete.setVisibility(View.VISIBLE);
+                    titleCourse.setText(mCourseEntity.getName());
                 } else {
                     lyChapterComplete.setVisibility(View.VISIBLE);
+                    titleChapter.setText(mChapterEntity.getName());
                 }
 
 
@@ -142,7 +142,6 @@ public class QuestionFragment extends BaseFragment {
     }
 
     ;
-
 
     @Override
     public void onStart() {
@@ -230,8 +229,9 @@ public class QuestionFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_button_chapter:
-                /*EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity, coursesEntity,
-                        mCourseEntity));*/
+                EventBus.getDefault().postSticky(mChapterEntity);
+                EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
+                        coursesEntity, mCourseEntity));
                 Intent intent = new Intent();
                 intent.putExtra("courses", coursesEntity);
                 intent.putExtra("chapter", mChapterEntity);

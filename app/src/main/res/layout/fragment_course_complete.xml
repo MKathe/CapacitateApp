@@ -51,19 +51,19 @@
 
 
                 <TextView
+                    android:id="@+id/title_course"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:id="@+id/title_course_complete"
                     android:text="Titulo del course"
                     android:textColor="@color/black"
                     android:textSize="23dp" />
 
                 <TextView
-                    android:id="@+id/title_course"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
