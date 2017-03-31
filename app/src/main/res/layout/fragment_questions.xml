@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/cream"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include
-        layout="@layout/fragment_chapter_complete"/>
+    android:layout_height="match_parent"
+    android:background="@color/cream"
+    android:orientation="vertical">
+
+    <include layout="@layout/fragment_chapter_complete" />
+
     <include
 
-        layout="@layout/fragment_course_complete"/>
+        layout="@layout/fragment_course_complete" />
+
     <include
 
-        layout="@layout/fragment_review_complete"/>
+        layout="@layout/fragment_review_complete" />
 
 
     <RelativeLayout
         android:id="@+id/frame_principal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
+
+        <com.cerezaconsulting.compendio.utils.CompendioViewPager
             android:id="@+id/aut_scroll"
             android:layout_width="match_parent"
             android:layout_height="430dp" />
 
         <LinearLayout
-            android:layout_below="@id/aut_scroll"
             android:id="@+id/layoutDots"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
+            android:layout_below="@id/aut_scroll"
             android:layout_gravity="bottom"
             android:background="@color/cream"
+
+            android:focusableInTouchMode="false"
             android:gravity="center"
             android:orientation="horizontal">
 
             <com.viewpagerindicator.CirclePageIndicator
                 android:id="@+id/indicator"
-                android:padding="10dip"
-                android:layout_height="wrap_content"
+
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                app:radius="8dp"
-                app:pageColor="@color/gray"
+                android:padding="10dip"
                 app:fillColor="@color/dark_gray"
+                app:pageColor="@color/gray"
+                app:radius="8dp"
                 app:strokeColor="#FF000000"
-                app:strokeWidth="0dp"
-                />
+                app:strokeWidth="0dp" />
         </LinearLayout>
 
     </RelativeLayout>

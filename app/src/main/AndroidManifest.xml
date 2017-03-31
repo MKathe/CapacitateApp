@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cerezaconsulting.coreproject">
+    package="com.cerezaconsulting.compendio">
 
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 
     <application
-        android:name=".CompendioApplication"
+        android:name="com.cerezaconsulting.compendio.CompendioApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/indigoTheme">
         <activity
-            android:name="com.cerezaconsulting.coreproject.presentation.activities.LoadActivity"
+            android:name="com.cerezaconsulting.compendio.presentation.activities.LoadActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -25,20 +25,20 @@
 
 
         <activity
-            android:name="com.cerezaconsulting.coreproject.presentation.activities.LoginActivity"
+            android:name="com.cerezaconsulting.compendio.presentation.activities.LoginActivity"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.cerezaconsulting.coreproject.presentation.activities.PanelActivity"
+            android:name="com.cerezaconsulting.compendio.presentation.activities.PanelActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".presentation.activities.ChapterActivity"
+            android:name="com.cerezaconsulting.compendio.presentation.activities.ChapterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.activities.QuestionActivity"
+            android:name="com.cerezaconsulting.compendio.presentation.activities.QuestionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.activities.FragmentsActivity"
+            android:name="com.cerezaconsulting.compendio.presentation.activities.FragmentsActivity"
             android:screenOrientation="portrait" />
     </application>
 
