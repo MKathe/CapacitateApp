@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
+import com.cerezaconsulting.compendio.core.BaseActivityLogin;
 import com.cerezaconsulting.compendio.core.BaseFragment;
 import com.cerezaconsulting.compendio.presentation.activities.ExampleActivity;
 import com.cerezaconsulting.compendio.presentation.activities.PanelActivity;
@@ -122,12 +123,12 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
 
     @Override
     public void showMessage(String msg) {
-        ((BaseActivity) getActivity()).showMessage(msg);
+        ((BaseActivityLogin) getActivity()).showMessage(msg);
     }
 
     @Override
     public void showErrorMessage(String message) {
-        ((BaseActivity) getActivity()).showMessageError(message);
+        ((BaseActivityLogin) getActivity()).showMessageError(message);
     }
 
 

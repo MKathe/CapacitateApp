@@ -54,8 +54,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:src="@drawable/doble_check"
-            android:tint="@color/black_select"
             android:visibility="gone" />
 
         <ImageView

@@ -25,10 +25,11 @@ public class MaterialColor {
     public static final String GRAY = "gray";
     public static final String BLUE_GRAY = "blue gray";
     public static final String BROWN = "brown";
+    public static final String BLACK = "black";
 
 
 
 
-    public static final String COLOR_INDIGO = "#3F51B5";
+;
 
 }

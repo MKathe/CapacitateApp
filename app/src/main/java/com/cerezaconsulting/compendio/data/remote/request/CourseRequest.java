@@ -6,8 +6,11 @@ import com.cerezaconsulting.compendio.data.model.TrainingEntity;
 import java.util.ArrayList;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -15,7 +18,7 @@ import retrofit2.http.Path;
  */
 
 public interface CourseRequest {
-    @GET("admin/company/{idCompany}/course")
+    @GET("training/employee/{idCompany}/training")
     Call<ArrayList<CourseEntity>> getCourses(@Header("Authorization") String token,
                                              @Path("idCompany") String idCompany);
 
@@ -24,4 +27,11 @@ public interface CourseRequest {
     Call<TrainingEntity> downloadCourses(@Header("Authorization") String token,
                                          @Path("idUser") String idUser,
                                          @Path("idTraining") String idTraining);
+
+    @FormUrlEncoded
+    @POST("training/employee/{idUser}/training/{idTraining}/doubt")
+    Call<Void> sendDoubt(@Header("Authorization") String token,
+                         @Path("idUser") int idUser,
+                         @Path("idTraining") String idTraining,
+                         @Field("doubt") String doubt) ;
 }

@@ -1,8 +1,12 @@
 package com.cerezaconsulting.compendio.utils;
 
 
+import android.app.Activity;
+
 import com.cerezaconsulting.compendio.data.model.ActivityEntity;
 import com.cerezaconsulting.compendio.data.model.ChapterEntity;
+import com.cerezaconsulting.compendio.data.model.CourseEntity;
+import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.data.model.FragmentEntity;
 import com.cerezaconsulting.compendio.data.model.OptionEntity;
 import com.cerezaconsulting.compendio.data.model.QuestionEntity;
@@ -14,7 +18,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -39,48 +46,50 @@ public class CompendioUtils {
 
         return questions;
     }
-/*
-    public ArrayList<QuestionEntity> getQuestions(TrainingEntity training) {
+
+    public static ArrayList<QuestionEntity> getQuestions(TrainingEntity training) {
         ArrayList<QuestionEntity> questions = new ArrayList<>();
-        Activity last_review_activity = trainingActivityService.findLastReviewActivity(training);
+        ActivityEntity last_review_activity = findLastReviewActivity(training);
 
         if (last_review_activity != null) {
-            List<Fragment> total_fragments = new ArrayList<>();
+            ArrayList<FragmentEntity> total_fragments = new ArrayList<>();
 
             String[] split = last_review_activity.getPoorly().split(",");
 
-            ArrayList<Long> ids = new ArrayList<>();
+            ArrayList<String> ids = new ArrayList<>();
             for (int i = 0; i < split.length; i++) {
                 if (!split[i].equals("") && !split[i].isEmpty() && split[i] != null) {
-                    ids.add(Long.parseLong(split[i]));
+                    ids.add(split[i]);
                 }
             }
 
             //Get fragment poorly
-            ArrayList<FragmentEntity> incorrects_fragments = trainingFragmentService.findByIdIn(training.getRelease().getCourse(), ids);
+            ArrayList<FragmentEntity> incorrects_fragments = findFragmentsByIdInCourse(training.getRelease().getCourse(), ids);
             Collections.shuffle(incorrects_fragments, new Random());
 
 
-            incorrects_fragments = incorrects_fragments.subList(0, (int) Math.ceil((double) incorrects_fragments.size() / 2.0));
+            incorrects_fragments = new ArrayList<FragmentEntity>(incorrects_fragments.subList(0, (int) Math.ceil((double) incorrects_fragments.size() / 2.0)));
+
+
             total_fragments.addAll(incorrects_fragments);
 
             //Get fragment good
-            List<Fragment> corrects_fragments = trainingFragmentService.findByIdNotIn(training.getRelease().getCourse(), ids);
+            ArrayList<FragmentEntity> corrects_fragments = findFragmentsNotIdInCourse(training.getRelease().getCourse(), ids);
             Collections.shuffle(corrects_fragments, new Random());
-            corrects_fragments = corrects_fragments.subList(0, (int) Math.ceil((double) corrects_fragments.size() / 2.0));
+            corrects_fragments = new ArrayList<FragmentEntity>(corrects_fragments.subList(0, (int) Math.ceil((double) corrects_fragments.size() / 2.0)));
             total_fragments.addAll(corrects_fragments);
 
             Collections.shuffle(total_fragments, new Random());
 
-            for (Fragment fragment : total_fragments) {
-                Question question = this.getQuestion(fragment);
+            for (FragmentEntity fragment : total_fragments) {
+                QuestionEntity question = getQuestion(fragment, training);
                 if (question.getDetail() != null && !question.getDetail().equals("")) {
                     questions.add(question);
                 }
             }
         } else {
-            List<Activity> activities = trainingActivityService.findChallengeActivities(training);
-            List<Fragment> total_fragments = new ArrayList<>();
+            ArrayList<ActivityEntity> activities = findChallengeActivities(training);
+            ArrayList<FragmentEntity> total_fragments = new ArrayList<>();
 
             //Get all poorly in training
             String poorly = activities.get(0).getPoorly();
@@ -89,29 +98,29 @@ public class CompendioUtils {
             }
 
             String[] split = poorly.split(",");
-            List<Long> ids = new ArrayList<>();
+            ArrayList<String> ids = new ArrayList<>();
             for (int i = 0; i < split.length; i++) {
                 if (!split[i].equals("") && !split[i].isEmpty() && split[i] != null) {
-                    ids.add(Long.parseLong(split[i]));
+                    ids.add(split[i]);
                 }
             }
 
             //Get fragment poorly
-            List<Fragment> incorrects_fragments = trainingFragmentService.findByIdIn(training.getRelease().getCourse(), ids);
+            ArrayList<FragmentEntity> incorrects_fragments = findFragmentsByIdInCourse(training.getRelease().getCourse(), ids);
             Collections.shuffle(incorrects_fragments, new Random());
-            incorrects_fragments = incorrects_fragments.subList(0, (int) Math.ceil((double) incorrects_fragments.size() / 2.0));
+            incorrects_fragments = new ArrayList<FragmentEntity>(incorrects_fragments.subList(0, (int) Math.ceil((double) incorrects_fragments.size() / 2.0)));
             total_fragments.addAll(incorrects_fragments);
 
             //Get fragment good
-            List<Fragment> corrects_fragments = trainingFragmentService.findByIdNotIn(training.getRelease().getCourse(), ids);
+            ArrayList<FragmentEntity> corrects_fragments = findFragmentsNotIdInCourse(training.getRelease().getCourse(), ids);
             Collections.shuffle(corrects_fragments, new Random());
-            corrects_fragments = corrects_fragments.subList(0, (int) Math.ceil((double) corrects_fragments.size() / 2.0));
+            corrects_fragments = new ArrayList<FragmentEntity>(corrects_fragments.subList(0, (int) Math.ceil((double) corrects_fragments.size() / 2.0)));
             total_fragments.addAll(corrects_fragments);
 
             Collections.shuffle(total_fragments, new Random());
 
-            for (Fragment fragment : total_fragments) {
-                Question question = this.getQuestion(fragment);
+            for (FragmentEntity fragment : total_fragments) {
+                QuestionEntity question = getQuestion(fragment, training);
                 if (question.getDetail() != null && !question.getDetail().equals("")) {
                     questions.add(question);
                 }
@@ -119,7 +128,124 @@ public class CompendioUtils {
         }
 
         return questions;
-    }*/
+    }
+
+    public static QuestionEntity getQuestion(FragmentEntity fragment, TrainingEntity trainingEntity) {
+        QuestionEntity question = new QuestionEntity();
+
+        Document doc = Jsoup.parse(fragment.getContent());
+        Elements bolds = doc.getElementsByTag("b");
+
+        if (!bolds.isEmpty()) {
+            question.setFragment(fragment.getId());
+            question.setDetail("");
+
+            for (Element bold : bolds) {
+                if (!bold.text().equals(" ") && !bold.text().equals("") && bold.text() != null) {
+                    question.setDetail(question.getDetail() + bold.text() + "...");
+                }
+            }
+
+            question.setOptions(getOptions(fragment, trainingEntity));
+        }
+
+        return question;
+    }
+
+    public static ArrayList<OptionEntity> getOptions(FragmentEntity fragment, TrainingEntity trainingEntity) {
+        ArrayList<OptionEntity> options = new ArrayList<>();
+
+        OptionEntity option = new OptionEntity();
+        option.setDetail(fragment.getTitle());
+        option.setCorrect(true);
+        options.add(option);
+
+        ArrayList<FragmentEntity> fragment_incorrects = findFragmentsExcludenFromFragment(fragment, trainingEntity);
+        Collections.shuffle(fragment_incorrects, new Random());
+
+        int total_option = fragment_incorrects.size() > 4 ? 4 : fragment_incorrects.size();
+
+        for (int i = 0; i < total_option; i++) {
+            option = new OptionEntity();
+            option.setDetail(fragment_incorrects.get(i).getTitle());
+            option.setCorrect(false);
+            options.add(option);
+        }
+
+        Collections.shuffle(options, new Random());
+
+        return options;
+    }
+
+    private static ArrayList<FragmentEntity>
+    findFragmentsExcludenFromFragment(FragmentEntity fragmentEntity, TrainingEntity trainingEntity) {
+        ArrayList<FragmentEntity> fragmentEntities = new ArrayList<>();
+        for (int i = 0; i < trainingEntity.getRelease().getCourse().getChapters().size(); i++) {
+            for (int j = 0; j < trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().size(); j++) {
+                if (!trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().get(j).getId()
+                        .equals(fragmentEntity.getId())) {
+                    fragmentEntities.add(trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().get(j));
+                }
+            }
+
+        }
+
+        return fragmentEntities;
+
+    }
+
+
+    private static ArrayList<ActivityEntity> findChallengeActivities(TrainingEntity training) {
+        ArrayList<ActivityEntity> activityEntities = new ArrayList<>();
+
+        for (int i = 0; i < training.getActivityEntities().size(); i++) {
+            if (!training.getActivityEntities().get(i).getIdChapter().equals("")) {
+                activityEntities.add(training.getActivityEntities().get(i));
+            }
+        }
+
+        return activityEntities;
+    }
+
+    private static ArrayList<FragmentEntity> findFragmentsNotIdInCourse(CourseEntity course, ArrayList<String> ids) {
+        ArrayList<FragmentEntity> fragmentEntities = new ArrayList<>();
+        for (int i = 0; i < course.getChapters().size(); i++) {
+            for (int j = 0; j < course.getChapters().get(i).getFragments().size(); j++) {
+                for (int k = 0; k < ids.size(); k++) {
+                    if (!ids.get(k).equals(course.getChapters().get(i).getFragments().get(j).getId())) {
+                        fragmentEntities.add(course.getChapters().get(i).getFragments().get(j));
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        return fragmentEntities;
+    }
+
+    private static ArrayList<FragmentEntity> findFragmentsByIdInCourse(CourseEntity course, ArrayList<String> ids) {
+
+        ArrayList<FragmentEntity> fragmentEntities = new ArrayList<>();
+        for (int i = 0; i < course.getChapters().size(); i++) {
+            for (int j = 0; j < course.getChapters().get(i).getFragments().size(); j++) {
+                for (int k = 0; k < ids.size(); k++) {
+                    if (ids.get(k).equals(course.getChapters().get(i).getFragments().get(j).getId())) {
+                        fragmentEntities.add(course.getChapters().get(i).getFragments().get(j));
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        return fragmentEntities;
+    }
+
+    private static ActivityEntity findLastReviewActivity(TrainingEntity training) {
+
+        return training.getActivityEntities().get(training.getActivityEntities().size() - 1);
+    }
 
     private static QuestionEntity getQuestion(FragmentEntity fragment, ArrayList<FragmentEntity> fragmentEntitiesTotal) {
         QuestionEntity question = new QuestionEntity();
@@ -224,5 +350,62 @@ public class CompendioUtils {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+
+    public static Date getReviewDate(Double totalIntellect) {
+        double base = 271828182845904.0;
+        double time = 1;
+        double s = totalIntellect;
+        double x = -1 * (time / s);
+        double fx = Math.pow(base, x); //retención
+
+        while (fx >= 0.5) {
+            time++;
+            x = -1 * (time / s);
+            fx = Math.pow(base, x);
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, (int) time);
+
+        return calendar.getTime();
+    }
+
+    public static Double getTotalIntellect(TrainingEntity training) {
+        double total_intellect_challenge = getIntellectChallengeActivity(training);
+        double total_intellect_review = 0;
+
+        ArrayList<ActivityEntity> activities = findReviewActivities(training);
+
+        if (activities != null) {
+            for (ActivityEntity activity : activities) {
+                total_intellect_review += activity.getIntellect();
+            }
+        }
+
+        return total_intellect_challenge + total_intellect_review;
+    }
+
+    private static Double getIntellectChallengeActivity(TrainingEntity training) {
+        ArrayList<ActivityEntity> activities = new ArrayList<>();
+        for (int i = 0; i < training.getActivityEntities().size(); i++) {
+            if (!training.getActivityEntities().get(i).getIdChapter().isEmpty()) {
+                activities.add(training.getActivityEntities().get(i));
+            }
+
+        }
+        return calculateIntellect(activities);
+    }
+
+    private static ArrayList<ActivityEntity> findReviewActivities(TrainingEntity training) {
+        ArrayList<ActivityEntity> activities = new ArrayList<>();
+        for (int i = 0; i < training.getActivityEntities().size(); i++) {
+            if (training.getActivityEntities().get(i).getIdChapter().isEmpty()) {
+                activities.add(training.getActivityEntities().get(i));
+            }
+
+        }
+        return activities;
     }
 }

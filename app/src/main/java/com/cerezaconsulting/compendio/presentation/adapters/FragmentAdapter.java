@@ -1,10 +1,15 @@
 package com.cerezaconsulting.compendio.presentation.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +17,7 @@ import android.widget.TextView;
 import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.data.model.FragmentEntity;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorChapterItem;
+import com.cerezaconsulting.compendio.utils.ProgressDialogCustom;
 
 import java.util.ArrayList;
 
@@ -25,12 +31,17 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
     private ArrayList<FragmentEntity> list;
     private CommunicatorChapterItem communicatorChapterItem;
     private Context context;
+    private boolean isFinished;
+    private ProgressDialogCustom progressDialogCustom;
+    private boolean firstLoad = false;
 
-    public FragmentAdapter(ArrayList<FragmentEntity> list, Context context,
+    public FragmentAdapter(boolean finished, ArrayList<FragmentEntity> list, Context context,
                            CommunicatorChapterItem communicatorChapterItem) {
         this.list = list;
         this.context = context;
         this.communicatorChapterItem = communicatorChapterItem;
+        this.isFinished = finished;
+        progressDialogCustom = new ProgressDialogCustom(context, "Cargando...");
     }
 
 
@@ -52,29 +63,76 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
             return new ViewHolder(itemView);
         } else {
             itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_button, parent, false);
-            return new ViewHolder(itemView,0);
+            return new ViewHolder(itemView, 0);
         }
 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
 
         if (position == list.size()) {
-            holder.nextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    communicatorChapterItem.openQuestions();
-                }
-            });
+
+            if (isFinished) {
+                holder.itemView.setVisibility(View.GONE);
+            } else {
+
+
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+                @ColorInt int color = typedValue.data;
+
+                holder.nextButton.setBackgroundColor(color);
+                holder.nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        communicatorChapterItem.openQuestions();
+                    }
+                });
+            }
+
+
         } else {
             FragmentEntity fragmentEntity = list.get(position);
             final String mimeType = "text/html";
             final String encoding = "UTF-8";
 
+            if (Build.VERSION.SDK_INT >= 19) {
+                holder.fragmentContent.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            } else {
+                holder.fragmentContent.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
+
+            holder.fragmentContent.setWebChromeClient(new WebChromeClient() {
+                public void onProgressChanged(WebView view, int progress) {
+
+                    progressDialogCustom.setProgress(progress);
+                    if (position == 0) {
+                        if (progress == 100) {
+                            if (progressDialogCustom.isShowing()) {
+                                progressDialogCustom.dismiss();
+                            }
+
+
+                        } else {
+
+                            if (!firstLoad) {
+                                firstLoad = true;
+                                progressDialogCustom.show();
+                            }
+
+                        }
+                    }
+
+
+                }
+            });
+
             String html = fragmentEntity.getContent();
-            holder.fragmentContent.loadDataWithBaseURL("", html, mimeType, encoding, "");
+            holder.fragmentContent.getSettings().setJavaScriptEnabled(true);
+            holder.fragmentContent.loadData(html, "text/html", "utf-8");
             holder.titleFragment.setText(fragmentEntity.getTitle());
         }
 
@@ -83,7 +141,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return list.size()+1;
+        return list.size() + 1;
     }
 
     public void setItems(ArrayList<FragmentEntity> list) {
@@ -103,7 +161,8 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
             titleFragment = (TextView) itemView.findViewById(R.id.title_fragment);
             fragmentContent = (WebView) itemView.findViewById(R.id.fragment_content);
         }
-        ViewHolder(View itemView,int off) {
+
+        ViewHolder(View itemView, int off) {
             super(itemView);
             nextButton = (Button) itemView.findViewById(R.id.next_button);
         }

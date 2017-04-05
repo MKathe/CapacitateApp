@@ -87,7 +87,7 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
         layoutManager = new LinearLayoutManager(getContext());
         complatinsList.setLayoutManager(layoutManager);
 
-        fragmentAdapter = new FragmentAdapter(chapterEntity.getFragments(), getContext(), this);
+        fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(),chapterEntity.getFragments(), getContext(), this);
 
 
         complatinsList.setAdapter(fragmentAdapter);

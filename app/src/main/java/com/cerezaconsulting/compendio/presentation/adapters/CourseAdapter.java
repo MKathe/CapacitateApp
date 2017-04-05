@@ -14,8 +14,10 @@ import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.presentation.adapters.listener.OnClickListListener;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
+import com.cerezaconsulting.compendio.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,9 +45,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        CourseEntity courseEntity = list.get(position);
-        holder.tvTitle.setText(courseEntity.getName());
-        holder.tvSubtitle.setText(courseEntity.getDescription());
+        final CourseEntity courseEntity = list.get(position);
+        holder.tvTitle.setText(courseEntity.getRelease().getCourse());
+
+        Date dateStart = new Date(courseEntity.getRelease().getStart());
+        Date dateEnd = new Date(courseEntity.getRelease().getEnd());
+        holder.tvSubtitle.setText(DateUtils.getFormant(dateStart) + " - " + DateUtils.getFormant(dateEnd));
+
+        // holder.tvSubtitle.setText(courseEntity.getDescription());
 
         if (courseEntity.isOffLineDisposed()) {
             holder.onlineDisposed.setBackgroundResource(R.drawable.offline_verde);
@@ -53,26 +60,78 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             holder.onlineDisposed.setBackgroundResource(R.drawable.offline_gris);
         }
 
+        if (courseEntity.getTrainingEntity() != null) {
+
+         /*   if(courseEntity.getTrainingEntity().isFinished()) {*/
+
+            if (courseEntity.getTrainingEntity().getReviewEntities() != null) {
+                holder.ivCheck.setVisibility(View.VISIBLE);
+
+                if (courseEntity.getTrainingEntity().getReviewEntities().size() > 0) {
+                    if (DateUtils
+                            .dateIsCurrent(courseEntity.getTrainingEntity()
+                                    .getReviewEntities()
+                                    .get(courseEntity.getTrainingEntity()
+                                            .getReviewEntities().size() - 1).getDate())) {
+
+                        holder.ivCheck.setBackgroundResource(R.drawable.alarma);
+                    } else {
+
+
+                        holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
+                    }
+                }
+
+
+            } else {
+
+
+                if (courseEntity.isFinished()) {
+                    holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
+                    holder.ivCheck.setVisibility(View.VISIBLE);
+                }else{
+                    holder.ivCheck.setVisibility(View.GONE);
+                }
+            }
+            /*}else{
+                holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
+            }*/
+
+        } else {
+
+            if (courseEntity.isFinished()) {
+                holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
+                holder.ivCheck.setVisibility(View.VISIBLE);
+            }else{
+                holder.ivCheck.setVisibility(View.GONE);
+            }
+
+        }
+
+
         holder.ivOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopupMenu(holder.ivOptions);
+                showPopupMenu(holder.ivOptions,courseEntity);
             }
         });
     }
 
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view, final CourseEntity courseEntity) {
         // inflate menu
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_course, popup.getMenu());
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_send_question:
+
                         return true;
                     case R.id.action_download:
+                        communicatorCourseItem.openDialogDoubt(courseEntity.getId());
                         return true;
                     default:
                         return false;

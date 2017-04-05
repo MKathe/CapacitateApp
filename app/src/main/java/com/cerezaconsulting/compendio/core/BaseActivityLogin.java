@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.data.local.SessionManager;
 import com.cerezaconsulting.compendio.utils.MaterialColor;
@@ -24,88 +23,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 /**
  * Base Actividad de la cual se va a exteder las otras actividades de la app
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivityLogin extends AppCompatActivity {
 
-    private SessionManager sessionManager;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        sessionManager = new SessionManager(this);
-       /* setTheme();*/
-        selectTheme(sessionManager.getUserEntity().getCompany().getColor());
-        super.onCreate(savedInstanceState);
-    }
-
-    private void selectTheme(String theme) {
-
-        switch (theme) {
-            case MaterialColor.AMBER:
-                setTheme(R.style.amberTheme);
-                break;
-            case MaterialColor.LIGHT_BLUE:
-                setTheme(R.style.ligthBlueTheme);
-                break;
-            case MaterialColor.RED:
-                setTheme(R.style.redTheme);
-                break;
-            case MaterialColor.BLUE_GRAY:
-                setTheme(R.style.blueGreyTheme);
-                break;
-            case MaterialColor.BROWN:
-                setTheme(R.style.brownTheme);
-                break;
-            case MaterialColor.DEEP_ORANGE:
-                setTheme(R.style.deepOrangeTheme);
-                break;
-            case MaterialColor.DEEP_PURPLE:
-                setTheme(R.style.deepPurpleTheme);
-                break;
-            case MaterialColor.GRAY:
-                setTheme(R.style.greyTheme);
-                break;
-            case MaterialColor.GREEN:
-                setTheme(R.style.greenTheme);
-                break;
-            case MaterialColor.INDIGO:
-                setTheme(R.style.indigoTheme);
-                break;
-            case MaterialColor.LIGTH_GREEN:
-                setTheme(R.style.ligthGreenTheme);
-                break;
-            case MaterialColor.LIME:
-                setTheme(R.style.limeTheme);
-                break;
-            case MaterialColor.ORANGE:
-                setTheme(R.style.orangeTheme);
-                break;
-            case MaterialColor.PINK:
-                setTheme(R.style.pinkTheme);
-                break;
-            case MaterialColor.PURPLE:
-                setTheme(R.style.purpleTheme);
-                break;
-            case MaterialColor.TEAL:
-                setTheme(R.style.tealTheme);
-                break;
-            case MaterialColor.YELLOW:
-                setTheme(R.style.yelloweTheme);
-                break;
-            case MaterialColor.CYAN:
-                setTheme(R.style.cyanTheme);
-                break;
-            case MaterialColor.BLUE:
-                setTheme(R.style.indigoTheme);
-                break;
-            case MaterialColor.BLACK:
-                setTheme(R.style.blackTheme);
-                break;
-
-            default:
-                setTheme(R.style.indigoTheme);
-                break;
-
-        }
-    }
 
     public void showMessageSnack(View container, String message, int colorResource) {
         if (container != null) {

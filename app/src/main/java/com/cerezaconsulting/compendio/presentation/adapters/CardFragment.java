@@ -3,11 +3,14 @@ package com.cerezaconsulting.compendio.presentation.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +109,12 @@ public class CardFragment extends Fragment {
 
         imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
 
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getActivity().getTheme();
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        @ColorInt int color = typedValue.data;
+
+        button.setBackgroundColor(color);
         title.setText(chapterEntity.getName());
         description.setText("");
         button.setOnClickListener(new View.OnClickListener() {

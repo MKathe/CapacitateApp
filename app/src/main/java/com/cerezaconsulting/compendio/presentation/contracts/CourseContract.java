@@ -11,19 +11,28 @@ import java.util.ArrayList;
  */
 
 public interface CourseContract {
-    interface View extends BaseView<Presenter>{
+    interface View extends BaseView<Presenter> {
         boolean isActive();
+
         void getCourses(ArrayList<CourseEntity> list);
+
         void detailCourse(CourseEntity courseEntity);
 
         void openCourse(CourseEntity courseEntity);
-    }
-    interface Presenter extends BasePresenter{
 
-        void downloadCourseById(String idTraining);
+        void sendDoubt(String s, String id);
+
+        void showDialogDoubt(String idTraining);
+    }
+
+    interface Presenter extends BasePresenter {
+
+        void downloadCourseById(CourseEntity courseEntity);
 
         void loadCourses();
 
         void loadCoursesFromLocalRepository();
+
+        void sendDoubt(String doubt, String id);
     }
 }

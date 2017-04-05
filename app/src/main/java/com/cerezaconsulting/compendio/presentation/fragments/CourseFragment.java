@@ -2,6 +2,7 @@ package com.cerezaconsulting.compendio.presentation.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -24,10 +25,15 @@ import com.cerezaconsulting.compendio.core.BaseFragment;
 import com.cerezaconsulting.compendio.core.ScrollChildSwipeRefreshLayout;
 import com.cerezaconsulting.compendio.data.events.MessageChapterCompleteEvent;
 import com.cerezaconsulting.compendio.data.model.CourseEntity;
+import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.presentation.activities.ChapterActivity;
+import com.cerezaconsulting.compendio.presentation.activities.FragmentsActivity;
+import com.cerezaconsulting.compendio.presentation.activities.QuestionReviewActivity;
 import com.cerezaconsulting.compendio.presentation.adapters.CourseAdapter;
 import com.cerezaconsulting.compendio.presentation.contracts.CourseContract;
+import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirmDialog;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
+import com.cerezaconsulting.compendio.utils.DateUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -118,7 +124,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-              presenter.loadCourses();
+                presenter.loadCourses();
             }
         });
 
@@ -145,7 +151,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     }
 
 
-    public void showDialogForDownloadCourse(Context context, String title, CharSequence message, final String idTraining) {
+    public void showDialogForDownloadCourse(Context context, String title, CharSequence message, final CourseEntity idTraining) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         if (title != null) builder.setTitle(title);
@@ -179,13 +185,43 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
 
 
         if (courseEntity.isOffLineDisposed()) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("course", courseEntity);
-            nextActivity(getActivity(), bundle, ChapterActivity.class, false);
+
+            if (courseEntity.getTrainingEntity().getReviewEntities() != null) {
+
+
+                if (courseEntity.getTrainingEntity().getReviewEntities().size() > 0) {
+                    if (DateUtils.dateIsCurrent(
+                            courseEntity.getTrainingEntity().getReviewEntities()
+                                    .get(courseEntity.getTrainingEntity().getReviewEntities().size() - 1)
+                                    .getDate())) {
+
+                        Bundle bundle = new Bundle();
+
+                        bundle.putSerializable("course", courseEntity);
+                        Intent intent = new Intent(getActivity(), QuestionReviewActivity.class);
+                        if (bundle != null) {
+                            intent.putExtras(bundle);
+                        }
+                        startActivityForResult(intent, 999);
+
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("course", courseEntity);
+                        nextActivity(getActivity(), bundle, ChapterActivity.class, false);
+                    }
+                }
+
+
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("course", courseEntity);
+                nextActivity(getActivity(), bundle, ChapterActivity.class, false);
+            }
+
         } else {
             showDialogForDownloadCourse(getContext(), "Descargar Curso",
-                    "Debes primero descargar el contenido del curso, recuerda que esto debes estar conenctado a una red inalámbrica",
-                    courseEntity.getId());
+                    "Debes primero descargar el contenido del curso, recuerda que esto debes estar conectado a una red inalámbrica",
+                    courseEntity);
         }
 
 
@@ -198,6 +234,18 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         Bundle bundle = new Bundle();
         bundle.putSerializable("course", courseEntity);
         nextActivity(getActivity(), bundle, ChapterActivity.class, false, REQUEST_CHAPTER);
+    }
+
+    @Override
+    public void sendDoubt(String doubt, String id) {
+        presenter.sendDoubt(doubt, id);
+    }
+
+    @Override
+    public void showDialogDoubt(String idTraining) {
+        AlertConfirmDialog alertConfirmDialog = new AlertConfirmDialog(getActivity(), this,
+                "Aceptar", idTraining);
+        alertConfirmDialog.show();
     }
 
     @Override

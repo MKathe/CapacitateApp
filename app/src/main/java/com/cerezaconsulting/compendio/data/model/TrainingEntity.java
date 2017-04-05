@@ -17,6 +17,19 @@ public class TrainingEntity implements Serializable {
     private boolean finished = false;
     private RealeseEntity release;
     private ArrayList<ActivityEntity> activityEntities;
+    private ArrayList<ReviewEntity> reviewEntities;
+
+    public void setPosition(double position) {
+        this.position = position;
+    }
+
+    public ArrayList<ReviewEntity> getReviewEntities() {
+        return reviewEntities;
+    }
+
+    public void setReviewEntities(ArrayList<ReviewEntity> reviewEntities) {
+        this.reviewEntities = reviewEntities;
+    }
 
     public ArrayList<ActivityEntity> getActivityEntities() {
         return activityEntities;

@@ -19,7 +19,9 @@
     <string name="good_great">¡Felicitaciones!</string>
     <string name="acepted">Aceptar</string>
     <string name="next_chapter">Siguiente Capítulo</string>
-    <string name="review_commend">Mejora tu ranking y fortalece tu aprendizaje\n hasta el próximo repaso</string>
+    <string name="review_commend">Mejora tu ranking y fortalece tu aprendizaje
+        hasta el próximo repaso</string>
     <string name="course_complete">Finalizar curso</string>
     <string name="review_complete">Finalizar repaso</string>
+    <string name="review">Repaso</string>
 </resources>

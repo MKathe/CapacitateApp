@@ -4,13 +4,14 @@ import android.os.Bundle;
 
 import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
+import com.cerezaconsulting.compendio.core.BaseActivityLogin;
 import com.cerezaconsulting.compendio.presentation.fragments.LoginFragment;
 import com.cerezaconsulting.compendio.presentation.presenters.LoginPresenter;
 import com.cerezaconsulting.compendio.utils.ActivityUtils;
 
 import butterknife.ButterKnife;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivityLogin {
 
     /*@BindView(R.id.toolbar)
     Toolbar toolbar;*/

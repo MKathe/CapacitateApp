@@ -46,13 +46,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 
 /**
  * Created by miguel on 16/03/17.
  */
 
-public class QuestionFragment extends BaseFragment {
+public class QuestionReviewFragment extends BaseFragment {
 
 
     CompendioViewPager autScroll;
@@ -99,8 +98,8 @@ public class QuestionFragment extends BaseFragment {
 
     private CoursesEntity coursesEntity;
 
-    public static QuestionFragment newInstance(Bundle bundle) {
-        QuestionFragment fragment = new QuestionFragment();
+    public static QuestionReviewFragment newInstance(Bundle bundle) {
+        QuestionReviewFragment fragment = new QuestionReviewFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -134,14 +133,28 @@ public class QuestionFragment extends BaseFragment {
             if (isEndToQuestionary()) {
                 framePrincipal.setVisibility(View.GONE);
                 mActivityEntity.calculateIntellect(questionEntities.size());
-                saveProgressCourse();
 
-                if (isToEndCourse()) {
+                if (mCourseEntity.getTrainingEntity().getActivityEntities() != null) {
+                    mCourseEntity.getTrainingEntity().setActivityEntities(new ArrayList<ActivityEntity>());
+                }
+                mCourseEntity.getTrainingEntity().getActivityEntities().add(mActivityEntity);
+                questionEnd = true;
+                lyReviewComplete.setVisibility(View.VISIBLE);
+                ReviewEntity reviewEntity = new ReviewEntity();
+                reviewEntity.setCompleted(true);
+                mCourseEntity.getTrainingEntity()
+                        .setIntellect(CompendioUtils
+                                .round(CompendioUtils.getTotalIntellect(mCourseEntity.getTrainingEntity()), 2));
+
+                saveAndGenerateReview(reviewEntity);
+               /* generateAdnSaveReview();
+                saveProgressCourse();*/
+
+                /*if (isToEndCourse()) {
                     generateAdnSaveReview();
                     questionEnd = true;
                     lyCourseComplete.setVisibility(View.VISIBLE);
                     titleCourse.setText(mCourseEntity.getName());
-
                     customToolbarChapterComplete(false, getString(R.string.course_complete));
 
 
@@ -152,7 +165,7 @@ public class QuestionFragment extends BaseFragment {
                     tvIntellect.setText(mCourseEntity.getTrainingEntity().getIntellect() + " %");
                     customToolbarChapterComplete(false, mChapterEntity.getName());
 
-                }
+                }*/
 
 
             }
@@ -161,15 +174,31 @@ public class QuestionFragment extends BaseFragment {
 
     }
 
+    private void saveAndGenerateReview(ReviewEntity reviewEntity) {
+        SessionManager sessionManager = new SessionManager(getContext());
+        ArrayList<CourseEntity> courseEntities = sessionManager.getCoures().getCourseEntities();
+
+        reviewEntity.setDate(CompendioUtils.getReviewDate(mCourseEntity.getTrainingEntity().getIntellect()));
+        tvReviewNext.setText(DateUtils.getFormant(reviewEntity.getDate()));
+        mCourseEntity.getTrainingEntity().getReviewEntities().add(reviewEntity);
+        for (int i = 0; i < courseEntities.size(); i++) {
+            if (mCourseEntity.getId().equals(courseEntities.get(i).getId())) {
+                courseEntities.set(i, mCourseEntity);
+
+            }
+
+        }
+        CoursesEntity coursesEntity = new CoursesEntity(courseEntities);
+        sessionManager.setCourses(coursesEntity);
+    }
+
 
     private void generateAdnSaveReview() {
 
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setDate(CompendioUtils.getReviewDate(mCourseEntity.getTrainingEntity().getIntellect()));
-        tvReview.setText(DateUtils.getFormant(reviewEntity.getDate()));
         mCourseEntity.getTrainingEntity().setReviewEntities(new ArrayList<ReviewEntity>());
         mCourseEntity.getTrainingEntity().getReviewEntities().add(reviewEntity);
-
 
         SessionManager sessionManager = new SessionManager(getContext());
         ArrayList<CourseEntity> courseEntities = sessionManager.getCoures().getCourseEntities();
@@ -209,12 +238,11 @@ public class QuestionFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         mSessionManager = new SessionManager(getContext());
-        questionEntities = (ArrayList<QuestionEntity>) getArguments().getSerializable("question");
-        mChapterEntity = (ChapterEntity) getArguments().getSerializable("chapter");
         mCourseEntity = (CourseEntity) getArguments().getSerializable("course");
+        questionEntities = CompendioUtils.getQuestions(mCourseEntity.getTrainingEntity());
+
+
     }
 
     @Nullable
@@ -235,7 +263,6 @@ public class QuestionFragment extends BaseFragment {
         autScroll.setAdapter(imagePagerAdapter);
         indicator.setViewPager(autScroll);
         mActivityEntity = new ActivityEntity();
-        mActivityEntity.setIdChapter(mChapterEntity.getId());
         autScroll.setPagingEnabled(false);
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -257,8 +284,10 @@ public class QuestionFragment extends BaseFragment {
         theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
         @ColorInt int color = typedValue.data;
 
-        nextButtonChapter.setBackgroundColor(color);
-        nextCourseComplete.setBackgroundColor(color);
+        buttonReviewComplete.setBackgroundColor(color);
+
+
+
     }
 
 
@@ -328,16 +357,17 @@ public class QuestionFragment extends BaseFragment {
 
                 break;
             case R.id.next_course_complete:
-                EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
+              /*  EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
                         coursesEntity, mCourseEntity));
                 Intent intent_course = new Intent();
                 intent_course.putExtra("courses", coursesEntity);
                 intent_course.putExtra("chapter", mChapterEntity);
                 intent_course.putExtra("course", mCourseEntity);
-                getActivity().setResult(Activity.RESULT_OK, intent_course);
+                getActivity().setResult(Activity.RESULT_OK, intent_course);*/
                 getActivity().finish();
                 break;
             case R.id.button_review_complete:
+                getActivity().finish();
                 break;
         }
     }

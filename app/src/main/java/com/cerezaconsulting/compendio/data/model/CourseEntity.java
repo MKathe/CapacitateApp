@@ -14,9 +14,48 @@ public class CourseEntity implements Serializable {
     private ArrayList<ChapterEntity> chapters;
 
 
-
     private boolean isOffLineDisposed = false;
     private TrainingEntity trainingEntity;
+
+    //Adjustment Training
+
+    private String certificate;
+    private boolean finished = false;
+    private RealeseTrainingEntity release;
+    private boolean review;
+
+
+    public String getCertificate() {
+        return certificate;
+    }
+
+    public void setCertificate(String certificate) {
+        this.certificate = certificate;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public RealeseTrainingEntity getRelease() {
+        return release;
+    }
+
+    public void setRelease(RealeseTrainingEntity release) {
+        this.release = release;
+    }
+
+    public boolean isReview() {
+        return review;
+    }
+
+    public void setReview(boolean review) {
+        this.review = review;
+    }
 
     public TrainingEntity getTrainingEntity() {
         return trainingEntity;

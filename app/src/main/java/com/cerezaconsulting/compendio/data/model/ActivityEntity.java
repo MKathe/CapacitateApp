@@ -13,8 +13,15 @@ public class ActivityEntity implements Serializable {
     private int incorrect = 0;
     private String poorly = "";
     private String idTraining;
-    private String idChapter;
+    private String idChapter = "";
 
+    public String getPoorly() {
+        return poorly;
+    }
+
+    public void setPoorly(String poorly) {
+        this.poorly = poorly;
+    }
 
     public void incrementIncorrect() {
         incorrect++;

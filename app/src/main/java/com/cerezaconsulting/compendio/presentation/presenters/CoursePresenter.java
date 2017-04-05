@@ -71,6 +71,11 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
         mView.detailCourse(courseEntity);
     }
 
+    @Override
+    public void openDialogDoubt(String idTraining) {
+        mView.showDialogDoubt(idTraining);
+    }
+
 
     private void downloadAndSaveCourseInLocalStorage(CourseEntity courseEntity) {
         CoursesEntity coursesEntity = sessionManager.getCoures();
@@ -78,7 +83,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
         if (coursesEntity != null) {
             for (int i = 0; i < coursesEntity.getCourseEntities().size(); i++) {
                 if (courseEntity.getId().equals(coursesEntity.getCourseEntities().get(i).getId())) {
-                    courseEntity.setName(coursesEntity.getCourseEntities().get(i).getName());
+                    //courseEntity.setName(coursesEntity.getCourseEntities().get(i).getName());
                     courseEntity.setDescription(coursesEntity.getCourseEntities().get(i).getDescription());
                     coursesEntity.getCourseEntities().set(i, courseEntity);
                     sessionManager.setCourses(coursesEntity);
@@ -92,14 +97,14 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
     }
 
     @Override
-    public void downloadCourseById(String idTraining) {
+    public void downloadCourseById(CourseEntity idTraining) {
         downloadCourseById(sessionManager.getUserToken(), String.valueOf(sessionManager.getUserEntity().getId()), idTraining);
     }
 
-    private void downloadCourseById(String Token, String idUser, final String idTraining) {
+    private void downloadCourseById(String Token, String idUser, final CourseEntity courseEntity) {
         mView.setLoadingIndicator(true);
         CourseRequest courseRequest = ServiceFactory.createService(CourseRequest.class);
-        Call<TrainingEntity> call = courseRequest.downloadCourses(Token, idUser, idTraining);
+        Call<TrainingEntity> call = courseRequest.downloadCourses(Token, idUser, courseEntity.getId());
         call.enqueue(new Callback<TrainingEntity>() {
             @Override
             public void onResponse(Call<TrainingEntity> call, Response<TrainingEntity> response) {
@@ -110,10 +115,11 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                         return;
                     }
 
-                    CourseEntity courseEntity = new CourseEntity();
+
                     courseEntity.setTrainingEntity(response.body());
+                    courseEntity.setName(courseEntity.getRelease().getCourse());
                     courseEntity.setOffLineDisposed(true);
-                    courseEntity.setId(idTraining);
+
                     downloadAndSaveCourseInLocalStorage(courseEntity);
 
                     mView.openCourse(courseEntity);
@@ -145,6 +151,8 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                 if (coursesEntitiesLocal.get(i).getId().equals(coursesEntitiesRemote.get(j).getId())) {
                     if (coursesEntitiesLocal.get(i).getTrainingEntity() != null) {
                         coursesEntitiesRemote.set(j, coursesEntitiesLocal.get(i));
+
+
                     }
                 }
             }
@@ -169,12 +177,12 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                     }
 
 
-                    if (sessionManager.getCoures() != null){
+                    if (sessionManager.getCoures() != null) {
                         ArrayList<CourseEntity> courseEntities = selectedCoursesFromServer(sessionManager.getCoures().getCourseEntities(),
                                 response.body());
                         sessionManager.setCourses(new CoursesEntity(courseEntities));
                         mView.getCourses(courseEntities);
-                    }else{
+                    } else {
 
                         sessionManager.setCourses(new CoursesEntity(response.body()));
                         mView.getCourses(response.body());
@@ -204,16 +212,57 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
         });
     }
 
+
     @Override
     public void loadCourses() {
 
-        loadCourses(sessionManager.getUserToken(), sessionManager.getUserEntity().getCompany().getId());
+        loadCourses(sessionManager.getUserToken(), String.valueOf(sessionManager.getUserEntity().getId()));
     }
 
     @Override
     public void loadCoursesFromLocalRepository() {
 
         loadCoursesFromLocalStorage();
+    }
+
+    @Override
+    public void sendDoubt(String doubt, String id) {
+        mView.setLoadingIndicator(true);
+        CourseRequest courseRequest = ServiceFactory.createService(CourseRequest.class);
+        Call<Void> call = courseRequest.sendDoubt(sessionManager.getUserToken(), sessionManager.getUserEntity().getId(),
+                doubt, id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                mView.setLoadingIndicator(false);
+                if (response.isSuccessful()) {
+
+                    if (!mView.isActive()) {
+                        return;
+                    }
+                    mView.showMessage("Consulta enviada");
+                } else {
+                    if (!mView.isActive()) {
+                        return;
+                    }
+                    mView.showErrorMessage("Hubo un error, por favor intentar más tarde");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                if (!mView.isActive()) {
+                    return;
+                }
+                mView.setLoadingIndicator(false);
+                mView.showErrorMessage("No se puede conectar con el servidor, por favor intentar más tarde");
+            }
+        });
+    }
+
+    @Override
+    public void downloandCertify(String url) {
+
     }
 
     private void loadCoursesFromLocalStorage() {

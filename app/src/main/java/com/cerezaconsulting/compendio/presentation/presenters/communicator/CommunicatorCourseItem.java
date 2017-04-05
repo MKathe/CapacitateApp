@@ -8,4 +8,8 @@ import com.cerezaconsulting.compendio.data.model.CourseEntity;
 
 public interface CommunicatorCourseItem {
     void onClick(CourseEntity courseEntity);
+
+    void openDialogDoubt(String idTraining);
+
+    void downloandCertify(String url);
 }
