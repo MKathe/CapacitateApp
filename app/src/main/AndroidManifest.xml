@@ -44,6 +44,11 @@
         <activity
             android:name="com.cerezaconsulting.compendio.presentation.activities.QuestionReviewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.cerezaconsulting.compendio.presentation.activities.LoadSocketActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".services.SocketService" />
     </application>
 
 </manifest>

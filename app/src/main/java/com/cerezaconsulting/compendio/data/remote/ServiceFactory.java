@@ -6,6 +6,7 @@ import com.cerezaconsulting.compendio.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -22,6 +23,18 @@ public class ServiceFactory {
             new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create());
+
+
+    public static <T> T retrofitService(final Class<T> tClass) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+
+                .build();
+        return retrofit.create(tClass);
+    }
+
 
     public static <S> S createService(Class<S> serviceClass) {
 

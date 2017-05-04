@@ -76,6 +76,13 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
             if (isFinished) {
                 holder.itemView.setVisibility(View.GONE);
+               /* TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+                @ColorInt int color = typedValue.data;
+
+                holder.nextButton.setBackgroundColor(color);
+                holder.nextButton.setOnClickListener(view -> communicatorChapterItem.openQuestions());*/
             } else {
 
 
@@ -85,12 +92,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
                 @ColorInt int color = typedValue.data;
 
                 holder.nextButton.setBackgroundColor(color);
-                holder.nextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        communicatorChapterItem.openQuestions();
-                    }
-                });
+                holder.nextButton.setOnClickListener(view -> communicatorChapterItem.openQuestions());
             }
 
 
@@ -105,7 +107,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
                 holder.fragmentContent.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
 
-            holder.fragmentContent.setWebChromeClient(new WebChromeClient() {
+            /*holder.fragmentContent.setWebChromeClient(new WebChromeClient() {
                 public void onProgressChanged(WebView view, int progress) {
 
                     progressDialogCustom.setProgress(progress);
@@ -128,12 +130,13 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
 
                 }
-            });
+            });*/
 
             String html = fragmentEntity.getContent();
             holder.fragmentContent.getSettings().setJavaScriptEnabled(true);
             holder.fragmentContent.loadData(html, "text/html", "utf-8");
             holder.titleFragment.setText(fragmentEntity.getTitle());
+
         }
 
 

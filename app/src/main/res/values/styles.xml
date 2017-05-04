@@ -6,145 +6,194 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
-    <style name="indigoTheme" parent="Theme.AppCompat.NoActionBar">
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="indigoTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#3F51B5</item>
         <item name="colorPrimaryDark">#1A237E</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="colorAccent">#3F51B5</item>
     </style>
 
-    <style name="redTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="redTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#F44336</item>
         <item name="colorPrimaryDark">#B71C1C</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="colorAccent">#EF9A9A</item>
     </style>
 
-    <style name="pinkTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="pinkTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#E91E63</item>
         <item name="colorPrimaryDark">#880E4F</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="colorAccent">#F06292</item>
     </style>
 
-    <style name="purpleTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="purpleTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#9C27B0</item>
         <item name="colorPrimaryDark">#4A148C</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="colorAccent">#BA68C8</item>
     </style>
 
-    <style name="deepPurpleTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="deepPurpleTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#673AB7</item>
         <item name="colorPrimaryDark">#311B92</item>
         <item name="colorAccent">#B39DDB</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="greenTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="greenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#4CAF50</item>
         <item name="colorPrimaryDark">#1B5E20</item>
         <item name="colorAccent">#A5D6A7</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="tealTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="tealTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#009688</item>
         <item name="colorPrimaryDark">#004D40</item>
         <item name="colorAccent">#80CBC4</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="cyanTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="cyanTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#00BCD4</item>
         <item name="colorPrimaryDark">#006064</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="colorAccent">#80DEEA</item>
     </style>
+    <style name="myPopupMenuStyle" parent="@style/Widget.AppCompat.Light.PopupMenu">
 
-    <style name="ligthBlueTheme" parent="Theme.AppCompat.NoActionBar">
+    </style>
+    <style name="ligthBlueTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#03A9F4</item>
         <item name="colorPrimaryDark">#01579B</item>
         <item name="colorAccent">#81D4FA</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="ligthGreenTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="ligthGreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#8BC34A</item>
         <item name="colorPrimaryDark">#33691E</item>
         <item name="colorAccent">#C5E1A5</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="limeTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="limeTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#CDDC39</item>
         <item name="colorPrimaryDark">#827717</item>
         <item name="colorAccent">#DCE775</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="yelloweTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="yelloweTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FFEB3B</item>
         <item name="colorPrimaryDark">#F57F17</item>
         <item name="colorAccent">#FFF59D</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="amberTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="amberTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
 
         <item name="colorPrimary">#FFC107</item>
         <item name="colorPrimaryDark">#FF6F00</item>
         <item name="colorAccent">#FFE082</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="orangeTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="orangeTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FF9800</item>
         <item name="colorPrimaryDark">#E65100</item>
         <item name="colorAccent">#FFE0B2</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="deepOrangeTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="deepOrangeTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FF5722</item>
         <item name="colorPrimaryDark">#D84315</item>
         <item name="colorAccent">#FFAB91</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="brownTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="brownTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#795548</item>
         <item name="colorPrimaryDark">#D7CCC8</item>
         <item name="colorAccent">#4E342E</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="greyTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="greyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#9E9E9E</item>
         <item name="colorPrimaryDark">#424242</item>
         <item name="colorAccent">#BDBDBD</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="blueGreyTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="blueGreyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#607D8B</item>
         <item name="colorPrimaryDark">#455A64</item>
         <item name="colorAccent">#B0BEC5</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="blackTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="blackTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#000000</item>
         <item name="colorPrimaryDark">#fc232222</item>
         <item name="colorAccent">#FFFFFF</item>
+
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
 </resources>

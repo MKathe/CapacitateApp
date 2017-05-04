@@ -4,6 +4,7 @@
         android:id="@+id/action_send_question"
         android:title="Enviar consulta" />
     <item
+        android:visible="false"
         android:id="@+id/action_download"
         android:title="Descargar consolidado"/>
 </menu>

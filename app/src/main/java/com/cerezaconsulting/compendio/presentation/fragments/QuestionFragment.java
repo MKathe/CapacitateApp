@@ -139,8 +139,9 @@ public class QuestionFragment extends BaseFragment {
                 if (isToEndCourse()) {
                     generateAdnSaveReview();
                     questionEnd = true;
-                    lyCourseComplete.setVisibility(View.VISIBLE);
-                    titleCourse.setText(mCourseEntity.getName());
+                    lyChapterComplete.setVisibility(View.VISIBLE);
+                    titleChapter.setText(mChapterEntity.getName());
+                    tvIntellect.setText(mCourseEntity.getTrainingEntity().getIntellect() + " %");
 
                     customToolbarChapterComplete(false, getString(R.string.course_complete));
 
@@ -165,6 +166,7 @@ public class QuestionFragment extends BaseFragment {
     private void generateAdnSaveReview() {
 
         ReviewEntity reviewEntity = new ReviewEntity();
+        reviewEntity.setOffline(true);
         reviewEntity.setDate(CompendioUtils.getReviewDate(mCourseEntity.getTrainingEntity().getIntellect()));
         tvReview.setText(DateUtils.getFormant(reviewEntity.getDate()));
         mCourseEntity.getTrainingEntity().setReviewEntities(new ArrayList<ReviewEntity>());
@@ -232,9 +234,9 @@ public class QuestionFragment extends BaseFragment {
 
         InformationAdapter imagePagerAdapter = new InformationAdapter(getChildFragmentManager(), questionEntities);
         mActivityEntity = new ActivityEntity();
+        mActivityEntity.setOffline(true);
         autScroll.setAdapter(imagePagerAdapter);
         indicator.setViewPager(autScroll);
-        mActivityEntity = new ActivityEntity();
         mActivityEntity.setIdChapter(mChapterEntity.getId());
         autScroll.setPagingEnabled(false);
         getView().setFocusableInTouchMode(true);
@@ -317,14 +319,22 @@ public class QuestionFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.next_button_chapter:
                 //EventBus.getDefault().postSticky(mChapterEntity);
-                EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
-                        coursesEntity, mCourseEntity));
-                Intent intent = new Intent();
-                intent.putExtra("courses", coursesEntity);
-                intent.putExtra("chapter", mChapterEntity);
-                intent.putExtra("course", mCourseEntity);
-                getActivity().setResult(Activity.RESULT_OK, intent);
-                getActivity().finish();
+
+
+                if (isToEndCourse()){
+                    lyCourseComplete.setVisibility(View.VISIBLE);
+                    titleCourse.setText(mCourseEntity.getName());
+                }else{
+                    EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
+                            coursesEntity, mCourseEntity));
+                    Intent intent = new Intent();
+                    intent.putExtra("courses", coursesEntity);
+                    intent.putExtra("chapter", mChapterEntity);
+                    intent.putExtra("course", mCourseEntity);
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                    getActivity().finish();
+                }
+
 
                 break;
             case R.id.next_course_complete:

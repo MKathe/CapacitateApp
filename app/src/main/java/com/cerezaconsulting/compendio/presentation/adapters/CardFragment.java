@@ -15,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cerezaconsulting.compendio.R;
@@ -106,8 +108,14 @@ public class CardFragment extends Fragment {
         TextView description = (TextView) view.findViewById(R.id.tv_detail);
         imageView = (ImageView) view.findViewById(R.id.tv_status_chapter);
         Button button = (Button) view.findViewById(R.id.button);
+        FrameLayout linearLayout = (FrameLayout) view.findViewById(R.id.layout_background);
 
         imageView.setVisibility(chapterEntity.isFinished() ? View.VISIBLE : View.INVISIBLE);
+
+        if (chapterEntity.isFinished()) {
+            linearLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.item_selected));
+        }
+
 
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = getActivity().getTheme();
@@ -116,7 +124,8 @@ public class CardFragment extends Fragment {
 
         button.setBackgroundColor(color);
         title.setText(chapterEntity.getName());
-        description.setText("");
+        description.setText(chapterEntity.getDescription());
+        //description.setText("");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

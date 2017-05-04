@@ -10,6 +10,7 @@ public class LoginResponse implements Serializable {
 
     private String email_or_phone;
     private String password;
+    private boolean offline = true;
 
 
     public LoginResponse(String email_or_phone, String password) {

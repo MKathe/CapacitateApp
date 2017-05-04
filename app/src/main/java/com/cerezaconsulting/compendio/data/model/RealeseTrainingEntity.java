@@ -9,18 +9,17 @@ import java.io.Serializable;
 public class RealeseTrainingEntity implements Serializable {
 
     private int id;
-    private long start;
-    private long end;
+    private String start;
+    private String end;
     private int total;
-    private String course;
+    private CourseEntity course;
 
 
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
+    public void setCourse(CourseEntity course) {
         this.course = course;
+    }
+    public String getCourse() {
+        return course.getName();
     }
 
     public int getId() {
@@ -31,19 +30,19 @@ public class RealeseTrainingEntity implements Serializable {
         this.id = id;
     }
 
-    public long getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(long start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public long getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(long end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 

@@ -13,7 +13,15 @@ public class ChapterEntity implements Serializable {
     private boolean finished = false;
     private ArrayList<QuestionEntity> questionEntities;
 
+    private String description;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public ArrayList<QuestionEntity> getQuestionEntities() {
         return questionEntities;
     }

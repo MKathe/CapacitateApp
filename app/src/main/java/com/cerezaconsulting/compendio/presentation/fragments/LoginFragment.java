@@ -1,7 +1,11 @@
 package com.cerezaconsulting.compendio.presentation.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cerezaconsulting.compendio.R;
-import com.cerezaconsulting.compendio.core.BaseActivity;
 import com.cerezaconsulting.compendio.core.BaseActivityLogin;
 import com.cerezaconsulting.compendio.core.BaseFragment;
 import com.cerezaconsulting.compendio.presentation.activities.ExampleActivity;
@@ -92,7 +95,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProgressDialogCustom = new ProgressDialogCustom(getContext(), "Ingresando...");
-        mValidator =  new Validator(this);
+        mValidator = new Validator(this);
         mValidator.setValidationListener(this);
 
 
@@ -146,7 +149,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                    mValidator.validate();
+                mValidator.validate();
                 break;
             case R.id.et_forget_password:
                 break;
@@ -176,5 +179,40 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void chagePasswordDialog (){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Escribe tu correo");
+
+// Set up the input
+        final EditText input = new EditText(getContext());
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // m_Text = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+    }
+
+
+    @OnClick(R.id.et_forget_password)
+    public void onClick() {
+
+        chagePasswordDialog();
     }
 }

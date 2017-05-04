@@ -9,6 +9,7 @@ import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.data.model.TrainingEntity;
 import com.cerezaconsulting.compendio.data.remote.ServiceFactory;
 import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
+import com.cerezaconsulting.compendio.data.response.DoubtResponse;
 import com.cerezaconsulting.compendio.presentation.contracts.CourseContract;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
 
@@ -84,7 +85,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
             for (int i = 0; i < coursesEntity.getCourseEntities().size(); i++) {
                 if (courseEntity.getId().equals(coursesEntity.getCourseEntities().get(i).getId())) {
                     //courseEntity.setName(coursesEntity.getCourseEntities().get(i).getName());
-                    courseEntity.setDescription(coursesEntity.getCourseEntities().get(i).getDescription());
+                    //courseEntity.setDescription(coursesEntity.getCourseEntities().get(i).getDescription());
                     coursesEntity.getCourseEntities().set(i, courseEntity);
                     sessionManager.setCourses(coursesEntity);
                     mView.getCourses(sessionManager.getCoures().getCourseEntities());
@@ -118,6 +119,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
 
                     courseEntity.setTrainingEntity(response.body());
                     courseEntity.setName(courseEntity.getRelease().getCourse());
+                    courseEntity.setDescription(response.body().getRelease().getCourse().getDescription());
                     courseEntity.setOffLineDisposed(true);
 
                     downloadAndSaveCourseInLocalStorage(courseEntity);
@@ -151,8 +153,6 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                 if (coursesEntitiesLocal.get(i).getId().equals(coursesEntitiesRemote.get(j).getId())) {
                     if (coursesEntitiesLocal.get(i).getTrainingEntity() != null) {
                         coursesEntitiesRemote.set(j, coursesEntitiesLocal.get(i));
-
-
                     }
                 }
             }
@@ -228,9 +228,11 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
     @Override
     public void sendDoubt(String doubt, String id) {
         mView.setLoadingIndicator(true);
+
+        DoubtResponse doubtResponse = new DoubtResponse(doubt);
         CourseRequest courseRequest = ServiceFactory.createService(CourseRequest.class);
         Call<Void> call = courseRequest.sendDoubt(sessionManager.getUserToken(), sessionManager.getUserEntity().getId(),
-                doubt, id);
+                doubt, doubtResponse);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

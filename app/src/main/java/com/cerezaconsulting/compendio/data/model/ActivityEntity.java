@@ -8,12 +8,48 @@ import java.io.Serializable;
 
 public class ActivityEntity implements Serializable {
 
+
+    private String id = "";
     private double intellect = 0;
     private int correct = 0;
     private int incorrect = 0;
     private String poorly = "";
-    private String idTraining;
+    private String training = "";
     private String idChapter = "";
+    private boolean isOffline = false;
+
+
+
+    public ActivityEntity(String id, double intellect, int correct, int incorrect, String poorly, String training, String idChapter, boolean isOffline) {
+        this.id = id;
+        this.intellect = intellect;
+        this.correct = correct;
+        this.incorrect = incorrect;
+        this.poorly = poorly;
+        this.training = training;
+        this.idChapter = idChapter;
+        this.isOffline = isOffline;
+    }
+
+    public ActivityEntity() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isOffline() {
+        return isOffline;
+    }
+
+    public void setOffline(boolean offline) {
+        isOffline = offline;
+    }
 
     public String getPoorly() {
         return poorly;
@@ -41,7 +77,7 @@ public class ActivityEntity implements Serializable {
     }
 
     public String getIdTraining() {
-        return idTraining;
+        return training;
     }
 
     public void calculateIntellect(int totalQuestion) {
@@ -50,7 +86,7 @@ public class ActivityEntity implements Serializable {
     }
 
     public void setIdTraining(String idTraining) {
-        this.idTraining = idTraining;
+        this.training = idTraining;
     }
 
     public String getIdChapter() {

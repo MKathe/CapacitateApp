@@ -1,5 +1,6 @@
 package com.cerezaconsulting.compendio.presentation.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,11 +24,13 @@ import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
 import com.cerezaconsulting.compendio.core.BaseFragment;
 import com.cerezaconsulting.compendio.core.ScrollChildSwipeRefreshLayout;
+import com.cerezaconsulting.compendio.data.events.ConnectedSocketEvent;
 import com.cerezaconsulting.compendio.data.events.MessageChapterCompleteEvent;
 import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.presentation.activities.ChapterActivity;
 import com.cerezaconsulting.compendio.presentation.activities.FragmentsActivity;
+import com.cerezaconsulting.compendio.presentation.activities.LoadSocketActivity;
 import com.cerezaconsulting.compendio.presentation.activities.QuestionReviewActivity;
 import com.cerezaconsulting.compendio.presentation.adapters.CourseAdapter;
 import com.cerezaconsulting.compendio.presentation.contracts.CourseContract;
@@ -90,6 +93,28 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         EventBus.getDefault().unregister(this);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void connectedSocket(ConnectedSocketEvent event) {
+
+
+        switch (event.getStatus()) {
+
+            case 0:
+                break;
+            case 1:
+                nextActivity(getActivity(), null, LoadSocketActivity.class, false);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCompletedChapterEvent(MessageChapterCompleteEvent event) {
         if (event != null) {
@@ -101,6 +126,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     @Override
     public void onResume() {
         super.onResume();
+        presenter.start();
         presenter.loadCoursesFromLocalRepository();
     }
 
@@ -121,20 +147,14 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
                 ContextCompat.getColor(getActivity(), R.color.black)
         );
         refreshLayout.setScrollUpChild(complatinsList);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.loadCourses();
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> presenter.loadCourses());
 
         fabAddTask.setVisibility(View.GONE);
         layoutManager = new LinearLayoutManager(getContext());
         complatinsList.setLayoutManager(layoutManager);
 
-        courseAdapter = new CourseAdapter(new ArrayList<CourseEntity>(), (CommunicatorCourseItem) presenter);
+        courseAdapter = new CourseAdapter(getContext(), new ArrayList<CourseEntity>(), (CommunicatorCourseItem) presenter);
         complatinsList.setAdapter(courseAdapter);
-        presenter.start();
     }
 
     @Override
@@ -190,7 +210,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
 
 
                 if (courseEntity.getTrainingEntity().getReviewEntities().size() > 0) {
-                    if (DateUtils.dateIsCurrent(
+                    if (DateUtils.comparteDates(
                             courseEntity.getTrainingEntity().getReviewEntities()
                                     .get(courseEntity.getTrainingEntity().getReviewEntities().size() - 1)
                                     .getDate())) {
@@ -209,6 +229,10 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
                         bundle.putSerializable("course", courseEntity);
                         nextActivity(getActivity(), bundle, ChapterActivity.class, false);
                     }
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("course", courseEntity);
+                    nextActivity(getActivity(), bundle, ChapterActivity.class, false);
                 }
 
 
@@ -231,6 +255,12 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     public void openCourse(CourseEntity courseEntity) {
 
 
+
+        if (courseEntity.getTrainingEntity().getReviewEntities()!=null){
+            if (courseEntity.getTrainingEntity().getReviewEntities().size()>0){
+                return;
+            }
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable("course", courseEntity);
         nextActivity(getActivity(), bundle, ChapterActivity.class, false, REQUEST_CHAPTER);
@@ -279,5 +309,35 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     @Override
     public void showErrorMessage(String message) {
         ((BaseActivity) getActivity()).showMessageError(message);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == 999) {
+
+                CourseEntity courseEntity = (CourseEntity) data.getSerializableExtra("course");
+
+
+                if (courseEntity != null){
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("course", courseEntity);
+                    nextActivity(getActivity(), bundle, ChapterActivity.class, false);
+                }
+
+            }
+
+        }
+    }
+
+    public void openChapter(Bundle bundle){
+        if (bundle != null){
+            nextActivity(getActivity(), bundle, ChapterActivity.class, false);
+        }
+
     }
 }

@@ -8,6 +8,9 @@
     <color name="blue_facebook">#3c5a88</color>
     <color name="blue_facebook_select">#3c6ab1</color>
 
+    <color name= "gray_selected">#EEEEEE</color>
+    <color name= "item_selected">#F7F7F8</color>
+
     <color name="red">#F6402C</color>
     <color name="pink">#EB1460</color>
     <color name="purple">#9C1AB1</color>

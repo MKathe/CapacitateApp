@@ -1,5 +1,6 @@
 package com.cerezaconsulting.compendio.presentation.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cerezaconsulting.compendio.R;
@@ -31,10 +33,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
     private ArrayList<CourseEntity> list;
     private CommunicatorCourseItem communicatorCourseItem;
+    private Context mContext;
 
-    public CourseAdapter(ArrayList<CourseEntity> list, CommunicatorCourseItem communicatorCourseItem) {
+    public CourseAdapter(Context context, ArrayList<CourseEntity> list, CommunicatorCourseItem communicatorCourseItem) {
         this.list = list;
         this.communicatorCourseItem = communicatorCourseItem;
+        this.mContext = context;
     }
 
     @Override
@@ -48,9 +52,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         final CourseEntity courseEntity = list.get(position);
         holder.tvTitle.setText(courseEntity.getRelease().getCourse());
 
+        holder.tvSubtitle.setText(courseEntity.getRelease().getStart() + " - " + courseEntity.getRelease().getEnd());
+        /*
         Date dateStart = new Date(courseEntity.getRelease().getStart());
         Date dateEnd = new Date(courseEntity.getRelease().getEnd());
-        holder.tvSubtitle.setText(DateUtils.getFormant(dateStart) + " - " + DateUtils.getFormant(dateEnd));
+        holder.tvSubtitle.setText(DateUtils.getFormant(dateStart) + " - " + DateUtils.getFormant(dateEnd));*/
 
         // holder.tvSubtitle.setText(courseEntity.getDescription());
 
@@ -68,16 +74,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 holder.ivCheck.setVisibility(View.VISIBLE);
 
                 if (courseEntity.getTrainingEntity().getReviewEntities().size() > 0) {
+                    holder.linearLayoutBackground.setBackgroundColor(mContext.getResources().getColor(R.color.item_selected));;
+
                     if (DateUtils
-                            .dateIsCurrent(courseEntity.getTrainingEntity()
+                            .comparteDates(courseEntity.getTrainingEntity()
                                     .getReviewEntities()
                                     .get(courseEntity.getTrainingEntity()
                                             .getReviewEntities().size() - 1).getDate())) {
 
                         holder.ivCheck.setBackgroundResource(R.drawable.alarma);
                     } else {
-
-
                         holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
                     }
                 }
@@ -88,8 +94,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
                 if (courseEntity.isFinished()) {
                     holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
+                    holder.linearLayoutBackground.setBackgroundColor(mContext.getResources().getColor(R.color.item_selected));;
                     holder.ivCheck.setVisibility(View.VISIBLE);
-                }else{
+                } else {
+
+                    holder.linearLayoutBackground.setBackgroundColor(mContext.getResources().getColor(R.color.white));
                     holder.ivCheck.setVisibility(View.GONE);
                 }
             }
@@ -100,21 +109,19 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         } else {
 
             if (courseEntity.isFinished()) {
+                holder.linearLayoutBackground.setBackgroundColor(mContext.getResources().getColor(R.color.item_selected));
+
                 holder.ivCheck.setBackgroundResource(R.drawable.doble_check);
                 holder.ivCheck.setVisibility(View.VISIBLE);
-            }else{
+            } else {
+                holder.linearLayoutBackground.setBackgroundColor(mContext.getResources().getColor(R.color.white));
                 holder.ivCheck.setVisibility(View.GONE);
             }
 
         }
 
 
-        holder.ivOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopupMenu(holder.ivOptions,courseEntity);
-            }
-        });
+        holder.ivOptions.setOnClickListener(v -> showPopupMenu(holder.ivOptions, courseEntity));
     }
 
     private void showPopupMenu(View view, final CourseEntity courseEntity) {
@@ -123,19 +130,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_course, popup.getMenu());
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_send_question:
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_send_question:
+                    communicatorCourseItem.openDialogDoubt(courseEntity.getId());
 
-                        return true;
-                    case R.id.action_download:
-                        communicatorCourseItem.openDialogDoubt(courseEntity.getId());
-                        return true;
-                    default:
-                        return false;
-                }
+                    return true;
+                case R.id.action_download:
+                    return true;
+                default:
+                    return false;
             }
         });
         popup.show();
@@ -169,6 +173,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         ImageView ivOptions;
         @BindView(R.id.online_disposed)
         ImageView onlineDisposed;
+        @BindView(R.id.layout_background)
+        LinearLayout linearLayoutBackground;
 
         private OnClickListListener onClickListListener;
 

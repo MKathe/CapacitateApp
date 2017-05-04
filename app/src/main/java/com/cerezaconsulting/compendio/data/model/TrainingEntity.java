@@ -16,27 +16,27 @@ public class TrainingEntity implements Serializable {
     private String certificate;
     private boolean finished = false;
     private RealeseEntity release;
-    private ArrayList<ActivityEntity> activityEntities;
-    private ArrayList<ReviewEntity> reviewEntities;
+    private ArrayList<ActivityEntity> activities;
+    private ArrayList<ReviewEntity> reviews;
 
     public void setPosition(double position) {
         this.position = position;
     }
 
     public ArrayList<ReviewEntity> getReviewEntities() {
-        return reviewEntities;
+        return reviews;
     }
 
     public void setReviewEntities(ArrayList<ReviewEntity> reviewEntities) {
-        this.reviewEntities = reviewEntities;
+        this.reviews = reviewEntities;
     }
 
     public ArrayList<ActivityEntity> getActivityEntities() {
-        return activityEntities;
+        return activities;
     }
 
     public void setActivityEntities(ArrayList<ActivityEntity> activityEntities) {
-        this.activityEntities = activityEntities;
+        this.activities = activityEntities;
     }
 
     public int getId() {

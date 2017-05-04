@@ -140,7 +140,8 @@ public class QuestionReviewFragment extends BaseFragment {
                 mCourseEntity.getTrainingEntity().getActivityEntities().add(mActivityEntity);
                 questionEnd = true;
                 lyReviewComplete.setVisibility(View.VISIBLE);
-                ReviewEntity reviewEntity = new ReviewEntity();
+                ReviewEntity reviewEntity = mCourseEntity.getTrainingEntity().getReviewEntities().get(0);
+                reviewEntity.setOffline(true);
                 reviewEntity.setCompleted(true);
                 mCourseEntity.getTrainingEntity()
                         .setIntellect(CompendioUtils
@@ -178,9 +179,15 @@ public class QuestionReviewFragment extends BaseFragment {
         SessionManager sessionManager = new SessionManager(getContext());
         ArrayList<CourseEntity> courseEntities = sessionManager.getCoures().getCourseEntities();
 
-        reviewEntity.setDate(CompendioUtils.getReviewDate(mCourseEntity.getTrainingEntity().getIntellect()));
+        ReviewEntity nextReviewEntity = new ReviewEntity();
+        nextReviewEntity.setOffline(true);
+        nextReviewEntity.setDate(CompendioUtils.getReviewDate(mCourseEntity.getTrainingEntity().getIntellect()));
+
+
+        mCourseEntity.getTrainingEntity().getReviewEntities().set(0, reviewEntity);
+        mCourseEntity.getTrainingEntity().getReviewEntities().add(nextReviewEntity);
         tvReviewNext.setText(DateUtils.getFormant(reviewEntity.getDate()));
-        mCourseEntity.getTrainingEntity().getReviewEntities().add(reviewEntity);
+
         for (int i = 0; i < courseEntities.size(); i++) {
             if (mCourseEntity.getId().equals(courseEntities.get(i).getId())) {
                 courseEntities.set(i, mCourseEntity);
@@ -196,6 +203,7 @@ public class QuestionReviewFragment extends BaseFragment {
     private void generateAdnSaveReview() {
 
         ReviewEntity reviewEntity = new ReviewEntity();
+        reviewEntity.setOffline(true);
         reviewEntity.setDate(CompendioUtils.getReviewDate(mCourseEntity.getTrainingEntity().getIntellect()));
         mCourseEntity.getTrainingEntity().setReviewEntities(new ArrayList<ReviewEntity>());
         mCourseEntity.getTrainingEntity().getReviewEntities().add(reviewEntity);
@@ -260,9 +268,9 @@ public class QuestionReviewFragment extends BaseFragment {
 
         InformationAdapter imagePagerAdapter = new InformationAdapter(getChildFragmentManager(), questionEntities);
         mActivityEntity = new ActivityEntity();
+        mActivityEntity.setOffline(true);
         autScroll.setAdapter(imagePagerAdapter);
         indicator.setViewPager(autScroll);
-        mActivityEntity = new ActivityEntity();
         autScroll.setPagingEnabled(false);
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -285,7 +293,6 @@ public class QuestionReviewFragment extends BaseFragment {
         @ColorInt int color = typedValue.data;
 
         buttonReviewComplete.setBackgroundColor(color);
-
 
 
     }
@@ -367,6 +374,10 @@ public class QuestionReviewFragment extends BaseFragment {
                 getActivity().finish();
                 break;
             case R.id.button_review_complete:
+                Intent intent2 = new Intent();
+                intent2.putExtra("course", mCourseEntity);
+                getActivity().setResult(Activity.RESULT_OK, intent2);
+
                 getActivity().finish();
                 break;
         }

@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#9DC9D2"
+        android:background="#B0E1E6"
         android:scaleType="fitXY" />
 
 
@@ -24,14 +24,14 @@
  -->
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
+
+        android:layout_centerInParent="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:focusableInTouchMode="true">
 
 
@@ -41,6 +41,7 @@
                 android:layout_gravity="center">
 
                 <LinearLayout
+                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -63,7 +64,7 @@
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical|center"
                         android:hint="Nombres"
-                        android:text=""
+                        android:text="juniorquegu@gmail.com"
                         android:imeActionLabel="Usuario"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
@@ -72,6 +73,7 @@
                         android:textSize="16dp" />
 
                     <EditText
+
                         android:id="@+id/etpassword"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -81,7 +83,7 @@
                         android:hint="Contraseña"
                         android:imeActionLabel="Usuario"
                         android:imeOptions="actionDone"
-                        android:text=""
+                        android:text="Admin1"
                         android:inputType="textPassword"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"

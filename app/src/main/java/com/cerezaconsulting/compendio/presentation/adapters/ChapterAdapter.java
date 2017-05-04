@@ -40,7 +40,6 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ChapterEntity chapterEntity = list.get(position);
-
         holder.tvTitle.setText(chapterEntity.getName());
 
     }

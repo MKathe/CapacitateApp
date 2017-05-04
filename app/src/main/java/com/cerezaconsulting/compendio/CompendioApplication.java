@@ -1,6 +1,7 @@
 package com.cerezaconsulting.compendio;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -8,7 +9,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Created by junior on 25/12/16.
  */
 
-public class CompendioApplication extends Application {
+public class CompendioApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {
@@ -18,12 +19,5 @@ public class CompendioApplication extends Application {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
-
     }
-
-
-
-
-
 }

@@ -132,7 +132,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageChapterCompleteEvent event) {
         if (event != null) {
-
+            getActivity().finish();
             for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
                 if (event.getChapterEntity().getId().equals(courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).getId())) {
 
@@ -412,7 +412,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
                         } else {
                             if (j == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size() - 1) {
 
-                                for (int k = 0; k <=i; k++) {
+                                for (int k = 0; k <= i; k++) {
                                     if (!courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(k).isFinished()) {
                                         openFragmentActivity(courseEntity, courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(k));
                                         viewPager.setCurrentItem(k);

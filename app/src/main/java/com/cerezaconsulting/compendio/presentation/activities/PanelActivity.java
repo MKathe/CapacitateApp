@@ -8,18 +8,24 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
+import com.cerezaconsulting.compendio.data.local.CompedioDbHelper;
 import com.cerezaconsulting.compendio.data.local.SessionManager;
+import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.data.model.UserEntity;
 import com.cerezaconsulting.compendio.presentation.fragments.CourseFragment;
 import com.cerezaconsulting.compendio.presentation.presenters.CoursePresenter;
+import com.cerezaconsulting.compendio.services.SocketService;
 import com.cerezaconsulting.compendio.utils.ActivityUtils;
 import com.cerezaconsulting.compendio.utils.GlideUtils;
 
@@ -36,7 +42,7 @@ public class PanelActivity extends BaseActivity {
     public ImageView profile_image;
     public TextView tv_state_gender;
     public UserEntity mUser;
-
+    CourseFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +57,15 @@ public class PanelActivity extends BaseActivity {
          */
         mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         /**
          * Setup click events on the Navigation View Items.
          */
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setTitle("Cursos");
+        toolbar.setTitle("Mis Cursos");
 
         setupDrawerContent(navigationView);
 
@@ -85,7 +90,7 @@ public class PanelActivity extends BaseActivity {
         initHeader();
 
 
-        CourseFragment fragment = (CourseFragment) getSupportFragmentManager().findFragmentById(R.id.body);
+        fragment = (CourseFragment) getSupportFragmentManager().findFragmentById(R.id.body);
         if (fragment == null) {
             fragment = CourseFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.body);
@@ -137,42 +142,39 @@ public class PanelActivity extends BaseActivity {
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem -> {
 
 
-                        menuItem.setChecked(false);
-                        menuItem.setCheckable(false);
+                    menuItem.setChecked(false);
+                    menuItem.setCheckable(false);
 
 
-                        switch (menuItem.getItemId()) {
-                            case R.id.nav_connect:
-                             /*  Intent intent_connect = new Intent(getBaseContext(), ProfileActivity.class);
-                                startActivityForResult(intent_connect,200);
-                */
-                                break;
-                            case R.id.nav_signout:
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_connect:
+                         /*  Intent intent_connect = new Intent(getBaseContext(), ProfileActivity.class);
+                            startActivityForResult(intent_connect,200);
+            */
+                            break;
+                        case R.id.nav_signout:
 
-                                CloseSession();
+                            CloseSession();
 
-                                break;
+                            break;
 
-                            default:
+                        default:
 
-                                break;
-                        }
-                        menuItem.setChecked(false);
-                        //  mDrawer.closeDrawers();
-                        return true;
+                            break;
                     }
-
+                    menuItem.setChecked(false);
+                    //  mDrawer.closeDrawers();
+                    return true;
                 });
     }
 
 
     private void CloseSession() {
         mSessionManager.closeSession();
+        deleteDatabase(CompedioDbHelper.DATABASE_NAME);
         newActivityClearPreview(this, null, LoginActivity.class);
 
 
@@ -184,6 +186,11 @@ public class PanelActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.menu_refresh:
+                Toast.makeText(this, "Sincronizando", Toast.LENGTH_SHORT).show();
+                startService(new Intent(getBaseContext(), SocketService.class));
                 return true;
         }
 
@@ -206,6 +213,12 @@ public class PanelActivity extends BaseActivity {
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_sinc, menu);
+        return true;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -213,8 +226,26 @@ public class PanelActivity extends BaseActivity {
         if (Activity.RESULT_OK == resultCode)
             if (200 == requestCode) {
                 initHeader();
-
+                return;
             }
+
+
+        if (data != null){
+
+            CourseEntity courseEntity = (CourseEntity) data.getSerializableExtra("course");
+
+
+            if (courseEntity != null) {
+
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("course", courseEntity);
+                fragment.openChapter(bundle
+                );
+            }
+
+
+        }
 
 
     }

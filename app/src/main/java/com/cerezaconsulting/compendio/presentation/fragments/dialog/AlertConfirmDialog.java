@@ -43,7 +43,7 @@ public class AlertConfirmDialog extends AlertDialog implements Validator.Validat
     private Validator validator;
     private String idTraining;
 
-    public AlertConfirmDialog(Context context, final CourseContract.View viewContract, String button1,String textConfirmDialog) {
+    public AlertConfirmDialog(Context context, final CourseContract.View viewContract, String button1, String textConfirmDialog) {
         super(context);
         this.viewContract = checkNotNull(viewContract, "view cannot be null!");
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -63,11 +63,12 @@ public class AlertConfirmDialog extends AlertDialog implements Validator.Validat
         theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
         @ColorInt int color = typedValue.data;
 
+        rlyClose.setBackgroundColor(color);
         btn1.setBackgroundColor(color);
 
         btn1.setText(button1);
         //btn2.setText(button2);
-       // textConfirm.setText(textConfirmDialog);
+        // textConfirm.setText(textConfirmDialog);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +88,7 @@ public class AlertConfirmDialog extends AlertDialog implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        viewContract.sendDoubt(textConfirm.getText().toString(),idTraining);
+        viewContract.sendDoubt(textConfirm.getText().toString(), idTraining);
         this.dismiss();
     }
 

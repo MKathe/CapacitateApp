@@ -61,6 +61,7 @@ public class QuestionPageFragment extends BaseFragment {
 
 
     final Handler handler = new Handler();
+    Handler mHandlerPausing = new Handler();
     private MessageActivityEvent mMessageActivityEvent;
     private SessionManager sessionManager;
 
@@ -68,6 +69,17 @@ public class QuestionPageFragment extends BaseFragment {
         @Override
         public void run() {
             EventBus.getDefault().postSticky(mMessageActivityEvent);
+        }
+    };
+
+    private Runnable mRunnableTempView = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -105,6 +117,7 @@ public class QuestionPageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         handler.removeCallbacks(mRunnable);
+        //mHandlerPausing.removeCallbacks(mRunnableTempView);
     }
 
     @Override
@@ -126,7 +139,7 @@ public class QuestionPageFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvQuestion.setText(questionEntity.getDetail());
+        tvQuestion.setText("¿" + questionEntity.getDetail() + "?");
 
         for (int i = 0; i < questionEntity.getOptions().size(); i++) {
             switch (i) {
@@ -190,10 +203,11 @@ public class QuestionPageFragment extends BaseFragment {
 
     private void clickQuestion(ImageView imageView, QuestionEntity questionEntity, int optionPosition) {
         if (!questionEntity.isContest()) {
+
             imageView.setBackgroundResource(
                     questionEntity.getOptions().get(optionPosition).isCorrect() ? R.drawable.check : R.drawable.equis);
             questionEntity.setContest(true);
-            selectedCorrectQuestion();
+            selectedCorrectQuestion();//1000 milliseconds is one second.
 
             mMessageActivityEvent = new MessageActivityEvent(questionEntity.getOptions().get(optionPosition).isCorrect(),
                     questionEntity.getFragment());

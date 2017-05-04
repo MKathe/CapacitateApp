@@ -1,24 +1,23 @@
-package com.cerezaconsulting.compendio.data.model;
+package com.cerezaconsulting.compendio.data.entities;
 
 import java.io.Serializable;
 
 /**
- * Created by junior on 24/03/17.
+ * Created by junior on 10/04/17.
  */
 
-public class RealeseEntity implements Serializable {
-
-    private int id;
+public class RealeseModel implements Serializable {
+    private String id;
     private String start;
     private String end;
-    private int total;
-    private CourseEntity course;
+    private String total;
+    private String course;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -38,19 +37,19 @@ public class RealeseEntity implements Serializable {
         this.end = end;
     }
 
-    public int getTotal() {
+    public String getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(String total) {
         this.total = total;
     }
 
-    public CourseEntity getCourse() {
+    public String getCourse() {
         return course;
     }
 
-    public void setCourse(CourseEntity course) {
+    public void setCourse(String course) {
         this.course = course;
     }
 }
