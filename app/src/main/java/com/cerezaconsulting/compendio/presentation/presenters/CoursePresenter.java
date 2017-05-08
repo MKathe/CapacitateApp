@@ -1,11 +1,17 @@
 package com.cerezaconsulting.compendio.presentation.presenters;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 
+import com.cerezaconsulting.compendio.data.local.CompedioDbHelper;
+import com.cerezaconsulting.compendio.data.local.CompendioPersistenceContract;
 import com.cerezaconsulting.compendio.data.local.SessionManager;
 import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.data.model.CoursesEntity;
+import com.cerezaconsulting.compendio.data.model.FragmentEntity;
+import com.cerezaconsulting.compendio.data.model.ReviewEntity;
 import com.cerezaconsulting.compendio.data.model.TrainingEntity;
 import com.cerezaconsulting.compendio.data.remote.ServiceFactory;
 import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
@@ -28,6 +34,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
     private CourseContract.View mView;
     private SessionManager sessionManager;
     private boolean firstLoad = false;
+    private CompedioDbHelper mCompedioDbHelper;
     private Context context;
 
     public CoursePresenter(CourseContract.View mView, Context context) {
@@ -35,6 +42,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
         sessionManager = new SessionManager(context);
         this.mView.setPresenter(this);
         this.context = context;
+        this.mCompedioDbHelper = new CompedioDbHelper(context);
 
     }
 
@@ -58,12 +66,12 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
     @Override
     public void start() {
 
-        if (!firstLoad) {
-            loadCoursesFromLocalRepository();
-            if (isInternetConnection())
-                loadCourses();
-            firstLoad = true;
-        }
+        //if (!firstLoad) {
+        loadCoursesFromLocalRepository();
+        if (isInternetConnection())
+            loadCourses();
+        //  firstLoad = true;
+        //}
 
     }
 
@@ -87,6 +95,19 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                     //courseEntity.setName(coursesEntity.getCourseEntities().get(i).getName());
                     //courseEntity.setDescription(coursesEntity.getCourseEntities().get(i).getDescription());
                     coursesEntity.getCourseEntities().set(i, courseEntity);
+
+                    for (int j = 0; j < courseEntity.getTrainingEntity().getRelease().getCourse()
+                            .getChapters().size(); j++) {
+
+                        for (int k = 0; k < courseEntity.getTrainingEntity().getRelease().getCourse()
+                                .getChapters().get(j).getFragments().size(); k++) {
+                            saveFragmentsToSQL(courseEntity.getTrainingEntity().getRelease().getCourse()
+                                            .getChapters().get(j).getFragments().get(k),
+                                    courseEntity.getId(), courseEntity.getTrainingEntity().getRelease().getCourse()
+                                            .getChapters().get(j).getId());
+                        }
+
+                    }
                     sessionManager.setCourses(coursesEntity);
                     mView.getCourses(sessionManager.getCoures().getCourseEntities());
                     return;
@@ -95,6 +116,22 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
 
         }
 
+    }
+
+
+    private void saveFragmentsToSQL(FragmentEntity fragmentEntity, String idTraining, String idChapter) {
+        SQLiteDatabase db = mCompedioDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(CompendioPersistenceContract.FragmentEntity._ID, fragmentEntity.getId());
+        values.put(CompendioPersistenceContract.FragmentEntity.CHAPTER, idChapter);
+        values.put(CompendioPersistenceContract.FragmentEntity.TRAINING, idTraining);
+        values.put(CompendioPersistenceContract.FragmentEntity.TITLE, fragmentEntity.getTitle());
+        values.put(CompendioPersistenceContract.FragmentEntity.CONTENT, fragmentEntity.getContent());
+
+        db.insert(CompendioPersistenceContract.FragmentEntity.TABLE_NAME, null, values);
+
+        db.close();
     }
 
     @Override
@@ -144,6 +181,39 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
         });
     }
 
+    private ArrayList<CourseEntity> updateTrainingResults(ArrayList<CourseEntity> coursesEntitiesLocal,
+                                                          ArrayList<CourseEntity> coursesEntitiesRemote) {
+
+        for (int j = 0; j < coursesEntitiesRemote.size(); j++) {
+
+            for (int i = 0; i < coursesEntitiesLocal.size(); i++) {
+                if (coursesEntitiesLocal.get(i).getId().equals(coursesEntitiesRemote.get(j).getId())) {
+                    if (coursesEntitiesLocal.get(i).getTrainingEntity() != null) {
+
+
+                        coursesEntitiesLocal.get(i).getTrainingEntity().setProgress(
+                                coursesEntitiesRemote.get(j).getProgress()
+                        );
+
+                        coursesEntitiesLocal.get(i).getTrainingEntity().setPosition(
+                                coursesEntitiesRemote.get(j).getPosition()
+                        );
+                        coursesEntitiesLocal.get(i).getTrainingEntity().setIntellect(
+                                coursesEntitiesRemote.get(j).getIntellect()
+                        );
+                        coursesEntitiesLocal.get(i).getTrainingEntity().setCertificate(
+                                coursesEntitiesRemote.get(j).getCertificate()
+                        );
+
+                    }
+                }
+            }
+
+        }
+
+        return coursesEntitiesLocal;
+    }
+
     private ArrayList<CourseEntity> selectedCoursesFromServer(ArrayList<CourseEntity> coursesEntitiesLocal,
                                                               ArrayList<CourseEntity> coursesEntitiesRemote) {
 
@@ -152,7 +222,10 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
             for (int i = 0; i < coursesEntitiesLocal.size(); i++) {
                 if (coursesEntitiesLocal.get(i).getId().equals(coursesEntitiesRemote.get(j).getId())) {
                     if (coursesEntitiesLocal.get(i).getTrainingEntity() != null) {
+
+
                         coursesEntitiesRemote.set(j, coursesEntitiesLocal.get(i));
+
                     }
                 }
             }
@@ -176,11 +249,15 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                         return;
                     }
 
+                    ArrayList<CourseEntity> courseEntitiesTemp = new ArrayList<>(response.body());
+                    ArrayList<CourseEntity> courseEntitiesTemp2 = new ArrayList<>(response.body());
 
                     if (sessionManager.getCoures() != null) {
                         ArrayList<CourseEntity> courseEntities = selectedCoursesFromServer(sessionManager.getCoures().getCourseEntities(),
-                                response.body());
-                        sessionManager.setCourses(new CoursesEntity(courseEntities));
+                                courseEntitiesTemp);
+
+                        ArrayList<CourseEntity> selectedCourses = updateTrainingResults(courseEntities, courseEntitiesTemp2);
+                        sessionManager.setCourses(new CoursesEntity(selectedCourses));
                         mView.getCourses(courseEntities);
                     } else {
 

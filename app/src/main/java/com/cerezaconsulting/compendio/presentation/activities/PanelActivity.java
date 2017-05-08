@@ -98,6 +98,10 @@ public class PanelActivity extends BaseActivity {
 
         new CoursePresenter(fragment, getApplicationContext());
 
+
+        if (isMyServiceRunning(SocketService.class)) {
+            nextActivity(this,null,LoadSocketActivity.class,false);
+        }
     }
 
 
@@ -173,6 +177,7 @@ public class PanelActivity extends BaseActivity {
 
 
     private void CloseSession() {
+        stopService(new Intent(getBaseContext(), SocketService.class));
         mSessionManager.closeSession();
         deleteDatabase(CompedioDbHelper.DATABASE_NAME);
         newActivityClearPreview(this, null, LoginActivity.class);
@@ -230,7 +235,7 @@ public class PanelActivity extends BaseActivity {
             }
 
 
-        if (data != null){
+        if (data != null) {
 
             CourseEntity courseEntity = (CourseEntity) data.getSerializableExtra("course");
 

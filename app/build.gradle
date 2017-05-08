@@ -49,6 +49,7 @@ android {
             targetSdkVersion 25
             applicationId = "com.cerezaconsulting.coreproject.test"
             buildConfigField 'String', 'BASE', '"http://racompendio.cloudapp.net"'
+            //buildConfigField 'String', 'BASE', '"http://192.168.1.5:8080"'
         }
     }
 

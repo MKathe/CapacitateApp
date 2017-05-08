@@ -22,6 +22,7 @@ import com.cerezaconsulting.compendio.data.model.FragmentEntity;
 import com.cerezaconsulting.compendio.data.model.QuestionEntity;
 import com.cerezaconsulting.compendio.presentation.activities.QuestionActivity;
 import com.cerezaconsulting.compendio.presentation.adapters.FragmentAdapter;
+import com.cerezaconsulting.compendio.presentation.contracts.FragmentContract;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorChapterItem;
 import com.cerezaconsulting.compendio.utils.CompendioUtils;
 
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by miguel on 15/03/17.
  */
 
-public class FragmentFragment extends BaseFragment implements CommunicatorChapterItem {
+public class FragmentFragment extends BaseFragment implements CommunicatorChapterItem, FragmentContract.View {
 
     private static final int REQUEST_QUESTIONARY = 300;
 
@@ -57,11 +58,19 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
     private ChapterEntity chapterEntity;
     private ArrayList<ChapterEntity> chapterEntities;
     private CourseEntity courseEntity;
+    private FragmentContract.Presenter mPresenter;
 
     public static FragmentFragment newInstance(Bundle bundle) {
         FragmentFragment fragment = new FragmentFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.loadFragments(courseEntity.getId(), chapterEntity.getId());
     }
 
     @Override
@@ -87,7 +96,8 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
         layoutManager = new LinearLayoutManager(getContext());
         complatinsList.setLayoutManager(layoutManager);
 
-        fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(),chapterEntity.getFragments(), getContext(), this);
+        //fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(),chapterEntity.getFragments(), getContext(), this);
+        fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(), new ArrayList<FragmentEntity>(), getContext(), this);
 
 
         complatinsList.setAdapter(fragmentAdapter);
@@ -126,7 +136,7 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == REQUEST_QUESTIONARY){
+            if (requestCode == REQUEST_QUESTIONARY) {
 
                 getActivity().setResult(Activity.RESULT_OK, data);
                 getActivity().finish();
@@ -136,4 +146,29 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
     }
 
 
+    @Override
+    public void showFragments(ArrayList<FragmentEntity> fragmentEntities) {
+        fragmentAdapter.setItems(fragmentEntities);
+        fragmentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setPresenter(FragmentContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void setLoadingIndicator(boolean active) {
+
+    }
+
+    @Override
+    public void showMessage(String message) {
+
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+
+    }
 }

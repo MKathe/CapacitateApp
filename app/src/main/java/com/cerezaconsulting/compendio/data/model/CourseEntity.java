@@ -19,11 +19,38 @@ public class CourseEntity implements Serializable {
 
     //Adjustment Training
 
-    private String certificate;
     private boolean finished = false;
     private RealeseTrainingEntity release;
     private boolean review;
+    private double position;
+    private double progress;
+    private double intellect;
+    private String certificate;
 
+
+    public double getPosition() {
+        return position;
+    }
+
+    public void setPosition(double position) {
+        this.position = position;
+    }
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
+
+    public double getIntellect() {
+        return intellect;
+    }
+
+    public void setIntellect(double intellect) {
+        this.intellect = intellect;
+    }
 
     public String getCertificate() {
         return certificate;

@@ -326,7 +326,7 @@ public class QuestionFragment extends BaseFragment {
                     titleCourse.setText(mCourseEntity.getName());
                 }else{
                     EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
-                            coursesEntity, mCourseEntity));
+                            coursesEntity, mCourseEntity,false));
                     Intent intent = new Intent();
                     intent.putExtra("courses", coursesEntity);
                     intent.putExtra("chapter", mChapterEntity);
@@ -339,7 +339,7 @@ public class QuestionFragment extends BaseFragment {
                 break;
             case R.id.next_course_complete:
                 EventBus.getDefault().postSticky(new MessageChapterCompleteEvent(mChapterEntity,
-                        coursesEntity, mCourseEntity));
+                        coursesEntity, mCourseEntity,true));
                 Intent intent_course = new Intent();
                 intent_course.putExtra("courses", coursesEntity);
                 intent_course.putExtra("chapter", mChapterEntity);

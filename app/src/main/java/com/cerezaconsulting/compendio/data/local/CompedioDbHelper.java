@@ -55,6 +55,16 @@ public class CompedioDbHelper extends SQLiteOpenHelper {
                     CompendioPersistenceContract.ReviewEntity.SYNC + BOOLEAN_TYPE +
                     " )";
 
+
+    private static final String SQL_CREATE_FRAGMENTS =
+            "CREATE TABLE " + CompendioPersistenceContract.FragmentEntity.TABLE_NAME + " (" +
+                    CompendioPersistenceContract.FragmentEntity._ID + BOOLEAN_TYPE + " PRIMARY KEY," +
+                    CompendioPersistenceContract.FragmentEntity.TITLE + TEXT_TYPE + COMMA_SEP +
+                    CompendioPersistenceContract.FragmentEntity.CONTENT + TEXT_TYPE + COMMA_SEP +
+                    CompendioPersistenceContract.FragmentEntity.CHAPTER + TEXT_TYPE + COMMA_SEP +
+                    CompendioPersistenceContract.FragmentEntity.TRAINING + TEXT_TYPE  +
+                    " )";
+
     public CompedioDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -62,6 +72,7 @@ public class CompedioDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ACTIVITIES);
         db.execSQL(SQL_CREATE_REVIEWS);
+        db.execSQL(SQL_CREATE_FRAGMENTS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

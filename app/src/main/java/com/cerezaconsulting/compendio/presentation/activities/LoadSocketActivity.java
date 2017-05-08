@@ -1,6 +1,10 @@
 package com.cerezaconsulting.compendio.presentation.activities;
 
+import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,6 +18,8 @@ import android.widget.Toast;
 
 import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
+import com.cerezaconsulting.compendio.data.events.ConnectedSocketEvent;
+import com.cerezaconsulting.compendio.data.events.DisconectedSocketEvent;
 import com.cerezaconsulting.compendio.data.events.SyncProcessSocketEvent;
 import com.cerezaconsulting.compendio.presentation.contracts.SyncContrac;
 import com.cerezaconsulting.compendio.presentation.presenters.SyncPresenter;
@@ -21,6 +27,7 @@ import com.cerezaconsulting.compendio.services.SocketService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +60,18 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
     private SyncContrac.Presenter mSyncPresenter;
     private int isDownload = 0;
 
+    BroadcastReceiver broadcast_reciever = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("finish_activity")) {
+                finish();
+            }
+        }
+    };
+
+
     @Subscribe
     public void connectedSocketProcess(SyncProcessSocketEvent event) {
 
@@ -60,12 +79,25 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
     }
 
 
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void socketEventDisconnected(DisconectedSocketEvent event) {
+        if (event != null) {
+
+            if (event.isActive()){
+                finish();
+            }
+            // presenter.loadCoursesFromLocalRepository();
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         setContentView(R.layout.fragment_loading_socket);
         ButterKnife.bind(this);
+        registerReceiver(broadcast_reciever, new IntentFilter("finish_activity"));
         mSyncPresenter = new SyncPresenter(this, this);
         mSyncPresenter.start();
     }
@@ -133,10 +165,11 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        unregisterReceiver(broadcast_reciever);
     }
 
 
-    @OnClick({R.id.btn_again, R.id.btn_esc, R.id.btn_cancel})
+    @OnClick({R.id.btn_again, R.id.btn_esc, R.id.btn_cancel,R.id.btn_cancel_off})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_again:
@@ -156,10 +189,10 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
 
                 break;
             case R.id.btn_cancel:
-                mSyncPresenter.tryAgainDowloandCourses();
+                mSyncPresenter.syncFinalize();
                 break;
             case R.id.btn_cancel_off:
-                mSyncPresenter.tryAgainDowloandCourses();
+                syncFinalize();
                 break;
         }
     }

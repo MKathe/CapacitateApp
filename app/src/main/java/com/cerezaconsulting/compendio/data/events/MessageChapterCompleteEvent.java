@@ -12,13 +12,30 @@ public class MessageChapterCompleteEvent {
     private ChapterEntity chapterEntity;
     private CoursesEntity coursesEntity;
     private CourseEntity courseEntity;
+    private boolean isFinishedChapter = false;
+
+
+    public boolean isFinishedChapter() {
+        return isFinishedChapter;
+    }
+
+    public void setFinishedChapter(boolean finishedChapter) {
+        isFinishedChapter = finishedChapter;
+    }
+
+    public MessageChapterCompleteEvent(ChapterEntity chapterEntity, CoursesEntity coursesEntity, CourseEntity courseEntity,
+                                       boolean  isFinishedChapter) {
+        this.chapterEntity = chapterEntity;
+        this.coursesEntity = coursesEntity;
+        this.courseEntity = courseEntity;
+        this.isFinishedChapter = isFinishedChapter;
+    }
 
     public MessageChapterCompleteEvent(ChapterEntity chapterEntity, CoursesEntity coursesEntity, CourseEntity courseEntity) {
         this.chapterEntity = chapterEntity;
         this.coursesEntity = coursesEntity;
         this.courseEntity = courseEntity;
     }
-
     public MessageChapterCompleteEvent(ChapterEntity chapterEntity, CourseEntity courseEntity) {
         this.chapterEntity = chapterEntity;
         this.courseEntity = courseEntity;

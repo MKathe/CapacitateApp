@@ -4,6 +4,9 @@ import com.cerezaconsulting.compendio.data.model.UserEntity;
 import com.cerezaconsulting.compendio.data.response.ActivityResponse;
 import com.cerezaconsulting.compendio.data.response.ResponseActivitySync;
 import com.cerezaconsulting.compendio.data.response.ReviewResponse;
+import com.cerezaconsulting.compendio.data.response.TrackReviewResponse;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,10 +23,10 @@ public interface SyncRequest {
 
 
     @POST("sync/activity")
-    Call<Void> syncActivity(@Header("Authorization") String token, @Body ActivityResponse activityResponse);
+    Call<Void> syncActivity(@Header("Authorization") String token, @Body ArrayList<ActivityResponse> activityResponse);
 
     @POST("sync/review")
-    Call<Void> syncReview(@Header("Authorization") String token , @Body ReviewResponse reviewResponse);
+    Call<Void> syncReview(@Header("Authorization") String token , @Body ArrayList<ReviewResponse> reviewResponse);
 
 
     @POST("sync/activity")

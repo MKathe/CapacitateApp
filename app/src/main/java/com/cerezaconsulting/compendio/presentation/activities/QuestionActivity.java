@@ -37,7 +37,7 @@ public class QuestionActivity extends BaseActivity {
             chapterEntity = (ChapterEntity) getIntent().getSerializableExtra("chapter");
         }
 
-        showDisplayHowEnabled(true, chapterEntity.getName());
+        showDisplayHowEnabled(false, chapterEntity.getName());
         QuestionFragment fragment = (QuestionFragment) getSupportFragmentManager().findFragmentById(R.id.body);
         if (fragment == null) {
             fragment = QuestionFragment.newInstance(getIntent().getExtras());
@@ -48,7 +48,7 @@ public class QuestionActivity extends BaseActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        //onBackPressed();
         return true;
     }
 

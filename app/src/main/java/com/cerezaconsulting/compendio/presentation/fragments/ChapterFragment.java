@@ -132,7 +132,11 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageChapterCompleteEvent event) {
         if (event != null) {
-            getActivity().finish();
+
+            if (event.isFinishedChapter()) {
+                getActivity().finish();
+            }
+
             for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
                 if (event.getChapterEntity().getId().equals(courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).getId())) {
 
@@ -290,6 +294,21 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         tvLightBulb.setText(courseEntity.getTrainingEntity().getIntellect() + "%");
         tvAdvance.setText(courseEntity.getTrainingEntity().getProgress() + "%");
         tvNumberAdvance.setText(courseEntity.getTrainingEntity().getPosition() + "%");
+
+
+        int count = 0;
+        for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
+            if (courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).isFinished()) {
+                viewPager.setCurrentItem(i);
+                count++;
+            }
+        }
+
+        if (count == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size()){
+            viewPager.setCurrentItem(0);
+        }else{
+            viewPager.setCurrentItem(count+1);
+        }
 
        /* viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

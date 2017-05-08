@@ -9,6 +9,7 @@ import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
 import com.cerezaconsulting.compendio.data.model.ChapterEntity;
 import com.cerezaconsulting.compendio.presentation.fragments.FragmentFragment;
+import com.cerezaconsulting.compendio.presentation.presenters.FragmentPresenter;
 import com.cerezaconsulting.compendio.utils.ActivityUtils;
 
 import butterknife.BindView;
@@ -30,9 +31,6 @@ public class FragmentsActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
-
-
         ChapterEntity courseEntity = new ChapterEntity();
         if (getIntent().hasExtra("chapter")) {
             courseEntity = (ChapterEntity) getIntent().getSerializableExtra("chapter");
@@ -51,6 +49,7 @@ public class FragmentsActivity extends BaseActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.body);
         }
 
+        new FragmentPresenter(fragment,this);
 
     }
 

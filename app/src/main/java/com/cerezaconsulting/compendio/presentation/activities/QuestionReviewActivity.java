@@ -33,7 +33,7 @@ public class QuestionReviewActivity extends BaseActivity {
 
 
 
-        showDisplayHowEnabled(true, getString(R.string.review));
+        showDisplayHowEnabled(false, getString(R.string.review));
         QuestionReviewFragment fragment = (QuestionReviewFragment) getSupportFragmentManager().findFragmentById(R.id.body);
         if (fragment == null) {
             fragment = QuestionReviewFragment.newInstance(getIntent().getExtras());
@@ -44,7 +44,7 @@ public class QuestionReviewActivity extends BaseActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+       // onBackPressed();
         return true;
     }
 

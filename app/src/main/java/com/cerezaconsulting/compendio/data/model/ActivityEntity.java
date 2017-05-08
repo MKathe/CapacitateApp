@@ -35,6 +35,18 @@ public class ActivityEntity implements Serializable {
 
     }
 
+    public ActivityEntity(String id, int correct, int incorrect, double intellect, String poorly, String idChapter, String idTraining) {
+
+        this.id = id;
+        this.intellect = intellect;
+        this.correct = correct;
+        this.incorrect = incorrect;
+        this.poorly = poorly;
+        this.training = idTraining;
+        this.idChapter = idChapter;
+        this.isOffline = false;
+    }
+
     public String getId() {
         return id;
     }

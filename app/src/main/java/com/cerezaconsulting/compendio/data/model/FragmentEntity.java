@@ -13,6 +13,16 @@ public class FragmentEntity implements Serializable {
     private String content;
 
 
+    public FragmentEntity() {
+
+    }
+
+    public FragmentEntity(String id, String title, String content) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+    }
+
     public String getId() {
         return id;
     }

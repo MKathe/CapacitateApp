@@ -16,8 +16,10 @@ import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.data.model.ReviewEntity;
 import com.cerezaconsulting.compendio.data.model.TrainingEntity;
+import com.cerezaconsulting.compendio.data.model.UserEntity;
 import com.cerezaconsulting.compendio.data.remote.ServiceFactory;
 import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
+import com.cerezaconsulting.compendio.data.remote.request.PerfilRequest;
 import com.cerezaconsulting.compendio.data.remote.request.SyncRequest;
 import com.cerezaconsulting.compendio.data.response.ActivityResponse;
 import com.cerezaconsulting.compendio.data.response.ResponseActivitySync;
@@ -262,6 +264,104 @@ public class SyncPresenter implements SyncContrac.Presenter {
         return activityResponses;
     }
 
+
+    private void synchronizateActivities() {
+
+        ArrayList<ActivityResponse> activityResponses = formActivityResponses();
+
+        if (activityResponses.size() > 0) {
+            SyncRequest syncRequest =
+                    ServiceFactory.createService(SyncRequest.class);
+            Call<Void> call = syncRequest.syncActivity(sessionManager.getUserToken(),
+                    activityResponses);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        for (int i = 0; i < activityResponses.size(); i++) {
+                            checkInActivityToUpload(activityResponses.get(i).getId());
+                        }
+                        synchronizateReviews();
+
+                    } else {
+                        mView.syncFailed();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                    mView.syncFailed();
+                }
+            });
+        } else {
+            synchronizateReviews();
+        }
+
+    }
+
+
+    private ArrayList<ReviewResponse> orderListTrackReviews(ArrayList<TrackReviewResponse> trackReviewResponses) {
+        ArrayList<ReviewResponse> reviewResponses = new ArrayList<>();
+
+        for (int i = 0; i < trackReviewResponses.size(); i++) {
+
+            if (!trackReviewResponses.get(i).getReviewResponse().getId().equals("")) {
+                reviewResponses.add(trackReviewResponses.get(i).getReviewResponse());
+            }
+        }
+
+
+        for (int i = 0; i < trackReviewResponses.size(); i++) {
+
+            if (trackReviewResponses.get(i).getReviewResponse().getId().equals("")) {
+                reviewResponses.add(trackReviewResponses.get(i).getReviewResponse());
+            }
+        }
+
+
+        return reviewResponses;
+    }
+
+    private void synchronizateReviews() {
+
+        ArrayList<TrackReviewResponse> reviewResponses = formReviewResponses();
+
+        ArrayList<ReviewResponse> reviewResponsesSync = orderListTrackReviews(reviewResponses);
+
+
+        if (reviewResponses.size() > 0) {
+            SyncRequest syncRequest =
+                    ServiceFactory.createService(SyncRequest.class);
+            Call<Void> call = syncRequest.syncReview(sessionManager.getUserToken(),
+                    reviewResponsesSync);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+
+                        for (int i = 0; i < reviewResponses.size(); i++) {
+                            checkInReviewToUpload(reviewResponses.get(i).getIdLocal());
+                        }
+                        downloadTrainingsUpdate(0);
+                    } else {
+                        mView.syncFailed();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                    mView.syncFailed();
+                }
+            });
+        } else {
+            downloadTrainingsUpdate(0);
+        }
+
+
+    }
+
     private void uploadReviewsToserver() {
 
         final int[] failureRequest = {0};
@@ -269,6 +369,7 @@ public class SyncPresenter implements SyncContrac.Presenter {
 
         if (reviewResponses.size() > 0) {
 
+            ArrayList<ActivityResponse> activityResponses = formActivityResponses();
 
             SyncRequest syncRequest =
                     ServiceFactory.retrofitService(SyncRequest.class);
@@ -300,7 +401,7 @@ public class SyncPresenter implements SyncContrac.Presenter {
                             public final void onError(Throwable e) {
                                 failureRequest[0]++;
                                 Log.e("ACTIVITIES SYNC", e.getMessage());
-                                if (e.getMessage().equals("HTTP 500 ")){
+                                if (e.getMessage().equals("HTTP 500 ")) {
                                     mView.syncFailed();
                                 }
                             }
@@ -360,9 +461,9 @@ public class SyncPresenter implements SyncContrac.Presenter {
                             @Override
                             public final void onError(Throwable e) {
                                 failureRequest[0]++;
-                                Log.e("ACTIVITIES SYNC", e.getMessage() + "-----"+e.hashCode());
+                                Log.e("ACTIVITIES SYNC", e.getMessage() + "-----" + e.hashCode());
 
-                                if (e.getMessage().equals("HTTP 500 ")){
+                                if (e.getMessage().equals("HTTP 500 ")) {
                                     mView.syncFailed();
                                 }
                             }
@@ -429,7 +530,7 @@ public class SyncPresenter implements SyncContrac.Presenter {
                             public final void onError(Throwable e) {
                                 failureRequest[0]++;
                                 Log.e("ACTIVITIES SYNC", e.getMessage());
-                                if (e.getMessage().equals("HTTP 500 ")){
+                                if (e.getMessage().equals("HTTP 500 ")) {
                                     mView.syncFailed();
                                 }
                             }
@@ -531,12 +632,12 @@ public class SyncPresenter implements SyncContrac.Presenter {
 
     @Override
     public void syncTryAgain() {
-        uploadReviewsToserver();
+        synchronizateActivities();
     }
 
     @Override
     public void syncFinalize() {
-        downloadTrainingsUpdate(1);
+        mView.syncFinalize();
     }
 
     @Override
@@ -599,7 +700,7 @@ public class SyncPresenter implements SyncContrac.Presenter {
                 if (sessionManager.getCoures().getCourseEntities().get(i).getTrainingEntity().getReviewEntities() != null) {
                     for (int j = 0; j < sessionManager.getCoures().getCourseEntities().get(i).getTrainingEntity().getReviewEntities().size(); j++) {
 
-                        if (sessionManager.getCoures().getCourseEntities().get(i).getTrainingEntity().getReviewEntities().get(j).isOffline()){
+                        if (sessionManager.getCoures().getCourseEntities().get(i).getTrainingEntity().getReviewEntities().get(j).isOffline()) {
                             reviewEntity = sessionManager.getCoures().getCourseEntities().get(i).getTrainingEntity().getReviewEntities().get(j);
                             reviewEntity.setIdTraining(String.valueOf(sessionManager.getCoures().getCourseEntities().get(i).getTrainingEntity().getId()));
                             saveReviewToLocalBD(reviewEntity);
@@ -635,7 +736,7 @@ public class SyncPresenter implements SyncContrac.Presenter {
 
 
         synchronizedActivitiesAndReviews();
-        uploadReviewsToserver();
+        synchronizateActivities();
         // synchronizedActivitiesAndReviews();
         //notificationWithProgressBar(context);
 

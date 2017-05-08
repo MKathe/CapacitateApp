@@ -1,6 +1,7 @@
 package com.cerezaconsulting.compendio.core;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,6 +35,16 @@ public abstract class BaseActivity extends AppCompatActivity {
        /* setTheme();*/
         selectTheme(sessionManager.getUserEntity().getCompany().getColor());
         super.onCreate(savedInstanceState);
+    }
+
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void selectTheme(String theme) {

@@ -134,7 +134,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
             String html = fragmentEntity.getContent();
             holder.fragmentContent.getSettings().setJavaScriptEnabled(true);
-            holder.fragmentContent.loadData(html, "text/html", "utf-8");
+            holder.fragmentContent.loadData(html, "text/html ; charset=utf-8", "utf-8");
             holder.titleFragment.setText(fragmentEntity.getTitle());
 
         }

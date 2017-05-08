@@ -58,4 +58,13 @@ public final class CompendioPersistenceContract {
         public static final String TRAINING = "training";
         public static final String SYNC = "sync";
     }
+
+
+    public static abstract class FragmentEntity implements BaseColumns {
+        public static final String TABLE_NAME = "fragment";
+        public static final String TITLE = "title";
+        public static final String CONTENT = "content";
+        public static final String TRAINING = "idTraning";
+        public static final String CHAPTER = "idChapter";
+    }
 }

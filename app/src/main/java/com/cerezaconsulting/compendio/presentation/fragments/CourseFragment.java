@@ -1,6 +1,7 @@
 package com.cerezaconsulting.compendio.presentation.fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -81,6 +82,9 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     }
 
 
+
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -98,10 +102,12 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     public void connectedSocket(ConnectedSocketEvent event) {
 
 
+
         switch (event.getStatus()) {
 
             case 0:
                 break;
+
             case 1:
                 nextActivity(getActivity(), null, LoadSocketActivity.class, false);
                 break;

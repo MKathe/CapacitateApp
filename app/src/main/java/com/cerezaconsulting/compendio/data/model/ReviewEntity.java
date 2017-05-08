@@ -34,6 +34,16 @@ public class ReviewEntity implements Serializable {
         this.idTraining = idTraining;
     }
 
+    public ReviewEntity(String id, Date date, int coutdown, boolean completed, String idTraining) {
+
+        this.id = id;
+        this.date = date;
+        this.completed = completed;
+        this.countdown = coutdown;
+        this.idTraining = idTraining;
+        this.isOffline = false;
+    }
+
     public String getIdTraining() {
         return idTraining;
     }

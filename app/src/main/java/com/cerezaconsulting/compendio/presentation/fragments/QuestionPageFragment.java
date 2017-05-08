@@ -3,6 +3,7 @@ package com.cerezaconsulting.compendio.presentation.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +139,18 @@ public class QuestionPageFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
 
+                    return true;
+                }
+                return false;
+            }
+        });
         tvQuestion.setText("¿" + questionEntity.getDetail() + "?");
 
         for (int i = 0; i < questionEntity.getOptions().size(); i++) {
