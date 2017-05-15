@@ -366,12 +366,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
                 (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
 
         // Make sure setRefreshing() is called after the layout is done with everything else.
-        srl.post(new Runnable() {
-            @Override
-            public void run() {
-                srl.setRefreshing(active);
-            }
-        });
+        srl.post(() -> srl.setRefreshing(active));
 
     }
 

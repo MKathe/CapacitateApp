@@ -94,7 +94,7 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentText("Compendio Web está actualmente activo")
                 .setContentTitle("Compendio Web");
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.ic_notification_compendio);
 
 
         builder.setAutoCancel(false);

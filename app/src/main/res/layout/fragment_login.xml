@@ -28,8 +28,11 @@
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <FrameLayout
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true">
@@ -65,7 +68,6 @@
                         android:gravity="center_vertical|center"
                         android:hint="Nombres"
                         android:imeActionLabel="Usuario"
-                        android:text="juniorquegu@gmail.com"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/black"
@@ -81,7 +83,6 @@
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical|center"
                         android:hint="Contraseña"
-                        android:text="Admin1"
                         android:imeActionLabel="Usuario"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
@@ -125,10 +126,12 @@
         </FrameLayout>
 
         <ImageView
-            android:scaleType="centerCrop"
+            android:layout_weight="2"
             android:src="@drawable/edificio_mitad"
+            android:id="@+id/buildings"
+            android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="1dp" />
     </LinearLayout>
 
 

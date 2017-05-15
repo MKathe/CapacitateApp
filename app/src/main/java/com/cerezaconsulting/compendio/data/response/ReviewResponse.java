@@ -9,7 +9,7 @@ import java.util.Date;
 public class ReviewResponse {
 
     private String id ;
-    private String date;
+    private long date;
     private int countdown;
     private boolean completed;
     private String training;
@@ -24,15 +24,14 @@ public class ReviewResponse {
         this.id = id;
     }
 
-    public String getDate() {
+
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
-
-
 
     public int getCountdown() {
         return countdown;

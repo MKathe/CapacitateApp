@@ -158,7 +158,8 @@ public class SyncPresenter implements SyncContrac.Presenter {
             reviewResponse = new ReviewResponse();
             reviewResponse.setId(reviewEntities.get(i).getId());
             reviewResponse.setTraining(reviewEntities.get(i).getIdTraining());
-            reviewResponse.setDate(DateUtils.getFormantSingle(reviewEntities.get(i).getDate()));
+            // reviewResponse.setDate(DateUtils.getFormantSingle(reviewEntities.get(i).getDate()));
+            reviewResponse.setDate(reviewEntities.get(i).getDate().getTime());
             reviewResponse.setCompleted(reviewEntities.get(i).isCompleted());
             reviewResponse.setCountdown(reviewEntities.get(i).getCountdown());
             trackReviewResponse = new TrackReviewResponse();

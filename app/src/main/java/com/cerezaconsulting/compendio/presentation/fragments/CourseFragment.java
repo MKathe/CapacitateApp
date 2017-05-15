@@ -198,26 +198,17 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         if (title != null) builder.setTitle(title);
 
         builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
 
-                dialogInterface.cancel();
-                if (isInternetConnection(getContext())) {
-                    presenter.downloadCourseById(idTraining);
-                } else {
-                    showErrorMessage("No está conectado a internet");
-                }
-
+            dialogInterface.cancel();
+            if (isInternetConnection(getContext())) {
+                presenter.downloadCourseById(idTraining);
+            } else {
+                showErrorMessage("No está conectado a internet");
             }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
 
-            }
         });
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.show();
     }
 
@@ -313,12 +304,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
                 (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
 
         // Make sure setRefreshing() is called after the layout is done with everything else.
-        srl.post(new Runnable() {
-            @Override
-            public void run() {
-                srl.setRefreshing(active);
-            }
-        });
+        srl.post(() -> srl.setRefreshing(active));
 
     }
 
