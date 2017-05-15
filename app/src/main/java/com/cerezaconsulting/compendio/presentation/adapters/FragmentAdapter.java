@@ -9,7 +9,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHolder> {
 
 
-    private ArrayList<FragmentEntity> list;
+    private ArrayList<FragmentEntity> mListFragments = new ArrayList<>();
     private CommunicatorChapterItem communicatorChapterItem;
     private Context context;
     private boolean isFinished;
@@ -37,17 +36,19 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
     public FragmentAdapter(boolean finished, ArrayList<FragmentEntity> list, Context context,
                            CommunicatorChapterItem communicatorChapterItem) {
-        this.list = list;
+
         this.context = context;
         this.communicatorChapterItem = communicatorChapterItem;
         this.isFinished = finished;
         progressDialogCustom = new ProgressDialogCustom(context, "Cargando...");
+        setItems(list);
     }
+
 
 
     @Override
     public int getItemViewType(int position) {
-        return (position == list.size()) ? R.layout.item_button : R.layout.item_fragment;
+        return (position == mListFragments.size()) ? R.layout.item_button : R.layout.item_fragment;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
 
-        if (position == list.size()) {
+        if (position == mListFragments.size()) {
 
             if (isFinished) {
                 holder.itemView.setVisibility(View.GONE);
@@ -97,7 +98,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
 
         } else {
-            FragmentEntity fragmentEntity = list.get(position);
+            FragmentEntity fragmentEntity = mListFragments.get(position);
             final String mimeType = "text/html";
             final String encoding = "UTF-8";
 
@@ -144,12 +145,12 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return list.size() + 1;
+        return mListFragments.size() + 1;
     }
 
     public void setItems(ArrayList<FragmentEntity> list) {
-        this.list = list;
-        notifyDataSetChanged();
+        this.mListFragments = list;
+   //     notifyDataSetChanged();
     }
 
 

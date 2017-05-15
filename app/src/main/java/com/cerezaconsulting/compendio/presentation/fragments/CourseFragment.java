@@ -1,6 +1,7 @@
 package com.cerezaconsulting.compendio.presentation.fragments;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +38,7 @@ import com.cerezaconsulting.compendio.presentation.adapters.CourseAdapter;
 import com.cerezaconsulting.compendio.presentation.contracts.CourseContract;
 import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirmDialog;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
+import com.cerezaconsulting.compendio.services.SocketService;
 import com.cerezaconsulting.compendio.utils.DateUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -161,8 +163,21 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
 
         courseAdapter = new CourseAdapter(getContext(), new ArrayList<CourseEntity>(), (CommunicatorCourseItem) presenter);
         complatinsList.setAdapter(courseAdapter);
-    }
 
+
+      //  if(isMyServiceRunning(SocketService.class)){
+
+        //}
+    }
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public boolean isActive() {
         return isAdded();

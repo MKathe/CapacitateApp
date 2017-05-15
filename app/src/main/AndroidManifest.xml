@@ -48,6 +48,13 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".services.SocketService" />
+
+        <receiver android:name=".services.NotificationReceiver">
+            <intent-filter>
+                <action android:name="stop_service" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

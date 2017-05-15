@@ -181,7 +181,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         }
     }
 
-    private void chagePasswordDialog (){
+    private void chagePasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Escribe tu correo");
 
@@ -192,18 +192,11 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         builder.setView(input);
 
 // Set up the buttons
-        builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // m_Text = input.getText().toString();
-            }
+        builder.setPositiveButton("Enviar", (dialog, which) -> {
+            mPresenter.requestChangePassword(input.getText().toString());
+            // m_Text = input.getText().toString();
         });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
 
         builder.show();
 

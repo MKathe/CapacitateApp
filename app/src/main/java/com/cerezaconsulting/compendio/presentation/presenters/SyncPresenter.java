@@ -23,6 +23,7 @@ import com.cerezaconsulting.compendio.data.remote.request.PerfilRequest;
 import com.cerezaconsulting.compendio.data.remote.request.SyncRequest;
 import com.cerezaconsulting.compendio.data.response.ActivityResponse;
 import com.cerezaconsulting.compendio.data.response.ResponseActivitySync;
+import com.cerezaconsulting.compendio.data.response.ResponseCompleteSyncResponse;
 import com.cerezaconsulting.compendio.data.response.ReviewResponse;
 import com.cerezaconsulting.compendio.data.response.TrackReviewResponse;
 import com.cerezaconsulting.compendio.presentation.contracts.SyncContrac;
@@ -486,6 +487,40 @@ public class SyncPresenter implements SyncContrac.Presenter {
 
     }
 
+    private void checkIsWebOpened() {
+
+        SyncRequest syncRequest =
+                ServiceFactory.createService(SyncRequest.class);
+        Call<ResponseCompleteSyncResponse> call = syncRequest.syncComplete(sessionManager.getUserToken(),
+                sessionManager.getUserEntity().getEmail());
+        call.enqueue(new Callback<ResponseCompleteSyncResponse>() {
+            @Override
+            public void onResponse(Call<ResponseCompleteSyncResponse> call, Response<ResponseCompleteSyncResponse> response) {
+                if (response.isSuccessful()) {
+
+                    if (response.body().isLinked()) {
+                        mView.syncSuccess();
+                    } else {
+
+                        Toast.makeText(context, "Contenido Actualizado", Toast.LENGTH_SHORT).show();
+                        mView.syncFinalize();
+                    }
+
+                } else {
+                    mView.syncFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCompleteSyncResponse> call, Throwable t) {
+
+                mView.syncFailed();
+            }
+        });
+
+
+    }
+
 
     private void downloadTrainingsUpdate(int status) {
 
@@ -519,7 +554,7 @@ public class SyncPresenter implements SyncContrac.Presenter {
                                 if (finalI == coursesEntity.getCourseEntities().size() - 1) {
 
                                     if (status == 0)
-                                        mView.syncSuccess();
+                                        checkIsWebOpened();
                                     else
                                         mView.syncFinalize();
                                 }

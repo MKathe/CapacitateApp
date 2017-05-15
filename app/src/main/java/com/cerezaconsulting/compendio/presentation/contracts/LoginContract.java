@@ -23,5 +23,6 @@ public interface LoginContract {
         void loginNormal(String username, String email);
 
 
+        void requestChangePassword(String email);
     }
 }

@@ -1,16 +1,24 @@
 package com.cerezaconsulting.compendio.services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.data.events.ConnectedSocketEvent;
 import com.cerezaconsulting.compendio.data.events.DisconectedSocketEvent;
 import com.cerezaconsulting.compendio.data.events.MessageChapterCompleteEvent;
+import com.cerezaconsulting.compendio.data.events.NotificacionCancelEvent;
 import com.cerezaconsulting.compendio.data.events.SyncProcessSocketEvent;
 import com.cerezaconsulting.compendio.data.local.SessionManager;
 import com.cerezaconsulting.compendio.data.model.ActivityEntity;
@@ -55,14 +63,12 @@ public class SocketService extends Service {
     @Subscribe
     public void socketEventDisconnected(ConnectedSocketEvent event) {
         if (event != null) {
-            // presenter.loadCoursesFromLocalRepository();
         }
     }
 
     @Subscribe
     public void connectedSocket(ConnectedSocketEvent event) {
         if (event != null) {
-            // presenter.loadCoursesFromLocalRepository();
         }
 
     }
@@ -104,7 +110,7 @@ public class SocketService extends Service {
         Log.i("STOMP", "onStartCommand SocketService");
 
         connectStomp();
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY;
     }
 
     public void connectStomp() {

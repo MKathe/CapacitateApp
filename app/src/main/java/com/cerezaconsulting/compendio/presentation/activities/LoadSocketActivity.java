@@ -1,10 +1,15 @@
 package com.cerezaconsulting.compendio.presentation.activities;
 
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -20,9 +25,11 @@ import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.core.BaseActivity;
 import com.cerezaconsulting.compendio.data.events.ConnectedSocketEvent;
 import com.cerezaconsulting.compendio.data.events.DisconectedSocketEvent;
+import com.cerezaconsulting.compendio.data.events.NotificacionCancelEvent;
 import com.cerezaconsulting.compendio.data.events.SyncProcessSocketEvent;
 import com.cerezaconsulting.compendio.presentation.contracts.SyncContrac;
 import com.cerezaconsulting.compendio.presentation.presenters.SyncPresenter;
+import com.cerezaconsulting.compendio.services.NotificationReceiver;
 import com.cerezaconsulting.compendio.services.SocketService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,18 +86,52 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
     }
 
 
+    public static void sendNotificationService(Context context) {
+        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        NotificationManager nm = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+
+        Notification.Builder builder = new Notification.Builder(context);
+        builder.setContentText("Compendio Web está actualmente activo")
+                .setContentTitle("Compendio Web");
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+
+
+        builder.setAutoCancel(false);
+
+
+        Intent yesReceive = new Intent(context, NotificationReceiver.class);
+        yesReceive.setAction("stop_service");
+        PendingIntent pendingIntentYes = PendingIntent.getBroadcast(context, 0, yesReceive, 0);
+        builder.addAction(R.drawable.ic_stat_cancel, "Detener", pendingIntentYes);
+
+
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        nm.notify(-1, notification);
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void socketEventDisconnected(DisconectedSocketEvent event) {
         if (event != null) {
 
-            if (event.isActive()){
+            if (event.isActive()) {
                 finish();
             }
             // presenter.loadCoursesFromLocalRepository();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void notificationCancelSync(NotificacionCancelEvent event) {
+        if (event != null) {
+
+            if (event.isStatus()) {
+                syncFinalize();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +152,7 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
         layoutDisconected.setVisibility(View.GONE);
         layoutConected.setVisibility(View.VISIBLE);
         EventBus.getDefault().post(new SyncProcessSocketEvent(1));
+        sendNotificationService(this);
         // Toast.makeText(this, "EXITO", Toast.LENGTH_SHORT).show();
     }
 
@@ -142,6 +184,10 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
     @Override
     public void syncFinalize() {
         Toast.makeText(this, "Desconectando...", Toast.LENGTH_SHORT).show();
+        String ns = Context.NOTIFICATION_SERVICE;
+
+        NotificationManager nMgr = (NotificationManager) this.getSystemService(ns);
+        nMgr.cancel(-1);
         stopService(new Intent(getBaseContext(), SocketService.class));
         finish();
     }
@@ -169,7 +215,7 @@ public class LoadSocketActivity extends BaseActivity implements SyncContrac.View
     }
 
 
-    @OnClick({R.id.btn_again, R.id.btn_esc, R.id.btn_cancel,R.id.btn_cancel_off})
+    @OnClick({R.id.btn_again, R.id.btn_esc, R.id.btn_cancel, R.id.btn_cancel_off})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_again:

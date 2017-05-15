@@ -20,6 +20,9 @@ import com.cerezaconsulting.compendio.data.model.QuestionEntity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -219,12 +222,23 @@ public class QuestionPageFragment extends BaseFragment {
             imageView.setBackgroundResource(
                     questionEntity.getOptions().get(optionPosition).isCorrect() ? R.drawable.check : R.drawable.equis);
             questionEntity.setContest(true);
-            selectedCorrectQuestion();//1000 milliseconds is one second.
+            Timer buttonTimer = new Timer();
+            buttonTimer.schedule(new TimerTask() {
 
-            mMessageActivityEvent = new MessageActivityEvent(questionEntity.getOptions().get(optionPosition).isCorrect(),
-                    questionEntity.getFragment());
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(() -> {
+                        selectedCorrectQuestion();
+                        mMessageActivityEvent = new MessageActivityEvent(questionEntity.getOptions().get(optionPosition).isCorrect(),
+                                questionEntity.getFragment());
 
-            handler.postDelayed(mRunnable, 1000);
+                        handler.postDelayed(mRunnable, 1000);
+                    });
+                }
+            }, 1000);
+
+
+
         }
     }
 

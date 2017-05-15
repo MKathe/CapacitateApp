@@ -70,7 +70,7 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.loadFragments(courseEntity.getId(), chapterEntity.getId());
+       // mPresenter.loadFragments(courseEntity.getId(), chapterEntity.getId());
     }
 
     @Override
@@ -94,12 +94,12 @@ public class FragmentFragment extends BaseFragment implements CommunicatorChapte
         super.onViewCreated(view, savedInstanceState);
 
         layoutManager = new LinearLayoutManager(getContext());
+
+
+        fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(), chapterEntity.getFragments(), getContext(), this);
+        // fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(), new ArrayList<FragmentEntity>(), getContext(), this);
+
         complatinsList.setLayoutManager(layoutManager);
-
-        //fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(),chapterEntity.getFragments(), getContext(), this);
-        fragmentAdapter = new FragmentAdapter(chapterEntity.isFinished(), new ArrayList<FragmentEntity>(), getContext(), this);
-
-
         complatinsList.setAdapter(fragmentAdapter);
         noComplatins.setVisibility((chapterEntity.getFragments().size() > 0) ? View.GONE : View.VISIBLE);
 

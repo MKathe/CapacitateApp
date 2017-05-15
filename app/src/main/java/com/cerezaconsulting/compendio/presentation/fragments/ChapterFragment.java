@@ -299,7 +299,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         int count = 0;
         for (int i = 0; i < courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size(); i++) {
             if (courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).isFinished()) {
-                viewPager.setCurrentItem(i);
+                //viewPager.setCurrentItem(i);
                 count++;
             }
         }
@@ -307,7 +307,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         if (count == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size()){
             viewPager.setCurrentItem(0);
         }else{
-            viewPager.setCurrentItem(count+1);
+            viewPager.setCurrentItem(count);
         }
 
        /* viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

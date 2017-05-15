@@ -10,6 +10,7 @@ import com.cerezaconsulting.compendio.data.model.AccessTokenEntity;
 import com.cerezaconsulting.compendio.data.model.UserEntity;
 import com.cerezaconsulting.compendio.data.remote.request.LoginRequest;
 import com.cerezaconsulting.compendio.data.remote.request.PerfilRequest;
+import com.cerezaconsulting.compendio.data.response.ChangePasswordResponse;
 import com.cerezaconsulting.compendio.data.response.LoginResponse;
 import com.cerezaconsulting.compendio.presentation.contracts.LoginContract;
 
@@ -112,6 +113,31 @@ public class LoginPresenter implements LoginContract.Presenter {
             public void onFailure(Call<UserEntity> call, Throwable t) {
                 mView.setLoadingIndicator(false);
                 mView.showErrorMessage("");
+            }
+        });
+    }
+
+    @Override
+    public void requestChangePassword(String email) {
+        PerfilRequest loginService =
+                ServiceFactory.createService(PerfilRequest.class);
+        Call<Void> call = loginService.requestChangePassword(new ChangePasswordResponse(email));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    mView.setLoadingIndicator(false);
+                    mView.showMessage("Se envió un email  a su correo");
+                } else {
+                    mView.setLoadingIndicator(false);
+                    mView.showErrorMessage(context.getResources().getString(R.string.no_connect));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                mView.setLoadingIndicator(false);
+                mView.showErrorMessage(context.getResources().getString(R.string.no_connect));
             }
         });
     }
