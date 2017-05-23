@@ -186,7 +186,7 @@ public class QuestionReviewFragment extends BaseFragment {
 
         mCourseEntity.getTrainingEntity().getReviewEntities().set(0, reviewEntity);
         mCourseEntity.getTrainingEntity().getReviewEntities().add(nextReviewEntity);
-        tvReviewNext.setText(DateUtils.getFormant(reviewEntity.getDate()));
+        tvReviewNext.setText(DateUtils.getFormant(nextReviewEntity.getDate()));
 
         for (int i = 0; i < courseEntities.size(); i++) {
             if (mCourseEntity.getId().equals(courseEntities.get(i).getId())) {

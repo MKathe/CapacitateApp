@@ -154,7 +154,7 @@ public class QuestionPageFragment extends BaseFragment {
                 return false;
             }
         });
-        tvQuestion.setText("¿" + questionEntity.getDetail() + "?");
+        tvQuestion.setText( questionEntity.getDetail());
 
         for (int i = 0; i < questionEntity.getOptions().size(); i++) {
             switch (i) {
@@ -179,38 +179,53 @@ public class QuestionPageFragment extends BaseFragment {
         }
 
 
-        llAnswer1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickQuestion(ivAnswer1, questionEntity, 0);
-            }
+        llAnswer1.setOnClickListener(view15 -> {
+            llAnswer1.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+            llAnswer2.setClickable(false);
+            llAnswer3.setClickable(false);
+            llAnswer4.setClickable(false);
+            llAnswer5.setClickable(false);
+
+            clickQuestion(ivAnswer1, questionEntity, 0);
         });
-        llAnswer2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickQuestion(ivAnswer2, questionEntity, 1);
-            }
+        llAnswer2.setOnClickListener(view14 -> {
+
+            llAnswer2.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+            llAnswer1.setClickable(false);
+            llAnswer3.setClickable(false);
+            llAnswer4.setClickable(false);
+            llAnswer5.setClickable(false);
+            clickQuestion(ivAnswer2, questionEntity, 1);
         });
 
-        llAnswer3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickQuestion(ivAnswer3, questionEntity, 2);
-            }
+        llAnswer3.setOnClickListener(view13 -> {
+
+            llAnswer3.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+            llAnswer1.setClickable(false);
+            llAnswer3.setClickable(false);
+            llAnswer4.setClickable(false);
+            llAnswer5.setClickable(false);
+            clickQuestion(ivAnswer3, questionEntity, 2);
         });
 
-        llAnswer4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickQuestion(ivAnswer4, questionEntity, 3);
-            }
+        llAnswer4.setOnClickListener(view12 -> {
+
+            llAnswer4.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+            llAnswer2.setClickable(false);
+            llAnswer3.setClickable(false);
+            llAnswer1.setClickable(false);
+            llAnswer5.setClickable(false);
+            clickQuestion(ivAnswer4, questionEntity, 3);
         });
 
-        llAnswer5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickQuestion(ivAnswer5, questionEntity, 4);
-            }
+        llAnswer5.setOnClickListener(view1 -> {
+
+            llAnswer5.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+            llAnswer2.setClickable(false);
+            llAnswer3.setClickable(false);
+            llAnswer4.setClickable(false);
+            llAnswer1.setClickable(false);
+            clickQuestion(ivAnswer5, questionEntity, 4);
         });
 
 
@@ -221,6 +236,8 @@ public class QuestionPageFragment extends BaseFragment {
 
             imageView.setBackgroundResource(
                     questionEntity.getOptions().get(optionPosition).isCorrect() ? R.drawable.check : R.drawable.equis);
+
+
             questionEntity.setContest(true);
             Timer buttonTimer = new Timer();
             buttonTimer.schedule(new TimerTask() {
@@ -235,8 +252,7 @@ public class QuestionPageFragment extends BaseFragment {
                         handler.postDelayed(mRunnable, 1000);
                     });
                 }
-            }, 1000);
-
+            }, 3000);
 
 
         }

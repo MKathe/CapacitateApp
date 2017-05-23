@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_refresh"
+    <item
+        android:id="@+id/menu_refresh"
         android:checkable="false"
-        app:showAsAction="always"
-        
-        android:title="Conectar"/>
+        android:icon="@drawable/sync_icon"
+        android:title="Conectar"
+        app:showAsAction="always" />
 
 
 </menu>

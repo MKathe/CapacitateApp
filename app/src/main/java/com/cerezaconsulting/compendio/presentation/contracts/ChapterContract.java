@@ -16,8 +16,11 @@ public interface ChapterContract {
         void detailChapter(ChapterEntity chapterEntity);
         boolean isActive();
 
+        void sendDoubt(String s, String idTraining);
     }
     interface Presenter extends BasePresenter{
         void getChapter(String id);
+
+        void sendDoubt(String s, String idTraining);
     }
 }

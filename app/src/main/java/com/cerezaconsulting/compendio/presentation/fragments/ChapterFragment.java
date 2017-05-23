@@ -33,6 +33,8 @@ import com.cerezaconsulting.compendio.presentation.adapters.CardFragmentPagerAda
 import com.cerezaconsulting.compendio.presentation.adapters.ChapterAdapter;
 import com.cerezaconsulting.compendio.presentation.adapters.ShadowTransformer;
 import com.cerezaconsulting.compendio.presentation.contracts.ChapterContract;
+import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirmDialog;
+import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirmDialogOff;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorChapterItem;
 
 import org.greenrobot.eventbus.EventBus;
@@ -83,6 +85,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     private ChapterAdapter adapter;
     private SessionManager sessionManager;
     private CardFragmentPagerAdapter pagerAdapter;
+    private ChapterContract.Presenter mPresenter;
 
     public static ChapterFragment newInstance(Bundle bundle) {
         ChapterFragment fragment = new ChapterFragment();
@@ -240,6 +243,9 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
 
         switch (item.getItemId()) {
             case R.id.btn_save:
+                AlertConfirmDialogOff alertConfirmDialog = new AlertConfirmDialogOff(getActivity(), this,
+                        "Aceptar", courseEntity.getId());
+                alertConfirmDialog.show();
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -304,9 +310,9 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
             }
         }
 
-        if (count == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size()){
+        if (count == courseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size()) {
             viewPager.setCurrentItem(0);
-        }else{
+        } else {
             viewPager.setCurrentItem(count);
         }
 
@@ -350,6 +356,11 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
     @Override
     public boolean isActive() {
         return isAdded();
+    }
+
+    @Override
+    public void sendDoubt(String s, String idTraining) {
+        presenter.sendDoubt(s,idTraining);
     }
 
     @Override

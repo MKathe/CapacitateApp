@@ -18,6 +18,7 @@ import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
 import com.cerezaconsulting.compendio.data.response.DoubtResponse;
 import com.cerezaconsulting.compendio.presentation.contracts.CourseContract;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
+import com.cerezaconsulting.compendio.utils.ListLinks;
 
 import java.util.ArrayList;
 
@@ -153,7 +154,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                         return;
                     }
 
-
+                    cachedUrls(response.body());
                     courseEntity.setTrainingEntity(response.body());
                     courseEntity.setName(courseEntity.getRelease().getCourse());
                     courseEntity.setDescription(response.body().getRelease().getCourse().getDescription());
@@ -179,6 +180,19 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                 mView.showErrorMessage("No se puede conectar con el servidor, por favor intentar más tarde");
             }
         });
+    }
+
+
+    private void cachedUrls(TrainingEntity trainingEntity) {
+        for (int i = 0; i < trainingEntity.getRelease().getCourse().getChapters().size(); i++) {
+
+            for (int j = 0; j < trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().size(); j++) {
+
+                ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
+                        getFragments().get(j).getContent(), context);
+            }
+
+        }
     }
 
     private ArrayList<CourseEntity> updateTrainingResults(ArrayList<CourseEntity> coursesEntitiesLocal,
@@ -309,7 +323,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
         DoubtResponse doubtResponse = new DoubtResponse(doubt);
         CourseRequest courseRequest = ServiceFactory.createService(CourseRequest.class);
         Call<Void> call = courseRequest.sendDoubt(sessionManager.getUserToken(), sessionManager.getUserEntity().getId(),
-                doubt, doubtResponse);
+                id, doubtResponse);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

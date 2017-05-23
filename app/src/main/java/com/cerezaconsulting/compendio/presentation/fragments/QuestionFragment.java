@@ -139,6 +139,7 @@ public class QuestionFragment extends BaseFragment {
                 if (isToEndCourse()) {
                     generateAdnSaveReview();
                     questionEnd = true;
+                    nextButtonChapter.setText("Siguiente");
                     lyChapterComplete.setVisibility(View.VISIBLE);
                     titleChapter.setText(mChapterEntity.getName());
                     tvIntellect.setText(mCourseEntity.getTrainingEntity().getIntellect() + " %");

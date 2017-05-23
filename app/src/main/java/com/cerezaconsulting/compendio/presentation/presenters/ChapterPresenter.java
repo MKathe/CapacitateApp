@@ -8,6 +8,8 @@ import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.data.remote.ServiceFactory;
 import com.cerezaconsulting.compendio.data.remote.request.ChapterRequest;
+import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
+import com.cerezaconsulting.compendio.data.response.DoubtResponse;
 import com.cerezaconsulting.compendio.presentation.contracts.ChapterContract;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorChapterItem;
 
@@ -63,6 +65,43 @@ public class ChapterPresenter implements ChapterContract.Presenter, Communicator
                 }
                 mView.setLoadingIndicator(false);
                 mView.showErrorMessage("No se pudo conectar al servidor, por favor intente más tarde");
+            }
+        });
+    }
+
+    @Override
+    public void sendDoubt(String s, String idTraining) {
+        mView.setLoadingIndicator(true);
+
+        DoubtResponse doubtResponse = new DoubtResponse(s);
+        CourseRequest courseRequest = ServiceFactory.createService(CourseRequest.class);
+        Call<Void> call = courseRequest.sendDoubt(sessionManager.getUserToken(), sessionManager.getUserEntity().getId(),
+                idTraining, doubtResponse);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                mView.setLoadingIndicator(false);
+                if (response.isSuccessful()) {
+
+                    if (!mView.isActive()) {
+                        return;
+                    }
+                    mView.showMessage("Consulta enviada");
+                } else {
+                    if (!mView.isActive()) {
+                        return;
+                    }
+                    mView.showErrorMessage("Hubo un error, por favor intentar más tarde");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                if (!mView.isActive()) {
+                    return;
+                }
+                mView.setLoadingIndicator(false);
+                mView.showErrorMessage("No se puede conectar con el servidor, por favor intentar más tarde");
             }
         });
     }
