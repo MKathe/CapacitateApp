@@ -23,6 +23,9 @@ public interface CourseContract {
         void sendDoubt(String s, String id);
 
         void showDialogDoubt(String idTraining);
+
+
+        void downloadingCourse(boolean active);
     }
 
     interface Presenter extends BasePresenter {

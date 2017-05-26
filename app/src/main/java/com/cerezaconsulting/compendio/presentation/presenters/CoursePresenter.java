@@ -7,13 +7,13 @@ import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.util.Log;
 
+import com.cerezaconsulting.compendio.data.entities.LocalUrls;
 import com.cerezaconsulting.compendio.data.local.CompedioDbHelper;
 import com.cerezaconsulting.compendio.data.local.CompendioPersistenceContract;
 import com.cerezaconsulting.compendio.data.local.SessionManager;
 import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.data.model.CoursesEntity;
 import com.cerezaconsulting.compendio.data.model.FragmentEntity;
-import com.cerezaconsulting.compendio.data.model.ReviewEntity;
 import com.cerezaconsulting.compendio.data.model.TrainingEntity;
 import com.cerezaconsulting.compendio.data.remote.ServiceFactory;
 import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
@@ -23,6 +23,7 @@ import com.cerezaconsulting.compendio.presentation.presenters.communicator.Commu
 import com.cerezaconsulting.compendio.utils.ImageDownloadManager;
 import com.cerezaconsulting.compendio.utils.ListLinks;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -144,13 +145,13 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
     }
 
     private void downloadCourseById(String Token, String idUser, final CourseEntity courseEntity) {
-        mView.setLoadingIndicator(true);
+        mView.downloadingCourse(true);
         CourseRequest courseRequest = ServiceFactory.createService(CourseRequest.class);
         Call<TrainingEntity> call = courseRequest.downloadCourses(Token, idUser, courseEntity.getId());
         call.enqueue(new Callback<TrainingEntity>() {
             @Override
             public void onResponse(Call<TrainingEntity> call, Response<TrainingEntity> response) {
-                mView.setLoadingIndicator(false);
+
                 if (response.isSuccessful()) {
 
                     if (!mView.isActive()) {
@@ -158,15 +159,16 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                     }
 
                     cachedUrls(response.body(), courseEntity);
-                    courseEntity.setTrainingEntity(response.body());
+                    /*courseEntity.setTrainingEntity(response.body());
                     courseEntity.setName(courseEntity.getRelease().getCourse());
                     courseEntity.setDescription(response.body().getRelease().getCourse().getDescription());
                     courseEntity.setOffLineDisposed(true);
 
                     downloadAndSaveCourseInLocalStorage(courseEntity);
-
+*/
 
                 } else {
+                    mView.downloadingCourse(false);
                     if (!mView.isActive()) {
                         return;
                     }
@@ -179,7 +181,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                 if (!mView.isActive()) {
                     return;
                 }
-                mView.setLoadingIndicator(false);
+                mView.downloadingCourse(false);
                 mView.showErrorMessage("No se puede conectar con el servidor, por favor intentar más tarde");
             }
         });
@@ -187,7 +189,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
 
 
     private void cachedUrls(TrainingEntity trainingEntity, CourseEntity courseEntity) {
-        ArrayList<String> arrayLists = new ArrayList<>();
+        ArrayList<LocalUrls> arrayLists = new ArrayList<>();
 
         for (int i = 0; i < trainingEntity.getRelease().getCourse().getChapters().size(); i++) {
 
@@ -197,43 +199,128 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                         getFragments().get(j).getContent(), context));*/
 
                 arrayLists.addAll(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
-                        getFragments().get(j).getContent(), context));
+                        getFragments().get(j).getContent(), context, trainingEntity.getRelease().getCourse().getChapters().get(i).
+                        getFragments().get(j).getId()));
+
+
+            }
+
+        }
+        ArrayList<String> strings = new ArrayList<>();
+
+        for (int i = 0; i < arrayLists.size(); i++) {
+            strings.add(arrayLists.get(i).getUrl());
+        }
+        dowloadimages(trainingEntity, strings, courseEntity, arrayLists);
+    }
+
+    private void replaceUrls(TrainingEntity trainingEntity, ArrayList<LocalUrls> lists, CourseEntity courseEntity) {
+        String path = Environment.getExternalStorageDirectory() + "/" + "COMPENDIO" + "/";
+
+        for (int i = 0; i < lists.size(); i++) {
+            for (int j = 0; j < trainingEntity.getRelease().getCourse().getChapters().size(); j++) {
+
+                for (int k = 0; k < trainingEntity.getRelease().getCourse().getChapters().get(j).getFragments().size(); k++) {
+
+                    if (trainingEntity.getRelease().getCourse().getChapters().get(j).getFragments().get(k).getId()
+                            .equals(lists.get(i).getIdFragment())) {
+
+                        String urlLocal = path + lists.get(i).getUrl().substring(54, lists.get(i).getUrl().indexOf(".jpg")) + ".jpg";
+                        Log.d("URLLOCAL", urlLocal);
+                        String newContent = trainingEntity.getRelease().getCourse().getChapters().get(j).getFragments().get(k).getContent()
+                                .replaceAll(lists.get(i).getUrl(), urlLocal);
+                        trainingEntity.getRelease().getCourse().getChapters().get(j).getFragments().get(k).setContent(newContent);
+
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        courseEntity.setTrainingEntity(trainingEntity);
+        courseEntity.setName(courseEntity.getRelease().getCourse());
+        courseEntity.setDescription(trainingEntity.getRelease().getCourse().getDescription());
+        courseEntity.setOffLineDisposed(true);
+
+        downloadAndSaveCourseInLocalStorage(courseEntity);
+        mView.openCourse(courseEntity);
+/*
+
+        for (int i = 0; i < trainingEntity.getRelease().getCourse().getChapters().size(); i++) {
+
+            for (int j = 0; j < trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().size(); j++) {
+
+               *//* arrayLists.add(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
+                        getFragments().get(j).getContent(), context));*//*
+
+                String path = Environment.getExternalStorageDirectory() + "/" + "COMPENDIO" + "/";
+                Log.d("Files", "Path: " + path);
+                File directory = new File(path);
+                File[] files = directory.listFiles();
+                Log.d("Files", "Size: " + files.length);
+                for (int k = 0; i < files.length; k++) {
+                    Log.d("Files", "FileName:" + files[k].getName());
+
+                    // if ()
+                }
+                arrayLists.addAll(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
+                        getFragments().get(j).getContent(), context, trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().get(j).getId()));
 
 
             }
 
         }
 
-        dowloadimages(arrayLists, courseEntity);
+
+        String path = Environment.getExternalStorageDirectory() + "/" + "COMPENDIO" + "/";
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        Log.d("Files", "Size: " + files.length);
+        for (int i = 0; i < files.length; i++) {
+            Log.d("Files", "FileName:" + files[i].getName());
+        }*/
     }
 
-    private void dowloadimages(ArrayList<String> arrayLists, CourseEntity courseEntity) {
-/*        List<String> urls =
-                Arrays.asList("http://design.ubuntu.com/wp-content/uploads/ubuntu-logo32.png",
-                        "https://www.seeklogo.net/wp-content/uploads/2013/11/facebook-flat-vector-logo-400x400.png",
-                        "https://maxcdn.icons8.com/Share/icon/User_Interface/toggle_off1600.png",
-                        "https://cdn3.iconfinder.com/data/icons/free-social-icons/67/rss_circle_color-128.png");*/
+    private void dowloadimages(TrainingEntity trainingEntity, ArrayList<String> arrayLists, CourseEntity courseEntity, ArrayList<LocalUrls> lists) {
 
         ArrayList<String> urls = arrayLists;
-        mView.setLoadingIndicator(true);
 
 
         String path =
-                Environment.getExternalStorageDirectory() + "/" +"COMPENDIO" +"/";
+                Environment.getExternalStorageDirectory() + "/" + "COMPENDIO" + "/";
         ImageDownloadManager.getInstance(context).addTask(
                 new ImageDownloadManager.ImageDownloadTask(this, ImageDownloadManager.Task.DOWNLOAD, urls,
                         path, new ImageDownloadManager.Callback() {
                     @Override
                     public void onSuccess(ImageDownloadManager.ImageDownloadTask task) {
 
-                        mView.setLoadingIndicator(false);
-                        mView.openCourse(courseEntity);
+
+                        replaceUrls(trainingEntity, lists, courseEntity);
+                        mView.downloadingCourse(false);
+
                         Log.d(ImageDownloadManager.class.getSimpleName(), "Image save success news ");
                     }
 
                     @Override
                     public void onFailure(ImageDownloadManager.ImageSaveFailureReason reason) {
-                        mView.setLoadingIndicator(false);
+                        mView.downloadingCourse(false);
+                        if (!mView.isActive()) {
+                            return;
+                        }
+
+                        courseEntity.setTrainingEntity(trainingEntity);
+                        courseEntity.setName(courseEntity.getRelease().getCourse());
+                        courseEntity.setDescription(trainingEntity.getRelease().getCourse().getDescription());
+                        courseEntity.setOffLineDisposed(true);
+
+                        downloadAndSaveCourseInLocalStorage(courseEntity);
+                        mView.openCourse(courseEntity);
+                        mView.showErrorMessage("No se pudieron descargar las imágenes");
                         Log.d(ImageDownloadManager.class.getSimpleName(), "Image save fail news " + reason);
                     }
                 }));
@@ -332,6 +419,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                     if (!mView.isActive()) {
                         return;
                     }
+
                     mView.showErrorMessage("Hubo un error, por favor intentar más tarde");
                 }
             }
@@ -341,6 +429,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                 if (!mView.isActive()) {
                     return;
                 }
+
                 mView.setLoadingIndicator(false);
                 mView.showErrorMessage("No se puede conectar con el servidor, por favor intentar más tarde");
             }

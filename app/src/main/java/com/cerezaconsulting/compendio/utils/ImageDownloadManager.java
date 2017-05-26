@@ -21,13 +21,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Helper to download Images. This takes set of Urls to download and a folder oath to cave the
- * files. Calls  onSuccess only if all images are downloaded. Else calls
- * onFailure()
- *
- * @author: bedprakash on 11/1/17.
- */
 
 public class ImageDownloadManager {
 
@@ -293,12 +286,7 @@ public class ImageDownloadManager {
     private void postSuccess(final ImageDownloadTask task) {
         final Callback callback = task.callback.get();
         if (callback != null) {
-            MAIN_HANDLER.post(new Runnable() {
-                @Override
-                public void run() {
-                    callback.onSuccess(task);
-                }
-            });
+            MAIN_HANDLER.post(() -> callback.onSuccess(task));
         }
         callbacks.remove(task);
     }
@@ -306,12 +294,7 @@ public class ImageDownloadManager {
     private void postFailure(ImageDownloadTask task, final ImageSaveFailureReason error) {
         final Callback callback = task.callback.get();
         if (callback != null) {
-            MAIN_HANDLER.post(new Runnable() {
-                @Override
-                public void run() {
-                    callback.onFailure(error);
-                }
-            });
+            MAIN_HANDLER.post(() -> callback.onFailure(error));
         }
 
         callbacks.remove(task);

@@ -40,6 +40,7 @@ import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirm
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
 import com.cerezaconsulting.compendio.services.SocketService;
 import com.cerezaconsulting.compendio.utils.DateUtils;
+import com.cerezaconsulting.compendio.utils.ProgressDialogCustom;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -78,13 +79,11 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     private CourseAdapter courseAdapter;
     private LinearLayoutManager layoutManager;
     private CourseContract.Presenter presenter;
+    private ProgressDialogCustom mProgressDialogCustom;
 
     public static CourseFragment newInstance() {
         return new CourseFragment();
     }
-
-
-
 
 
     @Override
@@ -102,7 +101,6 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void connectedSocket(ConnectedSocketEvent event) {
-
 
 
         switch (event.getStatus()) {
@@ -149,6 +147,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mProgressDialogCustom = new ProgressDialogCustom(getContext(), "Descargando curso...");
         refreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.black),
                 ContextCompat.getColor(getActivity(), R.color.dark_gray),
@@ -165,10 +164,11 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         complatinsList.setAdapter(courseAdapter);
 
 
-      //  if(isMyServiceRunning(SocketService.class)){
+        //  if(isMyServiceRunning(SocketService.class)){
 
         //}
     }
+
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -178,6 +178,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         }
         return false;
     }
+
     @Override
     public boolean isActive() {
         return isAdded();
@@ -267,9 +268,8 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     public void openCourse(CourseEntity courseEntity) {
 
 
-
-        if (courseEntity.getTrainingEntity().getReviewEntities()!=null){
-            if (courseEntity.getTrainingEntity().getReviewEntities().size()>0){
+        if (courseEntity.getTrainingEntity().getReviewEntities() != null) {
+            if (courseEntity.getTrainingEntity().getReviewEntities().size() > 0) {
                 return;
             }
         }
@@ -294,6 +294,21 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
     public void setPresenter(CourseContract.Presenter presenter) {
         this.presenter = presenter;
     }
+
+
+    @Override
+    public void downloadingCourse(boolean active) {
+
+
+        if (active) {
+            mProgressDialogCustom.show();
+        } else {
+            if (mProgressDialogCustom.isShowing()) {
+                mProgressDialogCustom.dismiss();
+            }
+        }
+    }
+
 
     @Override
     public void setLoadingIndicator(final boolean active) {
@@ -330,7 +345,7 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
                 CourseEntity courseEntity = (CourseEntity) data.getSerializableExtra("course");
 
 
-                if (courseEntity != null){
+                if (courseEntity != null) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("course", courseEntity);
                     nextActivity(getActivity(), bundle, ChapterActivity.class, false);
@@ -341,8 +356,8 @@ public class CourseFragment extends BaseFragment implements CourseContract.View 
         }
     }
 
-    public void openChapter(Bundle bundle){
-        if (bundle != null){
+    public void openChapter(Bundle bundle) {
+        if (bundle != null) {
             nextActivity(getActivity(), bundle, ChapterActivity.class, false);
         }
 

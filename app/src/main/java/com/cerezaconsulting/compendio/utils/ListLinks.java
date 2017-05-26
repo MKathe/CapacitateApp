@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.cerezaconsulting.compendio.data.entities.LocalUrls;
 
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
@@ -20,8 +21,8 @@ import java.util.ArrayList;
 public class ListLinks {
 
 
-    public static  ArrayList<String> showLinks(String text, Context context) {
-        ArrayList<String> strings =  new ArrayList<>();
+    public static  ArrayList<LocalUrls> showLinks(String text, Context context, String id) {
+        ArrayList<LocalUrls> strings =  new ArrayList<>();
 
 
         Document doc = Jsoup.parse(text);
@@ -37,7 +38,7 @@ public class ListLinks {
                         trim(src.attr("alt"), 20));
 
                 Log.e("IMAGEEEE", src.attr("abs:src"));
-                strings.add(src.attr("abs:src"));
+                strings.add(new LocalUrls(src.attr("abs:src"),id));
 
 
 

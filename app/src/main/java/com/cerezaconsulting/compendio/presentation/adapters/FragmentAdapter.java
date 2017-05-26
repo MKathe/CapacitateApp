@@ -3,6 +3,7 @@ package com.cerezaconsulting.compendio.presentation.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -43,7 +44,6 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
         progressDialogCustom = new ProgressDialogCustom(context, "Cargando...");
         setItems(list);
     }
-
 
 
     @Override
@@ -134,8 +134,14 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
             });*/
 
             String html = fragmentEntity.getContent();
+
+            String baseUrl = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+            //  holder.fragmentContent.getSettings().setBuiltInZoomControls(true);
+            holder.fragmentContent.getSettings().setAllowFileAccess(true);
             holder.fragmentContent.getSettings().setJavaScriptEnabled(true);
-            holder.fragmentContent.loadData(html, "text/html ; charset=utf-8", "utf-8");
+            holder.fragmentContent.loadDataWithBaseURL("file:///storage", html, "text/html", "charset=utf-8", "utf-8");
+            //  holder.fragmentContent.loadData(html, "text/html ; charset=utf-8", "utf-8");
             holder.titleFragment.setText(fragmentEntity.getTitle());
 
         }
@@ -150,7 +156,7 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.ViewHo
 
     public void setItems(ArrayList<FragmentEntity> list) {
         this.mListFragments = list;
-   //     notifyDataSetChanged();
+        //     notifyDataSetChanged();
     }
 
 
