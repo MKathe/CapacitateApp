@@ -3,6 +3,7 @@
     <string name="pick_image_intent_text">Elegir imagen</string>
     <string name="demo_min_label">min</string>
     <string name="demo_max_label">max</string>
+    <string name="perm_camera">Se necesitan permisos para almacenamiento</string>
 
 
 
