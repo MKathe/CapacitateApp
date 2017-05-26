@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
+import android.os.Environment;
+import android.util.Log;
 
 import com.cerezaconsulting.compendio.data.local.CompedioDbHelper;
 import com.cerezaconsulting.compendio.data.local.CompendioPersistenceContract;
@@ -18,6 +20,7 @@ import com.cerezaconsulting.compendio.data.remote.request.CourseRequest;
 import com.cerezaconsulting.compendio.data.response.DoubtResponse;
 import com.cerezaconsulting.compendio.presentation.contracts.CourseContract;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorCourseItem;
+import com.cerezaconsulting.compendio.utils.ImageDownloadManager;
 import com.cerezaconsulting.compendio.utils.ListLinks;
 
 import java.util.ArrayList;
@@ -154,7 +157,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                         return;
                     }
 
-                    cachedUrls(response.body());
+                    cachedUrls(response.body(), courseEntity);
                     courseEntity.setTrainingEntity(response.body());
                     courseEntity.setName(courseEntity.getRelease().getCourse());
                     courseEntity.setDescription(response.body().getRelease().getCourse().getDescription());
@@ -162,7 +165,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
 
                     downloadAndSaveCourseInLocalStorage(courseEntity);
 
-                    mView.openCourse(courseEntity);
+
                 } else {
                     if (!mView.isActive()) {
                         return;
@@ -183,16 +186,57 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
     }
 
 
-    private void cachedUrls(TrainingEntity trainingEntity) {
+    private void cachedUrls(TrainingEntity trainingEntity, CourseEntity courseEntity) {
+        ArrayList<String> arrayLists = new ArrayList<>();
+
         for (int i = 0; i < trainingEntity.getRelease().getCourse().getChapters().size(); i++) {
 
             for (int j = 0; j < trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().size(); j++) {
 
-                ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
-                        getFragments().get(j).getContent(), context);
+               /* arrayLists.add(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
+                        getFragments().get(j).getContent(), context));*/
+
+                arrayLists.addAll(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
+                        getFragments().get(j).getContent(), context));
+
+
             }
 
         }
+
+        dowloadimages(arrayLists, courseEntity);
+    }
+
+    private void dowloadimages(ArrayList<String> arrayLists, CourseEntity courseEntity) {
+/*        List<String> urls =
+                Arrays.asList("http://design.ubuntu.com/wp-content/uploads/ubuntu-logo32.png",
+                        "https://www.seeklogo.net/wp-content/uploads/2013/11/facebook-flat-vector-logo-400x400.png",
+                        "https://maxcdn.icons8.com/Share/icon/User_Interface/toggle_off1600.png",
+                        "https://cdn3.iconfinder.com/data/icons/free-social-icons/67/rss_circle_color-128.png");*/
+
+        ArrayList<String> urls = arrayLists;
+        mView.setLoadingIndicator(true);
+
+
+        String path =
+                Environment.getExternalStorageDirectory() + "/" +"COMPENDIO" +"/";
+        ImageDownloadManager.getInstance(context).addTask(
+                new ImageDownloadManager.ImageDownloadTask(this, ImageDownloadManager.Task.DOWNLOAD, urls,
+                        path, new ImageDownloadManager.Callback() {
+                    @Override
+                    public void onSuccess(ImageDownloadManager.ImageDownloadTask task) {
+
+                        mView.setLoadingIndicator(false);
+                        mView.openCourse(courseEntity);
+                        Log.d(ImageDownloadManager.class.getSimpleName(), "Image save success news ");
+                    }
+
+                    @Override
+                    public void onFailure(ImageDownloadManager.ImageSaveFailureReason reason) {
+                        mView.setLoadingIndicator(false);
+                        Log.d(ImageDownloadManager.class.getSimpleName(), "Image save fail news " + reason);
+                    }
+                }));
     }
 
     private ArrayList<CourseEntity> updateTrainingResults(ArrayList<CourseEntity> coursesEntitiesLocal,

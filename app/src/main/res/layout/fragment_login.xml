@@ -71,7 +71,8 @@
                         android:imeActionLabel="Usuario"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        android:padding="5dp"
+                        android:paddingLeft="15dp"
+                        android:text="juniorquegu@gmail.com"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="16dp" />
@@ -84,11 +85,11 @@
                         android:background="@drawable/edittext_default"
                         android:gravity="center_vertical"
                         android:hint="@string/login_password"
-
                         android:imeActionLabel="Usuario"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:padding="5dp"
+                        android:paddingLeft="15dp"
+                        android:text="Admin1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="16dp" />

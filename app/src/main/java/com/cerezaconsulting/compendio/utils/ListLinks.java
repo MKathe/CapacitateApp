@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Example program to list links from a URL.
@@ -19,7 +20,9 @@ import java.io.IOException;
 public class ListLinks {
 
 
-    public static void showLinks(String text, Context context) {
+    public static  ArrayList<String> showLinks(String text, Context context) {
+        ArrayList<String> strings =  new ArrayList<>();
+
 
         Document doc = Jsoup.parse(text);
         Elements links = doc.select("a[href]");
@@ -34,8 +37,9 @@ public class ListLinks {
                         trim(src.attr("alt"), 20));
 
                 Log.e("IMAGEEEE", src.attr("abs:src"));
-                Glide.with(context)
-                        .load(src.attr("abs:src"));
+                strings.add(src.attr("abs:src"));
+
+
 
             } else
                 print(" * %s: <%s>", src.tagName(), src.attr("abs:src"));
@@ -51,7 +55,7 @@ public class ListLinks {
             print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
         }
 
-
+        return strings;
     }
 
 
