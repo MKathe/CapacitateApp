@@ -68,6 +68,28 @@ public class LoadActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
+        boolean isAllPermissonsGranted=true;
+        for (int i = 0; i < grantResults.length; i++) {
+
+            if(grantResults[i]==-1){
+                isAllPermissonsGranted=false;
+                break;
+            }
+
+
+        }
+
+        if(!isAllPermissonsGranted){
+            finish();
+        }
+
+
+    }
+    @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this).build().show();

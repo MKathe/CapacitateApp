@@ -1,11 +1,13 @@
 package com.cerezaconsulting.compendio.presentation.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +38,7 @@ import com.cerezaconsulting.compendio.presentation.contracts.ChapterContract;
 import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirmDialog;
 import com.cerezaconsulting.compendio.presentation.fragments.dialog.AlertConfirmDialogOff;
 import com.cerezaconsulting.compendio.presentation.presenters.communicator.CommunicatorChapterItem;
+import com.cerezaconsulting.compendio.utils.ListLinks;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -360,7 +363,7 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
 
     @Override
     public void sendDoubt(String s, String idTraining) {
-        presenter.sendDoubt(s,idTraining);
+        presenter.sendDoubt(s, idTraining);
     }
 
     @Override
@@ -458,7 +461,9 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
         }
     }
 
+
     private void openFragmentActivity(CourseEntity courseEntity, ChapterEntity chapterEntity) {
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("chapter", chapterEntity);
         bundle.putSerializable("chapters", courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
@@ -468,5 +473,6 @@ public class ChapterFragment extends BaseFragment implements ChapterContract.Vie
             intent.putExtras(bundle);
         }
         startActivityForResult(intent, REQUEST_FRAGMENT);
+
     }
 }

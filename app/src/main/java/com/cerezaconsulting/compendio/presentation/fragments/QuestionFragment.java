@@ -172,21 +172,14 @@ public class QuestionFragment extends BaseFragment {
         tvReview.setText(DateUtils.getFormant(reviewEntity.getDate()));
         mCourseEntity.getTrainingEntity().setReviewEntities(new ArrayList<ReviewEntity>());
         mCourseEntity.getTrainingEntity().getReviewEntities().add(reviewEntity);
-
-
         SessionManager sessionManager = new SessionManager(getContext());
         ArrayList<CourseEntity> courseEntities = sessionManager.getCoures().getCourseEntities();
-
-
         for (int i = 0; i < courseEntities.size(); i++) {
             if (mCourseEntity.getId().equals(courseEntities.get(i).getId())) {
                 courseEntities.set(i, mCourseEntity);
-
             }
-
         }
         CoursesEntity coursesEntity = new CoursesEntity(courseEntities);
-
         sessionManager.setCourses(coursesEntity);
 
 
@@ -211,9 +204,6 @@ public class QuestionFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         mSessionManager = new SessionManager(getContext());
         questionEntities = (ArrayList<QuestionEntity>) getArguments().getSerializable("question");
         mChapterEntity = (ChapterEntity) getArguments().getSerializable("chapter");
@@ -275,7 +265,6 @@ public class QuestionFragment extends BaseFragment {
             if (mCourseEntity.getTrainingEntity().getRelease().getCourse().getChapters().get(i).isFinished()) {
                 count++;
             }
-
         }
 
         if (count == mCourseEntity.getTrainingEntity().getRelease().getCourse().getChapters().size()) {

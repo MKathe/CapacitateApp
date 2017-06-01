@@ -2,12 +2,14 @@ package com.cerezaconsulting.compendio.presentation.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,6 +26,7 @@ import com.cerezaconsulting.compendio.R;
 import com.cerezaconsulting.compendio.data.model.ChapterEntity;
 import com.cerezaconsulting.compendio.data.model.CourseEntity;
 import com.cerezaconsulting.compendio.presentation.activities.FragmentsActivity;
+import com.cerezaconsulting.compendio.utils.ListLinks;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -130,15 +133,46 @@ public class CardFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("chapter", chapterEntity);
-                bundle.putSerializable("chapters", chapterEntities);
-                bundle.putSerializable("course", courseEntity);
-                Intent intent = new Intent(getActivity(), FragmentsActivity.class);
-                if (bundle != null) {
-                    intent.putExtras(bundle);
+
+                if (ListLinks.ifContentInternetData(chapterEntity.getFragments())) {
+                    AlertDialog.Builder builder = null;
+                    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("chapter", chapterEntity);
+                                bundle.putSerializable("chapters", courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+                                bundle.putSerializable("course", courseEntity);
+                                Intent intent = new Intent(getActivity(), FragmentsActivity.class);
+                                if (bundle != null) {
+                                    intent.putExtras(bundle);
+                                }
+                                startActivityForResult(intent, 200);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                break;
+                        }
+                    };
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Este capítulo tiene contenido audiovisual que requiere conexión a internet. ¿Deseas ingresar de todos modos?").setPositiveButton("Aceptar", dialogClickListener)
+                            .setNegativeButton("Cancelar", dialogClickListener).show();
+
+
+                } else {
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("chapter", chapterEntity);
+                    bundle.putSerializable("chapters", courseEntity.getTrainingEntity().getRelease().getCourse().getChapters());
+                    bundle.putSerializable("course", courseEntity);
+                    Intent intent = new Intent(getActivity(), FragmentsActivity.class);
+                    if (bundle != null) {
+                        intent.putExtras(bundle);
+                    }
+                    startActivityForResult(intent, 200);
                 }
-                startActivityForResult(intent, 200);
 
             }
         });

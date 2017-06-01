@@ -226,7 +226,6 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
                             .equals(lists.get(i).getIdFragment())) {
 
                         String urlLocal = path + lists.get(i).getUrl().substring(54, lists.get(i).getUrl().indexOf(".jpg")) + ".jpg";
-                        Log.d("URLLOCAL", urlLocal);
                         String newContent = trainingEntity.getRelease().getCourse().getChapters().get(j).getFragments().get(k).getContent()
                                 .replaceAll(lists.get(i).getUrl(), urlLocal);
                         trainingEntity.getRelease().getCourse().getChapters().get(j).getFragments().get(k).setContent(newContent);
@@ -248,42 +247,7 @@ public class CoursePresenter implements CourseContract.Presenter, CommunicatorCo
 
         downloadAndSaveCourseInLocalStorage(courseEntity);
         mView.openCourse(courseEntity);
-/*
 
-        for (int i = 0; i < trainingEntity.getRelease().getCourse().getChapters().size(); i++) {
-
-            for (int j = 0; j < trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().size(); j++) {
-
-               *//* arrayLists.add(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
-                        getFragments().get(j).getContent(), context));*//*
-
-                String path = Environment.getExternalStorageDirectory() + "/" + "COMPENDIO" + "/";
-                Log.d("Files", "Path: " + path);
-                File directory = new File(path);
-                File[] files = directory.listFiles();
-                Log.d("Files", "Size: " + files.length);
-                for (int k = 0; i < files.length; k++) {
-                    Log.d("Files", "FileName:" + files[k].getName());
-
-                    // if ()
-                }
-                arrayLists.addAll(ListLinks.showLinks(trainingEntity.getRelease().getCourse().getChapters().get(i).
-                        getFragments().get(j).getContent(), context, trainingEntity.getRelease().getCourse().getChapters().get(i).getFragments().get(j).getId()));
-
-
-            }
-
-        }
-
-
-        String path = Environment.getExternalStorageDirectory() + "/" + "COMPENDIO" + "/";
-        Log.d("Files", "Path: " + path);
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-        Log.d("Files", "Size: " + files.length);
-        for (int i = 0; i < files.length; i++) {
-            Log.d("Files", "FileName:" + files[i].getName());
-        }*/
     }
 
     private void dowloadimages(TrainingEntity trainingEntity, ArrayList<String> arrayLists, CourseEntity courseEntity, ArrayList<LocalUrls> lists) {

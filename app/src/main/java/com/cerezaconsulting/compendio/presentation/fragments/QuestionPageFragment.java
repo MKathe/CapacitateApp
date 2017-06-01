@@ -249,10 +249,10 @@ public class QuestionPageFragment extends BaseFragment {
                         mMessageActivityEvent = new MessageActivityEvent(questionEntity.getOptions().get(optionPosition).isCorrect(),
                                 questionEntity.getFragment());
 
-                        handler.postDelayed(mRunnable, 1000);
+                        handler.postDelayed(mRunnable, 3000);
                     });
                 }
-            }, 3000);
+            }, 1000);
 
 
         }
