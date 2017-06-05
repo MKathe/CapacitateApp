@@ -72,7 +72,6 @@
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:paddingLeft="15dp"
-                        android:text="juniorquegu@gmail.com"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="16dp" />
@@ -89,7 +88,6 @@
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:paddingLeft="15dp"
-                        android:text="Admin1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="16dp" />

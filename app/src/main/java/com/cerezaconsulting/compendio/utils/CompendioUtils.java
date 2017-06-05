@@ -295,7 +295,7 @@ public class CompendioUtils {
         return options;
     }
 
-    private static ArrayList<FragmentEntity> findIncorrectOptions(ArrayList<FragmentEntity> fragmentEntities,
+    private static ArrayList<FragmentEntity> findIncorrectOptionsandNotInclude(ArrayList<FragmentEntity> fragmentEntities,
                                                                   String title) {
 
 
@@ -303,6 +303,29 @@ public class CompendioUtils {
         for (FragmentEntity fragment : fragmentEntities) {
             if (!fragmentEntities.equals(title))
                 fragmentEntitiesTemp.add(fragment);
+        }
+
+
+        return fragmentEntitiesTemp;
+    }
+
+    private static ArrayList<FragmentEntity> findIncorrectOptions(ArrayList<FragmentEntity> fragmentEntities,
+                                                                  String title) {
+
+
+        ArrayList<FragmentEntity> fragmentEntitiesTemp = new ArrayList<>();
+      /*  for (FragmentEntity fragment : fragmentEntities) {
+            if (!fragment.equals(title)) {
+                fragmentEntitiesTemp.add(fragment);
+            }
+
+        }*/
+
+        for (int i = 0; i < fragmentEntities.size(); i++) {
+
+            if(!fragmentEntities.get(i).getTitle().equals(title)){
+                fragmentEntitiesTemp.add(fragmentEntities.get(i));
+            }
         }
 
         return fragmentEntitiesTemp;
