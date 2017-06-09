@@ -9,6 +9,9 @@
     <string name="forgot_password"> ¿Olvidaste tu contraseña? </string>
     <string name="login">Ingresar</string>
 
+    <string name="perm_camera">Necesitas permisos para almacenamiento</string>
+
+
 
 
 
